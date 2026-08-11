@@ -1023,4 +1023,32 @@ html {
 
 .booking button:hover {
     background: #555;
+.form-success {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.form-success h3 {
+    font-family: Georgia, serif;
+    font-size: 45px;
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+.form-success p {
+    color: #666;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+
+
+
+
+
+
+
+
+
+    
 }
