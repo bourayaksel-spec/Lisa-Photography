@@ -2275,13 +2275,139 @@ html {
                 color 0.3s ease;
 }
 
-.about-text .about-button:hover {
-    background-color: #222;
+/* FINAL SERVICES DESIGN */
 
+.services-section {
+    background: #222 !important;
     color: #fff !important;
+    padding: 140px 6vw !important;
 }
 
+.services-header {
+    max-width: 700px !important;
+    margin: 0 auto 80px !important;
+    text-align: center !important;
+}
 
+.services-header h2 {
+    font-family: Georgia, serif !important;
+    font-size: clamp(50px, 7vw, 85px) !important;
+    font-weight: normal !important;
+    line-height: 1 !important;
+    margin: 20px 0 25px !important;
+}
 
+.services-header > p:last-child {
+    color: #aaa !important;
+    line-height: 1.8 !important;
+}
 
+.services-grid {
+    max-width: 1200px !important;
+    margin: 0 auto !important;
+
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+
+    border-top: 1px solid #444 !important;
+    border-left: 1px solid #444 !important;
+}
+
+.service-card {
+    min-height: 330px !important;
+    padding: 35px !important;
+
+    border-right: 1px solid #444 !important;
+    border-bottom: 1px solid #444 !important;
+
+    box-sizing: border-box !important;
+
+    display: flex !important;
+    flex-direction: column !important;
+
+    transition: transform 0.4s ease, background 0.4s ease !important;
+}
+
+.service-card span {
+    color: #777 !important;
+    font-size: 10px !important;
+    letter-spacing: 3px !important;
+}
+
+.service-card h3 {
+    margin-top: auto !important;
+    margin-bottom: 20px !important;
+
+    font-family: Georgia, serif !important;
+    font-size: 32px !important;
+    font-weight: normal !important;
+}
+
+.service-card p {
+    color: #aaa !important;
+    line-height: 1.7 !important;
+    margin: 0 !important;
+}
+
+.service-card:hover {
+    background: #2d2d2d !important;
+    transform: translateY(-5px) !important;
+}
+
+@media (max-width: 768px) {
+
+    .services-section {
+        padding: 90px 20px !important;
+    }
+
+    .services-header {
+        margin-bottom: 50px !important;
+    }
+
+    .services-header h2 {
+        font-size: 50px !important;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .service-card {
+        min-height: 280px !important;
+        padding: 30px !important;
+    }
+
+    .service-card h3 {
+        margin-top: 80px !important;
+    }
+
+}
+@media (max-width: 768px) {
+
+    .services-section {
+        padding: 90px 20px;
+    }
+
+    .services-header {
+        margin-bottom: 50px;
+    }
+
+    .services-header h2 {
+        font-size: 50px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card {
+        min-height: 280px;
+        padding: 30px;
+    }
+
+    .service-card h3 {
+        margin-top: 80px;
+    }
+
+}
 
