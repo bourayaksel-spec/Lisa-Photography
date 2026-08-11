@@ -1528,3 +1528,36 @@ html {
 
     line-height: 1.8;
 }
+@media (max-width: 768px) {
+
+    .services-section {
+        padding: 90px 20px;
+    }
+
+    .services-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .service-card {
+        min-height: 260px;
+        padding: 35px 25px;
+    }
+
+    .service-card h3 {
+        font-size: 34px;
+        margin-top: 45px;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
