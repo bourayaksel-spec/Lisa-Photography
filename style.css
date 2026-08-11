@@ -2102,7 +2102,50 @@ html {
     }
 
 }
+@media (max-width: 768px) {
 
+    .nav-links.active {
+        display: flex !important;
+
+        position: absolute;
+
+        top: 60px;
+        right: 20px;
+
+        width: 220px;
+
+        padding: 30px 25px;
+
+        background: #222;
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 22px;
+
+        z-index: 9999;
+
+        box-sizing: border-box;
+    }
+
+    .nav-links.active a {
+        display: block !important;
+
+        color: white !important;
+
+        text-decoration: none;
+
+        font-size: 11px;
+
+        letter-spacing: 3px;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+}
 
 
 
