@@ -1289,7 +1289,39 @@ html {
 
     opacity: 0.8;
 }
+@media (max-width: 768px) {
 
+    .hero {
+        min-height: 100svh;
+
+        background-position: center;
+    }
+
+    .hero h1 {
+        font-size: 80px;
+
+        letter-spacing: 10px;
+    }
+
+    .hero-description {
+        font-size: 15px;
+
+        max-width: 320px;
+    }
+
+    .hero-label {
+        font-size: 9px;
+
+        letter-spacing: 4px;
+    }
+
+    .hero-scroll {
+        font-size: 7px;
+
+        letter-spacing: 3px;
+    }
+
+}
 
 
 
