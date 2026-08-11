@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lisa Photography</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header>
+
+    <div class="logo">
+        LISA
+    </div>
+
+    <nav>
+        <a href="#home">HOME</a>
+        <a href="#portfolio">PORTFOLIO</a>
+        <a href="#about">ABOUT</a>
+        <a href="#services">SERVICES</a>
+        <a href="#contact">CONTACT</a>
+    </nav>
+
+</header>
+<section id="home" class="hero">
+
+    <div class="hero-content">
+
+        <p class="hero-label">
+            PHOTOGRAPHER
+        </p>
+
+        <h1>
+            LISA
+        </h1>
+
+        <p class="hero-description">
+            Capturing beautiful moments,
+            honest emotions and stories
+            worth remembering.
+        </p>
+
+        <a href="#portfolio" class="hero-button">
+            VIEW PORTFOLIO
+        </a>
+
+    </div>
+
+</section>
+<section id="portfolio">
+
+    <p>SELECTED WORK</p>
+
+    <h2>Lisa's Portfolio</h2>
+
+    <div class="gallery">
+
+        <img src="images/1.jpeg" alt="Lisa Photography">
+
+        <img src="images/2.jpeg" alt="Lisa Photography">
+
+        <img src="images/3.jpeg" alt="Lisa Photography">
+
+    </div>
+
+</section>
+<section id="about">
+
+    <div class="about-image">
+        <img src="images/1.jpeg" alt="Lisa">
+    </div>
+
+    <div class="about-text">
+
+        <p>ABOUT LISA</p>
+
+        <h2>
+    Stories deserve to be remembered.
+</h2>
+
+<p>
+    I'm Lisa, a photographer who believes
+    that the most meaningful photographs
+    are the ones that make you feel something.
+</p>
+
+<p>
+    Through portraits, couples, weddings and
+    lifestyle photography, I focus on genuine
+    emotions, natural moments and the stories
+    behind every person I photograph.
+</p>
+
+    </div>
+
+</section>
+<section id="services">
+
+    <p class="services-label">SERVICES</p>
+
+    <h2>What I photograph.</h2>
+
+    <div class="services-grid">
+
+        <div class="service">
+            <h3>Portraits</h3>
+            <p>
+                Natural and expressive portraits
+                that show personality and emotion.
+            </p>
+        </div>
+
+        <div class="service">
+            <h3>Couples</h3>
+            <p>
+                Authentic photographs focused
+                on connection and genuine emotion.
+            </p>
+        </div>
+
+        <div class="service">
+            <h3>Weddings</h3>
+            <p>
+                Beautifully documenting the emotions,
+                details and unforgettable moments.
+            </p>
+        </div>
+
+        <div class="service">
+            <h3>Lifestyle</h3>
+            <p>
+                Natural storytelling through
+                candid and artistic photography.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+<section id="contact">
+
+    <p class="contact-label">GET IN TOUCH</p>
+
+    <h2>Let's create something beautiful.</h2>
+
+    <p class="contact-text">
+        Whether you are planning a wedding,
+        a portrait session or simply want to
+        tell your story, I'd love to hear from you.
+    </p>
+
+    <div class="contact-links">
+
+        <a href="mailto:lisa@example.com">
+            EMAIL
+        </a>
+
+        <a href="#" target="_blank">
+            INSTAGRAM
+        </a>
+
+    </div>
+<div class="booking">
+
+    <h3>Book a session</h3>
+
+    <p>
+        Tell me a little about your project
+        and I'll get back to you soon.
+    </p>
+
+    <form action="https://formspree.io/f/xjybwozk" method="POST">
+    
+    <input type="hidden" name="_next" value="success.html">
+
+        <input
+            type="text"
+            name="name"
+            placeholder="Your name"
+            required
+        >
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Your email"
+            required
+        >
+
+        <select name="photography_type" required>
+
+            <option value="">Type of photography</option>
+
+            <option value="Portrait">Portrait</option>
+
+            <option value="Couples">Couples</option>
+
+            <option value="Wedding">Wedding</option>
+
+            <option value="Lifestyle">Lifestyle</option>
+
+        </select>
+
+        <textarea
+            name="message"
+            placeholder="Tell me about your project..."
+            rows="6"
+            required
+        ></textarea>
+
+        <button type="submit">
+            SEND REQUEST
+        </button>
+
+    </form>
+
+</div>
+</section>
+<footer>
+
+    <p>© 2026 Lisa Photography</p>
+
+    <div class="social-links">
+
+        <a href="#" target="_blank">Instagram</a>
+
+        <a href="#" target="_blank">Facebook</a>
+
+    </div>
+
+</footer>
+<div id="lightbox" class="lightbox">
+
+    <span class="close">&times;</span>
+
+    <button id="prev" class="lightbox-arrow left">
+        &#10094;
+    </button>
+
+    <img id="lightbox-image" src="" alt="Lisa Photography">
+
+    <button id="next" class="lightbox-arrow right">
+        &#10095;
+    </button>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
