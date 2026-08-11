@@ -2104,15 +2104,21 @@ html {
 }
 @media (max-width: 768px) {
 
+    .main-nav {
+        position: relative;
+        width: 100%;
+    }
+
     .nav-links.active {
         display: flex !important;
 
-        position: absolute;
+        position: fixed;
 
-        top: 60px;
+        top: 70px;
+        left: 20px;
         right: 20px;
 
-        width: 220px;
+        width: auto;
 
         padding: 30px 25px;
 
@@ -2124,7 +2130,7 @@ html {
 
         gap: 22px;
 
-        z-index: 9999;
+        z-index: 99999;
 
         box-sizing: border-box;
     }
@@ -2132,13 +2138,17 @@ html {
     .nav-links.active a {
         display: block !important;
 
+        width: 100%;
+
         color: white !important;
 
-        text-decoration: none;
+        text-align: left;
 
         font-size: 11px;
 
         letter-spacing: 3px;
+
+        text-decoration: none;
 
         visibility: visible !important;
 
