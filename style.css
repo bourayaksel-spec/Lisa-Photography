@@ -2046,11 +2046,7 @@ html {
     padding: 5px;
 }
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
+
 @media (max-width: 768px) {
 
     .main-nav {
