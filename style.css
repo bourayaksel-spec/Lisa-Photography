@@ -1392,7 +1392,39 @@ html {
 
     filter: brightness(0.9);
 }
+@media (max-width: 768px) {
 
+    #portfolio {
+        padding: 90px 20px;
+    }
+
+    .portfolio-header {
+        margin-bottom: 50px;
+    }
+
+    .portfolio-header h2 {
+        font-size: 45px;
+    }
+
+    .gallery {
+        display: grid;
+
+        grid-template-columns: 1fr;
+
+        grid-template-rows: auto;
+
+        gap: 12px;
+    }
+
+    .gallery-item.large {
+        grid-row: auto;
+    }
+
+    .gallery-item {
+        height: 450px;
+    }
+
+}
 
 
 
