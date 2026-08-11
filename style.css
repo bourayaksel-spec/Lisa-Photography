@@ -1040,7 +1040,62 @@ html {
     font-size: 17px;
     line-height: 1.7;
 }
+.site-header {
+    position: fixed;
 
+    top: 0;
+    left: 0;
+
+    width: 100%;
+
+    z-index: 1000;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 22px 45px;
+
+    box-sizing: border-box;
+
+    background: rgba(245, 241, 235, 0.92);
+
+    backdrop-filter: blur(10px);
+}
+
+.site-header .logo {
+    color: #222;
+
+    text-decoration: none;
+
+    font-size: 22px;
+
+    letter-spacing: 6px;
+}
+
+.site-header nav {
+    display: flex;
+
+    gap: 30px;
+}
+
+.site-header nav a {
+    color: #222;
+
+    text-decoration: none;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+
+    transition: opacity 0.3s ease;
+}
+
+.site-header nav a:hover {
+    opacity: 0.5;
+}
 
 
 
