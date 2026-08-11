@@ -2231,3 +2231,35 @@ html {
     background: #222;
     color: white;
 }
+@media (max-width: 768px) {
+
+    .about-section {
+        padding: 90px 20px;
+
+        grid-template-columns: 1fr;
+
+        gap: 50px;
+    }
+
+    .about-image {
+        height: 500px;
+    }
+
+    .about-text {
+        max-width: 100%;
+    }
+
+    .about-text h2 {
+        font-size: 50px;
+
+        margin-bottom: 30px;
+    }
+
+}
+
+
+
+
+
+
+
