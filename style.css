@@ -2156,7 +2156,64 @@ html {
     }
 
 }
+@media (max-width: 768px) {
 
+    .nav-links.active {
+        position: fixed !important;
+
+        top: 70px !important;
+        left: 10px !important;
+        right: 10px !important;
+
+        width: calc(100% - 20px) !important;
+
+        margin: 0 !important;
+
+        padding: 30px 25px !important;
+
+        display: flex !important;
+
+        flex-direction: column !important;
+
+        align-items: flex-start !important;
+
+        justify-content: flex-start !important;
+
+        gap: 22px !important;
+
+        box-sizing: border-box !important;
+
+        background: #222 !important;
+
+        z-index: 99999 !important;
+
+        overflow: visible !important;
+    }
+
+    .nav-links.active a {
+        position: static !important;
+
+        display: block !important;
+
+        width: 100% !important;
+
+        margin: 0 !important;
+        padding: 0 !important;
+
+        transform: none !important;
+
+        color: white !important;
+
+        text-align: left !important;
+
+        white-space: nowrap !important;
+
+        visibility: visible !important;
+
+        opacity: 1 !important;
+    }
+
+}
 
 
 
