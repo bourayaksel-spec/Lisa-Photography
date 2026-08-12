@@ -2683,6 +2683,137 @@ html {
     }
 
 }
+.review-box {
+    max-width: 650px;
+    margin: 100px auto 0;
+
+    padding: 50px;
+
+    border: 1px solid #444;
+
+    text-align: left;
+}
+
+.review-box h3 {
+    font-family: Georgia, serif;
+    font-size: 38px;
+    font-weight: normal;
+    margin: 0 0 15px;
+}
+
+.review-box > p {
+    color: #999;
+    line-height: 1.7;
+    margin-bottom: 35px;
+}
+
+.review-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-form input[type="text"],
+.review-form textarea {
+    width: 100%;
+    box-sizing: border-box;
+
+    padding: 16px;
+
+    border: 1px solid #444;
+
+    background: transparent;
+
+    color: white;
+
+    font-family: inherit;
+}
+
+.review-form textarea {
+    resize: vertical;
+}
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.rating p {
+    margin: 0 15px 0 0;
+
+    color: #999;
+
+    font-size: 11px;
+
+    letter-spacing: 2px;
+}
+
+.rating label {
+    color: #777;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.rating input {
+    display: none;
+}
+
+.rating label:has(input:checked) {
+    color: white;
+}
+
+.review-form button {
+    align-self: flex-start;
+
+    margin-top: 10px;
+
+    padding: 16px 30px;
+
+    border: 1px solid white;
+
+    background: white;
+
+    color: #222;
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    cursor: pointer;
+}
+
+.review-form button:hover {
+    background: transparent;
+    color: white;
+}
+@media (max-width: 768px) {
+
+    .review-box {
+        margin-top: 60px;
+        padding: 30px 20px;
+    }
+
+    .review-box h3 {
+        font-size: 32px;
+    }
+
+    .rating {
+        flex-wrap: wrap;
+    }
+
+    .rating p {
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .review-form button {
+        width: 100%;
+    }
+
+}
+
+
 
 
 
