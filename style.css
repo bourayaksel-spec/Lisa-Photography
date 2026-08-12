@@ -2577,7 +2577,13 @@ html {
     }
 
 }
+@media (min-width: 769px) {
 
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+
+}
 
 
 
