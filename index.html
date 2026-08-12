@@ -322,36 +322,28 @@
             required
         >
 
-        <div class="rating">
+       <div class="rating">
 
-            <p>Your rating</p>
+    <p>Your rating</p>
 
-            <label>
-                <input type="radio" name="rating" value="1" required>
-                ★
-            </label>
+    <div class="stars">
 
-            <label>
-                <input type="radio" name="rating" value="2">
-                ★
-            </label>
+        <button type="button" class="star" data-rating="1">★</button>
+        <button type="button" class="star" data-rating="2">★</button>
+        <button type="button" class="star" data-rating="3">★</button>
+        <button type="button" class="star" data-rating="4">★</button>
+        <button type="button" class="star" data-rating="5">★</button>
 
-            <label>
-                <input type="radio" name="rating" value="3">
-                ★
-            </label>
+    </div>
 
-            <label>
-                <input type="radio" name="rating" value="4">
-                ★
-            </label>
+    <input
+        type="hidden"
+        name="rating"
+        id="rating-value"
+        required
+    >
 
-            <label>
-                <input type="radio" name="rating" value="5">
-                ★
-            </label>
-
-        </div>
+</div>
 
         <textarea
             name="review"
