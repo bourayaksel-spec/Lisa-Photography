@@ -216,21 +216,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
-});
-/* =========================
+
+    /* =========================
        STAR RATING
     ========================= */
 
-    const stars = document.querySelectorAll(".star");
-    const ratingValue = document.getElementById("rating-value");
+    const stars =
+        document.querySelectorAll(".star");
+
+    const ratingValue =
+        document.getElementById("rating-value");
+
 
     stars.forEach(function (star) {
 
         star.addEventListener("click", function () {
 
-            const rating = Number(this.dataset.rating);
+            const rating =
+                Number(this.dataset.rating);
 
-            ratingValue.value = rating;
+            if (ratingValue) {
+                ratingValue.value = rating;
+            }
 
             stars.forEach(function (item) {
 
@@ -238,9 +245,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     Number(item.dataset.rating);
 
                 if (itemRating <= rating) {
+
                     item.classList.add("selected");
+
                 } else {
+
                     item.classList.remove("selected");
+
                 }
 
             });
@@ -248,83 +259,116 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     });
-/* =========================
-   REVIEW FORM
-========================= */
 
-const reviewForm = document.getElementById("review-form");
 
-if (reviewForm) {
+    /* =========================
+       REVIEW FORM
+    ========================= */
 
-    reviewForm.addEventListener("submit", async function (event) {
+    const reviewForm =
+        document.getElementById("review-form");
 
-        event.preventDefault();
 
-        const submitButton =
-            reviewForm.querySelector("button[type='submit']");
+    if (reviewForm) {
 
-        submitButton.disabled = true;
-        submitButton.textContent = "SENDING...";
+        reviewForm.addEventListener(
+            "submit",
+            async function (event) {
 
-        try {
+                event.preventDefault();
 
-            const response = await fetch(
-                reviewForm.action,
-                {
-                    method: "POST",
-                    body: new FormData(reviewForm),
-                    headers: {
-                        "Accept": "application/json"
+                const submitButton =
+                    reviewForm.querySelector(
+                        "button[type='submit']"
+                    );
+
+
+                submitButton.disabled = true;
+                submitButton.textContent = "SENDING...";
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            reviewForm.action,
+                            {
+                                method: "POST",
+                                body: new FormData(reviewForm),
+                                headers: {
+                                    "Accept":
+                                        "application/json"
+                                }
+                            }
+                        );
+
+
+                    if (response.ok) {
+
+                        reviewForm.innerHTML = `
+                            <div class="form-success">
+
+                                <h3>
+                                    Thank you.
+                                </h3>
+
+                                <p>
+                                    Your review has been received.
+                                    Thank you for sharing your experience.
+                                </p>
+
+                            </div>
+                        `;
+
+                    } else {
+
+                        submitButton.disabled = false;
+
+                        submitButton.textContent =
+                            "SUBMIT REVIEW";
+
+                        alert(
+                            "Something went wrong. Please try again."
+                        );
+
                     }
+
+
+                } catch (error) {
+
+                    submitButton.disabled = false;
+
+                    submitButton.textContent =
+                        "SUBMIT REVIEW";
+
+                    alert(
+                        "Unable to send your review. Please try again."
+                    );
+
                 }
-            );
-
-            if (response.ok) {
-
-                reviewForm.innerHTML = `
-                    <div class="form-success">
-
-                        <h3>Thank you.</h3>
-
-                        <p>
-                            Your review has been received.
-                            Thank you for sharing your experience.
-                        </p>
-
-                    </div>
-                `;
-
-            } else {
-
-                submitButton.disabled = false;
-                submitButton.textContent = "SUBMIT REVIEW";
-
-                alert(
-                    "Something went wrong. Please try again."
-                );
 
             }
+        );
 
-        } catch (error) {
+    }
 
-            submitButton.disabled = false;
-            submitButton.textContent = "SUBMIT REVIEW";
 
-            alert(
-                "Unable to send your review. Please try again."
-            );
+    /* =========================
+       AUTOMATIC COPYRIGHT YEAR
+    ========================= */
 
-        }
+    const currentYear =
+        document.getElementById("current-year");
 
-    });
 
-    const currentYear = document.getElementById("current-year");
+    if (currentYear) {
 
-if (currentYear) {
-    currentYear.textContent = new Date().getFullYear();
-}
-}
+        currentYear.textContent =
+            new Date().getFullYear();
 
+    }
+
+});
 
 
 
