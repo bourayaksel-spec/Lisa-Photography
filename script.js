@@ -248,7 +248,77 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
     });
+/* =========================
+   REVIEW FORM
+========================= */
 
+const reviewForm = document.getElementById("review-form");
+
+if (reviewForm) {
+
+    reviewForm.addEventListener("submit", async function (event) {
+
+        event.preventDefault();
+
+        const submitButton =
+            reviewForm.querySelector("button[type='submit']");
+
+        submitButton.disabled = true;
+        submitButton.textContent = "SENDING...";
+
+        try {
+
+            const response = await fetch(
+                reviewForm.action,
+                {
+                    method: "POST",
+                    body: new FormData(reviewForm),
+                    headers: {
+                        "Accept": "application/json"
+                    }
+                }
+            );
+
+            if (response.ok) {
+
+                reviewForm.innerHTML = `
+                    <div class="form-success">
+
+                        <h3>Thank you.</h3>
+
+                        <p>
+                            Your review has been received.
+                            Thank you for sharing your experience.
+                        </p>
+
+                    </div>
+                `;
+
+            } else {
+
+                submitButton.disabled = false;
+                submitButton.textContent = "SUBMIT REVIEW";
+
+                alert(
+                    "Something went wrong. Please try again."
+                );
+
+            }
+
+        } catch (error) {
+
+            submitButton.disabled = false;
+            submitButton.textContent = "SUBMIT REVIEW";
+
+            alert(
+                "Unable to send your review. Please try again."
+            );
+
+        }
+
+    });
+
+}
 
 
 
