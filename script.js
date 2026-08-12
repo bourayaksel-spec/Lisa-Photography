@@ -217,3 +217,48 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 });
+/* =========================
+       STAR RATING
+    ========================= */
+
+    const stars = document.querySelectorAll(".star");
+    const ratingValue = document.getElementById("rating-value");
+
+    stars.forEach(function (star) {
+
+        star.addEventListener("click", function () {
+
+            const rating = Number(this.dataset.rating);
+
+            ratingValue.value = rating;
+
+            stars.forEach(function (item) {
+
+                const itemRating =
+                    Number(item.dataset.rating);
+
+                if (itemRating <= rating) {
+                    item.classList.add("selected");
+                } else {
+                    item.classList.remove("selected");
+                }
+
+            });
+
+        });
+
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
