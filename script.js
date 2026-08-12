@@ -366,7 +366,7 @@ currentYears.forEach(function (year) {
         new Date().getFullYear();
 
 });
-
+});
 
 
 
