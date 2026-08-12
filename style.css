@@ -2736,11 +2736,11 @@ html {
 .rating {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 15px;
 }
 
 .rating p {
-    margin: 0 15px 0 0;
+    margin: 0;
 
     color: #999;
 
@@ -2749,20 +2749,38 @@ html {
     letter-spacing: 2px;
 }
 
-.rating label {
-    color: #777;
-    font-size: 22px;
+.stars {
+    display: flex;
+    gap: 4px;
+}
+
+.star {
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    color: #555;
+
+    font-size: 28px;
+
+    line-height: 1;
+
     cursor: pointer;
+
+    transition: color 0.2s ease,
+                transform 0.2s ease;
 }
 
-.rating input {
-    display: none;
+.star:hover,
+.star.selected {
+    color: #fff;
 }
 
-.rating label:has(input:checked) {
-    color: white;
+.star:hover {
+    transform: scale(1.1);
 }
-
 .review-form button {
     align-self: flex-start;
 
@@ -2812,6 +2830,53 @@ html {
     }
 
 }
+/* FINAL MOBILE REVIEW RATING */
+
+@media (max-width: 768px) {
+
+    .rating {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 10px !important;
+    }
+
+    .rating p {
+        width: auto !important;
+        margin: 0 !important;
+        color: #999 !important;
+        font-size: 11px !important;
+        letter-spacing: 2px !important;
+    }
+
+    .stars {
+        display: flex !important;
+        gap: 4px !important;
+    }
+
+    .star {
+        display: inline-block !important;
+        width: auto !important;
+        padding: 0 !important;
+        margin: 0 !important;
+
+        border: none !important;
+        background: transparent !important;
+
+        color: #555 !important;
+
+        font-size: 28px !important;
+        line-height: 1 !important;
+
+        cursor: pointer !important;
+    }
+
+    .star.selected {
+        color: #fff !important;
+    }
+
+}
+
 
 
 
