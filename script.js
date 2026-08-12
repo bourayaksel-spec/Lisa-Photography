@@ -357,19 +357,15 @@ document.addEventListener("DOMContentLoaded", function () {
        AUTOMATIC COPYRIGHT YEAR
     ========================= */
 
-    const currentYear =
-        document.getElementById("current-year");
+   const currentYears =
+    document.querySelectorAll(".current-year");
 
+currentYears.forEach(function (year) {
 
-    if (currentYear) {
-
-        currentYear.textContent =
-            new Date().getFullYear();
-
-    }
+    year.textContent =
+        new Date().getFullYear();
 
 });
-
 
 
 
