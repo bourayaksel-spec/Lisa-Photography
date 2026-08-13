@@ -183,7 +183,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+/* =========================================================
+   LIGHTBOX KEYBOARD NAVIGATION
+========================================================= */
 
+document.addEventListener("keydown", function (event) {
+
+    // التحقق من أن الـ Lightbox مفتوح على الشاشة
+    if (!lightbox || lightbox.style.display !== "flex") {
+        return;
+    }
+
+    if (event.key === "Escape") {
+
+        lightbox.style.display = "none";
+
+    } else if (event.key === "ArrowRight") {
+
+        if (nextButton) {
+            nextButton.click();
+        }
+
+    } else if (event.key === "ArrowLeft") {
+
+        if (previousButton) {
+            previousButton.click();
+        }
+
+    }
+
+});
+
+    
     /* =========================
        MOBILE MENU
     ========================= */
