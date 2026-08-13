@@ -1557,7 +1557,11 @@ select {
     .review-form button {
         width: 100%;
     }
-
+.review-form .star {
+    width: 42px !important;
+    min-width: 42px;
+    flex: 0 0 42px;
+}
 
     /* CONTACT */
 
