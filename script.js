@@ -217,49 +217,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================
-       STAR RATING
-    ========================= */
+  /* =========================================================
+   STAR RATING
+========================================================= */
 
-    const stars =
-        document.querySelectorAll(".star");
+const stars = document.querySelectorAll(".stars .star");
+const ratingValue = document.getElementById("rating-value");
 
-    const ratingValue =
-        document.getElementById("rating-value");
+stars.forEach((star) => {
 
+    star.addEventListener("click", () => {
 
-    stars.forEach(function (star) {
+        const rating = Number(star.dataset.rating);
 
-        star.addEventListener("click", function () {
+        // Save rating
+        ratingValue.value = rating;
 
-            const rating =
-                Number(this.dataset.rating);
+        // Update stars
+        stars.forEach((item) => {
 
-            if (ratingValue) {
-                ratingValue.value = rating;
+            const itemRating = Number(item.dataset.rating);
+
+            if (itemRating <= rating) {
+                item.classList.add("selected");
+            } else {
+                item.classList.remove("selected");
             }
-
-            stars.forEach(function (item) {
-
-                const itemRating =
-                    Number(item.dataset.rating);
-
-                if (itemRating <= rating) {
-
-                    item.classList.add("selected");
-
-                } else {
-
-                    item.classList.remove("selected");
-
-                }
-
-            });
 
         });
 
     });
 
+});
 
     /* =========================
        REVIEW FORM
