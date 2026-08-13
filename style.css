@@ -1901,3 +1901,49 @@ select {
     }
 
 }
+/* =========================================
+   MOBILE STAR RATING FIX
+========================================= */
+
+.rating {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.review-form .star {
+    width: 42px !important;
+    min-width: 42px;
+    height: 42px;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    border: none !important;
+    background: white !important;
+
+    color: #222;
+
+    font-size: 20px;
+    line-height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 42px;
+}
+
+.review-form .star:hover,
+.review-form .star.selected {
+    color: #222;
+    background: #ddd !important;
+}
