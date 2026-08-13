@@ -1538,31 +1538,132 @@ select {
         font-size: 32px;
     }
 
+   /* =========================================================
+   STAR RATING
+========================================================= */
+
+.rating {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin: 5px 0;
+}
+
+.rating p {
+    margin: 0;
+    color: #999;
+    font-size: 11px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* STAR BUTTONS */
+
+.review-form .stars .star {
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+    margin: 0;
+
+    border: none !important;
+    outline: none;
+
+    background: transparent !important;
+
+    color: #555 !important;
+
+    font-size: 28px;
+    line-height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+/* Hover */
+
+.review-form .stars .star:hover {
+    color: #d4af37 !important;
+    transform: scale(1.15);
+}
+
+/* Selected */
+
+.review-form .stars .star.selected {
+    color: #d4af37 !important;
+}
+
+/* =========================================================
+   MOBILE STAR RATING
+========================================================= */
+
+@media (max-width: 768px) {
+
     .rating {
         display: flex;
-
         flex-direction: column;
-
         align-items: flex-start;
-
         gap: 10px;
+        width: 100%;
     }
 
     .rating p {
         width: auto;
-
         margin: 0;
     }
 
-    .review-form button {
+    .stars {
+        display: flex;
+        width: 100%;
+        gap: 5px;
+        justify-content: flex-start;
+    }
+
+    .review-form .stars .star {
+        width: 42px !important;
+        min-width: 42px !important;
+        max-width: 42px !important;
+
+        height: 42px !important;
+
+        padding: 0 !important;
+        margin: 0 !important;
+
+        background: transparent !important;
+        border: none !important;
+
+        color: #555 !important;
+
+        font-size: 28px;
+        line-height: 42px;
+    }
+
+    .review-form .stars .star:hover,
+    .review-form .stars .star.selected {
+        color: #d4af37 !important;
+    }
+
+    /* مهم جداً:
+       لا تجعل قاعدة submit button تؤثر على النجوم
+    */
+
+    .review-form > button {
         width: 100%;
     }
-.review-form .star {
-    width: 42px !important;
-    min-width: 42px;
-    flex: 0 0 42px;
 }
-
     /* CONTACT */
 
     #contact {
@@ -1901,49 +2002,4 @@ select {
     }
 
 }
-/* =========================================
-   MOBILE STAR RATING FIX
-========================================= */
 
-.rating {
-    width: 100%;
-    box-sizing: border-box;
-}
-
-.stars {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    width: 100%;
-    max-width: 100%;
-    overflow: hidden;
-}
-
-.review-form .star {
-    width: 42px !important;
-    min-width: 42px;
-    height: 42px;
-
-    padding: 0 !important;
-    margin: 0 !important;
-
-    border: none !important;
-    background: white !important;
-
-    color: #222;
-
-    font-size: 20px;
-    line-height: 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    flex: 0 0 42px;
-}
-
-.review-form .star:hover,
-.review-form .star.selected {
-    color: #222;
-    background: #ddd !important;
-}
