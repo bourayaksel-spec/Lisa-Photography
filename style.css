@@ -767,44 +767,53 @@ select {
 }
 
 
-/* RATING */
+ /* =========================================================
+   STAR RATING
+========================================================= */
 
 .rating {
     display: flex;
-
     align-items: center;
-
-    gap: 15px;
+    gap: 18px;
+    margin: 5px 0;
 }
 
 .rating p {
     margin: 0;
-
     color: #999;
-
     font-size: 11px;
-
     letter-spacing: 2px;
+    white-space: nowrap;
 }
 
 .stars {
     display: flex;
-
-    gap: 4px;
+    align-items: center;
+    gap: 8px;
 }
 
-.star {
+/* STAR BUTTONS */
+
+.review-form .stars .star {
+    width: 42px;
+    height: 42px;
+
     padding: 0;
+    margin: 0;
 
-    border: none;
+    border: none !important;
+    outline: none;
 
-    background: transparent;
+    background: transparent !important;
 
-    color: #555;
+    color: #555 !important;
 
     font-size: 28px;
+    line-height: 42px;
 
-    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     cursor: pointer;
 
@@ -813,13 +822,17 @@ select {
         transform 0.2s ease;
 }
 
-.star:hover,
-.star.selected {
-    color: white;
+/* Hover */
+
+.review-form .stars .star:hover {
+    color: #d4af37 !important;
+    transform: scale(1.15);
 }
 
-.star:hover {
-    transform: scale(1.1);
+/* Selected */
+
+.review-form .stars .star.selected {
+    color: #d4af37 !important;
 }
 
 
@@ -1538,74 +1551,7 @@ select {
         font-size: 32px;
     }
 
-   /* =========================================================
-   STAR RATING
-========================================================= */
-
-.rating {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin: 5px 0;
-}
-
-.rating p {
-    margin: 0;
-    color: #999;
-    font-size: 11px;
-    letter-spacing: 2px;
-    white-space: nowrap;
-}
-
-.stars {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* STAR BUTTONS */
-
-.review-form .stars .star {
-    width: 42px;
-    height: 42px;
-
-    padding: 0;
-    margin: 0;
-
-    border: none !important;
-    outline: none;
-
-    background: transparent !important;
-
-    color: #555 !important;
-
-    font-size: 28px;
-    line-height: 42px;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    transition:
-        color 0.2s ease,
-        transform 0.2s ease;
-}
-
-/* Hover */
-
-.review-form .stars .star:hover {
-    color: #d4af37 !important;
-    transform: scale(1.15);
-}
-
-/* Selected */
-
-.review-form .stars .star.selected {
-    color: #d4af37 !important;
-}
-
+  
 /* =========================================================
    MOBILE STAR RATING
 ========================================================= */
