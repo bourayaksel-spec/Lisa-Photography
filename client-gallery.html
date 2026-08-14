@@ -40,15 +40,14 @@
             PRIVATE CLIENT GALLERY
         </p>
 
-        <h1>
-            Your memories.
-        </h1>
+       <h1 id="client-name">
+    Your memories.
+</h1>
 
-        <p>
-            A private collection of photographs
-            captured by Lisa Michelle Visuals.
-        </p>
-
+<p>
+    A private collection of photographs
+    captured by Lisa Michelle Visuals.
+</p>
     </div>
 
 
@@ -116,8 +115,35 @@
 
 <script>
 
+    /* Current year */
+
     document.querySelector(".current-year").textContent =
         new Date().getFullYear();
+
+
+    /* Client name from URL */
+
+    const params = new URLSearchParams(
+        window.location.search
+    );
+
+    const client = params.get("client");
+
+    const clientName =
+        document.getElementById("client-name");
+
+
+    if (client && clientName) {
+
+        const formattedName = client
+            .replace(/-/g, " ")
+            .replace(/\b\w/g, function (letter) {
+                return letter.toUpperCase();
+            });
+
+        clientName.textContent = formattedName;
+
+    }
 
 </script>
 
