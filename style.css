@@ -2198,3 +2198,57 @@ select {
 #lightbox-image {
     transition: opacity 0.2s ease, transform 0.2s ease;
 }
+/* =========================
+   PURCHASE BUTTON
+========================= */
+
+#purchase-button {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 13px 28px;
+
+    background: rgba(255, 255, 255, 0.95);
+    color: #111;
+
+    border: none;
+    border-radius: 2px;
+
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    z-index: 20;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+#purchase-button:hover {
+    background: #111;
+    color: #fff;
+
+    transform: translateX(-50%) translateY(-2px);
+}
+
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    #purchase-button {
+        bottom: 25px;
+
+        padding: 11px 20px;
+
+        font-size: 10px;
+        letter-spacing: 1.5px;
+    }
+
+}
