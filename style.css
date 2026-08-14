@@ -1955,3 +1955,54 @@ select {
     text-align: left;
     margin: 25px 0 20px;
 }
+/* =========================
+   PORTFOLIO FILTERS
+========================= */
+
+.portfolio-filters {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin: 45px auto 40px;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid #ccc;
+    padding: 10px 18px;
+    font-family: inherit;
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+.filter-btn.active {
+    background: #111;
+    color: #fff;
+    border-color: #111;
+}
+
+
+/* Animation */
+
+.gallery-item {
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+.gallery-item.hidden {
+    opacity: 0;
+    transform: scale(0.95);
+    pointer-events: none;
+    position: absolute;
+}
