@@ -394,6 +394,47 @@ document.querySelectorAll('img').forEach(function (img) {
         e.preventDefault();
     });
 });
+    /* =========================
+   PORTFOLIO FILTERS
+========================= */
+
+const filterButtons = document.querySelectorAll(".filter-btn");
+const galleryItems = document.querySelectorAll(".gallery-item");
+
+filterButtons.forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const filter = button.dataset.filter;
+
+        // Remove active class
+        filterButtons.forEach(btn => {
+            btn.classList.remove("active");
+        });
+
+        // Add active class
+        button.classList.add("active");
+
+        // Filter images
+        galleryItems.forEach(item => {
+
+            const category = item.dataset.category;
+
+            if (filter === "all" || category === filter) {
+
+                item.classList.remove("hidden");
+
+            } else {
+
+                item.classList.add("hidden");
+
+            }
+
+        });
+
+    });
+
+});
 });
 
 
