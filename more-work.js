@@ -109,10 +109,18 @@ document.addEventListener("DOMContentLoaded", function () {
         const image =
             visibleItems[currentImage].querySelector("img");
 
-
+lightboxImage.style.opacity = "0";
+lightboxImage.style.transform = "scale(0.98)";
        lightboxImage.src = image.src;
+        lightboxImage.alt = image.alt;
+        setTimeout(function () {
 
-lightboxImage.alt = image.alt;
+    lightboxImage.style.opacity = "1";
+    lightboxImage.style.transform = "scale(1)";
+
+}, 50);
+
+
 
 if (lightboxCounter) {
 
