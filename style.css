@@ -1948,4 +1948,10 @@ select {
     }
 
 }
-
+.testimonial-stars {
+    color: #d4af37;
+    font-size: 18px;
+    letter-spacing: 4px;
+    text-align: left;
+    margin: 25px 0 20px;
+}
