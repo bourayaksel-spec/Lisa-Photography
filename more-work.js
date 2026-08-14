@@ -94,13 +94,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (index < 0) {
-            index = visibleItems.length - 1;
-        }
-
-
-        if (index >= visibleItems.length) {
             index = 0;
         }
+
+
+     if (index >= visibleItems.length) {
+    index = visibleItems.length - 1;
+}
 
 
         currentImage = index;
