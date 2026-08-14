@@ -77,6 +77,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const nextButton =
         document.getElementById("next");
+    const lightboxCounter =
+    document.getElementById("lightbox-counter");
 
 
     let currentImage = 0;
@@ -108,11 +110,20 @@ document.addEventListener("DOMContentLoaded", function () {
             visibleItems[currentImage].querySelector("img");
 
 
-        lightboxImage.src = image.src;
+       lightboxImage.src = image.src;
 
-        lightboxImage.alt = image.alt;
+lightboxImage.alt = image.alt;
 
-        lightbox.style.display = "flex";
+if (lightboxCounter) {
+
+    lightboxCounter.textContent =
+        (currentImage + 1) +
+        " / " +
+        visibleItems.length;
+
+}
+
+lightbox.style.display = "flex";
 
     }
 
