@@ -323,9 +323,46 @@ document.addEventListener("keydown", function (event) {
     }
 
 });
+/* =========================================================
+   MOBILE SWIPE
+========================================================= */
+
+let touchStartX = 0;
+let touchEndX = 0;
+
+lightboxImage.addEventListener("touchstart", function (event) {
+
+    touchStartX = event.changedTouches[0].screenX;
+
+});
 
 
-    
+lightboxImage.addEventListener("touchend", function (event) {
+
+    touchEndX = event.changedTouches[0].screenX;
+
+    const swipeDistance =
+        touchEndX - touchStartX;
+
+    // Swipe left → Next
+    if (swipeDistance < -50) {
+
+        if (nextButton) {
+            nextButton.click();
+        }
+
+    }
+
+    // Swipe right → Previous
+    else if (swipeDistance > 50) {
+
+        if (previousButton) {
+            previousButton.click();
+        }
+
+    }
+
+});    
     
     /* =========================
        MOBILE MENU
