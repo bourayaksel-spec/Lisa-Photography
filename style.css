@@ -2191,3 +2191,10 @@ select {
     -webkit-user-select: none;
     -webkit-user-drag: none;
 }
+/* =========================================================
+   LIGHTBOX IMAGE TRANSITION
+========================================================= */
+
+#lightbox-image {
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
