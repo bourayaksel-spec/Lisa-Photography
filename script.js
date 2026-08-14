@@ -388,10 +388,12 @@ currentYears.forEach(function (year) {
 });
 // Protect images
 
-        img.setAttribute('draggable', 'false');
+document.querySelectorAll('img').forEach(function (img) {
+    img.setAttribute('draggable', 'false');
     img.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
+});
 });
 
 
