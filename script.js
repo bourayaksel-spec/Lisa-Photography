@@ -150,6 +150,10 @@ function showGalleryImage(index) {
 
     lightboxImage.alt =
         visibleImages[currentImage].alt;
+    if (purchaseButton) {
+    purchaseButton.dataset.image =
+        visibleImages[currentImage].src;
+}
 
     lightbox.style.display = "flex";
 
