@@ -237,5 +237,46 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
     });
+/* =========================
+       MOBILE SWIPE
+    ========================= */
 
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    if (lightbox) {
+
+        lightbox.addEventListener("touchstart", function (event) {
+
+            touchStartX = event.changedTouches[0].screenX;
+
+        }, { passive: true });
+
+
+        lightbox.addEventListener("touchend", function (event) {
+
+            touchEndX = event.changedTouches[0].screenX;
+
+            const swipeDistance =
+                touchEndX - touchStartX;
+
+
+            // Swipe left → Next
+            if (swipeDistance < -50) {
+
+                showImage(currentImage + 1);
+
+            }
+
+
+            // Swipe right → Previous
+            if (swipeDistance > 50) {
+
+                showImage(currentImage - 1);
+
+            }
+
+        }, { passive: true });
+
+    }
 });
