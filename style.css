@@ -2178,4 +2178,16 @@ select {
     }
 
 }
+/* =========================================================
+   LIGHTBOX MOBILE SWIPE
+========================================================= */
 
+.lightbox {
+    touch-action: none;
+}
+
+.lightbox img {
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+}
