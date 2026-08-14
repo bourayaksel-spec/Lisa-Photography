@@ -300,37 +300,37 @@ lightbox.style.display = "flex";
 }, { passive: true });
 
     }
-/* =========================
-   MOBILE MENU
-========================= */
+ 
+    /* =========================
+       MOBILE MENU
+    ========================= */
 
-const menuToggle =
-    document.querySelector(".menu-toggle");
+    const menuToggle =
+        document.querySelector(".menu-toggle");
 
-const navLinks =
-    document.querySelector(".nav-links");
-
-if (menuToggle && navLinks) {
-
-    menuToggle.addEventListener("click", function () {
-
-        navLinks.classList.toggle("active");
-
-    });
+    const navLinks =
+        document.querySelector(".nav-links");
 
 
-    navLinks.querySelectorAll("a").forEach(function (link) {
+    if (menuToggle && navLinks) {
 
-        link.addEventListener("click", function () {
+        menuToggle.addEventListener("click", function () {
 
-            navLinks.classList.remove("active");
+            navLinks.classList.toggle("active");
 
         });
 
-    });
 
-}
+        navLinks.querySelectorAll("a").forEach(function (link) {
 
+            link.addEventListener("click", function () {
 
-    
+                navLinks.classList.remove("active");
+
+            });
+
+        });
+
+    }
+
 });
