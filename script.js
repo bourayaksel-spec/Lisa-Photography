@@ -386,14 +386,14 @@ currentYears.forEach(function (year) {
         new Date().getFullYear();
 
 });
-});
 // Protect images
-document.querySelectorAll('img').forEach(function (img) {
-    img.setAttribute('draggable', 'false');
+
+        img.setAttribute('draggable', 'false');
     img.addEventListener('contextmenu', function (e) {
         e.preventDefault();
     });
 });
+
 
 
 
