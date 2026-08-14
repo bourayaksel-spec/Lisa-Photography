@@ -264,30 +264,32 @@ lightbox.style.display = "flex";
         }, { passive: true });
 
 
-        lightbox.addEventListener("touchend", function (event) {
+   lightbox.addEventListener("touchend", function (event) {
 
-            touchEndX = event.changedTouches[0].screenX;
+    touchEndX = event.changedTouches[0].screenX;
 
-            const swipeDistance =
-                touchEndX - touchStartX;
+    const swipeDistance =
+        touchEndX - touchStartX;
 
-
-            // Swipe left → Next
-            if (swipeDistance < -50) {
-
-                showImage(currentImage + 1);
-
-            }
+    const minimumSwipe = 60;
 
 
-            // Swipe right → Previous
-            if (swipeDistance > 50) {
+    // Swipe left → Next
+    if (swipeDistance <= -minimumSwipe) {
 
-                showImage(currentImage - 1);
+        showImage(currentImage + 1);
 
-            }
+    }
 
-        }, { passive: true });
+
+    // Swipe right → Previous
+    else if (swipeDistance >= minimumSwipe) {
+
+        showImage(currentImage - 1);
+
+    }
+
+}, { passive: true });
 
     }
 });
