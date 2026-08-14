@@ -96,6 +96,8 @@ const previousButton =
 
 const nextButton =
     document.getElementById("next");
+    const purchaseButton =
+    document.getElementById("purchase-button");
 
 let currentImage = 0;
 
