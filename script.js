@@ -96,8 +96,7 @@ const previousButton =
 
 const nextButton =
     document.getElementById("next");
-    const purchaseButton =
-    document.getElementById("purchase-button");
+    
 
 let currentImage = 0;
 
@@ -150,16 +149,7 @@ function showGalleryImage(index) {
 
     lightboxImage.alt =
         visibleImages[currentImage].alt;
-if (purchaseButton) {
 
-    const imageSrc =
-        visibleImages[currentImage].src;
-
-    purchaseButton.href =
-        "purchase.html?image=" +
-        encodeURIComponent(imageSrc);
-
-}
 
     lightbox.style.display = "flex";
 
