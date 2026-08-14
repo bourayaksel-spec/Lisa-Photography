@@ -2006,3 +2006,67 @@ select {
     pointer-events: none;
     position: absolute;
 }
+/* =========================
+   MORE WORK
+========================= */
+
+.more-work-section {
+    padding: 120px 8%;
+}
+
+.more-work-header {
+    max-width: 700px;
+    margin: 0 auto 60px;
+    text-align: center;
+}
+
+.more-work-header h2 {
+    margin-bottom: 20px;
+}
+
+.more-work-header p {
+    line-height: 1.8;
+}
+
+
+/* Gallery */
+
+.more-work-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.more-work-item {
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    cursor: pointer;
+}
+
+.more-work-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.more-work-item:hover img {
+    transform: scale(1.05);
+}
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .more-work-section {
+        padding: 80px 5%;
+    }
+
+    .more-work-gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+}
+
+
