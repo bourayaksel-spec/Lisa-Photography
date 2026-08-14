@@ -73,115 +73,219 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================
-       PORTFOLIO LIGHTBOX
-    ========================= */
-
-    const galleryImages =
-        document.querySelectorAll(".gallery img");
-
-    const lightbox =
-        document.getElementById("lightbox");
-
-    const lightboxImage =
-        document.getElementById("lightbox-image");
-
-    const closeButton =
-        document.querySelector(".close");
-
-    const previousButton =
-        document.getElementById("prev");
-
-    const nextButton =
-        document.getElementById("next");
-
-    let currentImage = 0;
 
 
-    function showGalleryImage(index) {
+/* =========================
+   PORTFOLIO LIGHTBOX
+========================= */
 
-        if (!galleryImages.length || !lightbox || !lightboxImage) {
-            return;
-        }
+const galleryImages =
+    document.querySelectorAll(".gallery img");
 
-        currentImage = index;
+const lightbox =
+    document.getElementById("lightbox");
 
-        lightboxImage.src =
-            galleryImages[currentImage].src;
+const lightboxImage =
+    document.getElementById("lightbox-image");
 
-        lightbox.style.display = "flex";
-    }
+const closeButton =
+    document.querySelector(".close");
+
+const previousButton =
+    document.getElementById("prev");
+
+const nextButton =
+    document.getElementById("next");
+
+let currentImage = 0;
 
 
-    galleryImages.forEach(function (image, index) {
+/*
+   Get only the images that are currently visible
+   after applying the portfolio filter.
+*/
+function getVisibleGalleryImages() {
 
-        image.addEventListener("click", function () {
+    return Array.from(galleryImages).filter(function (image) {
 
-            showGalleryImage(index);
+        const galleryItem =
+            image.closest(".gallery-item");
 
-        });
+        return galleryItem &&
+               !galleryItem.classList.contains("hidden");
 
     });
 
+}
 
-    if (closeButton) {
 
-        closeButton.addEventListener("click", function () {
+function showGalleryImage(index) {
 
-            lightbox.style.display = "none";
+    const visibleImages =
+        getVisibleGalleryImages();
 
-        });
-
+    if (
+        !visibleImages.length ||
+        !lightbox ||
+        !lightboxImage
+    ) {
+        return;
     }
 
-
-    if (nextButton) {
-
-        nextButton.addEventListener("click", function () {
-
-            currentImage++;
-
-            if (currentImage >= galleryImages.length) {
-                currentImage = 0;
-            }
-
-            showGalleryImage(currentImage);
-
-        });
-
+    // Keep index inside the visible images
+    if (index < 0) {
+        index = 0;
     }
 
+    if (index >= visibleImages.length) {
+        index = visibleImages.length - 1;
+    }
+
+    currentImage = index;
+
+    lightboxImage.src =
+        visibleImages[currentImage].src;
+
+    lightboxImage.alt =
+        visibleImages[currentImage].alt;
+
+    lightbox.style.display = "flex";
+
+    updateLightboxButtons();
+}
+
+
+function updateLightboxButtons() {
+
+    const visibleImages =
+        getVisibleGalleryImages();
+
+    if (!visibleImages.length) {
+        return;
+    }
+
+    /*
+       Hide the Previous button on the first image
+       and Next button on the last image.
+    */
 
     if (previousButton) {
 
-        previousButton.addEventListener("click", function () {
+        previousButton.style.visibility =
+            currentImage === 0
+                ? "hidden"
+                : "visible";
 
-            currentImage--;
+    }
 
-            if (currentImage < 0) {
-                currentImage = galleryImages.length - 1;
-            }
+    if (nextButton) {
+
+        nextButton.style.visibility =
+            currentImage === visibleImages.length - 1
+                ? "hidden"
+                : "visible";
+
+    }
+
+}
+
+
+/* Open image */
+
+galleryImages.forEach(function (image) {
+
+    image.addEventListener("click", function () {
+
+        const visibleImages =
+            getVisibleGalleryImages();
+
+        const index =
+            visibleImages.indexOf(image);
+
+        if (index !== -1) {
+
+            showGalleryImage(index);
+
+        }
+
+    });
+
+});
+
+
+/* Close */
+
+if (closeButton) {
+
+    closeButton.addEventListener("click", function () {
+
+        lightbox.style.display = "none";
+
+    });
+
+}
+
+
+/* Next */
+
+if (nextButton) {
+
+    nextButton.addEventListener("click", function () {
+
+        const visibleImages =
+            getVisibleGalleryImages();
+
+        if (
+            currentImage <
+            visibleImages.length - 1
+        ) {
+
+            currentImage++;
 
             showGalleryImage(currentImage);
 
-        });
+        }
 
-    }
+    });
+
+}
 
 
-    if (lightbox) {
+/* Previous */
 
-        lightbox.addEventListener("click", function (event) {
+if (previousButton) {
 
-            if (event.target === lightbox) {
+    previousButton.addEventListener("click", function () {
 
-                lightbox.style.display = "none";
+        if (currentImage > 0) {
 
-            }
+            currentImage--;
 
-        });
+            showGalleryImage(currentImage);
 
-    }
+        }
+
+    });
+
+}
+
+
+/* Close when clicking outside image */
+
+if (lightbox) {
+
+    lightbox.addEventListener("click", function (event) {
+
+        if (event.target === lightbox) {
+
+            lightbox.style.display = "none";
+
+        }
+
+    });
+
+}
+
 
 /* =========================================================
    LIGHTBOX KEYBOARD NAVIGATION
@@ -189,8 +293,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("keydown", function (event) {
 
-    // التحقق من أن الـ Lightbox مفتوح على الشاشة
-    if (!lightbox || lightbox.style.display !== "flex") {
+    if (
+        !lightbox ||
+        lightbox.style.display !== "flex"
+    ) {
         return;
     }
 
@@ -198,13 +304,17 @@ document.addEventListener("keydown", function (event) {
 
         lightbox.style.display = "none";
 
-    } else if (event.key === "ArrowRight") {
+    }
+
+    else if (event.key === "ArrowRight") {
 
         if (nextButton) {
             nextButton.click();
         }
 
-    } else if (event.key === "ArrowLeft") {
+    }
+
+    else if (event.key === "ArrowLeft") {
 
         if (previousButton) {
             previousButton.click();
@@ -214,6 +324,8 @@ document.addEventListener("keydown", function (event) {
 
 });
 
+
+    
     
     /* =========================
        MOBILE MENU
