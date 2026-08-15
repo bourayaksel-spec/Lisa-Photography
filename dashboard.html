@@ -559,7 +559,35 @@ async function uploadPhotos(galleryId, fileInput) {
     );
 }
 
+async function copyGalleryLink(gallery) {
 
+    const link =
+        window.location.origin +
+        "/Lisa-Photography/gallery.html?gallery=" +
+        encodeURIComponent(gallery.id) +
+        "&token=" +
+        encodeURIComponent(gallery.access_token);
+
+    try {
+
+        await navigator.clipboard.writeText(link);
+
+        showMessage(
+            "Gallery link copied successfully.",
+            "success"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "Could not copy the gallery link.",
+            "error"
+        );
+    }
+}
+    
 /* LOAD CLIENTS */
 
 async function loadClients() {
@@ -727,7 +755,23 @@ photoInfo.textContent =
             actions.appendChild(
                 openButton
             );
+const copyButton =
+    document.createElement("button");
 
+copyButton.className =
+    "copy-button";
+
+copyButton.textContent =
+    "COPY LINK";
+
+copyButton.addEventListener(
+    "click",
+    () => copyGalleryLink(clientGallery)
+);
+
+actions.appendChild(
+    copyButton
+);
 
             /*
                 UPLOAD PHOTOS
