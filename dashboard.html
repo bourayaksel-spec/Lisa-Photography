@@ -370,7 +370,7 @@ async function addClient(event) {
             data,
             error
         } = await supabaseClient.functions.invoke(
-            "create-client",
+            "super-handler",
             {
                 body: {
                     name: name,
