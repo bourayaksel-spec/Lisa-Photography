@@ -637,23 +637,57 @@ if (photoError) {
     list.innerHTML = "";
 
 
-    clients.forEach(client => {
+clients.forEach(client => {
 
-        const div =
-            document.createElement("div");
+    const div =
+        document.createElement("div");
 
-        div.className =
-            "client";
+    div.className =
+        "client";
 
 
-        const name =
-            document.createElement("div");
+    const name =
+        document.createElement("div");
 
-        name.className =
-            "client-name";
+    name.className =
+        "client-name";
 
-        name.textContent =
-            client.name;
+    name.textContent =
+        client.name;
+
+
+    /* PHOTO COUNT */
+
+    const clientGallery =
+        galleries.find(
+            gallery =>
+                String(gallery.client_id).trim() ===
+                String(client.id).trim()
+        );
+
+    let photoCount = 0;
+
+    if (clientGallery) {
+
+        photoCount =
+            photos.filter(
+                photo =>
+                    String(photo.gallery_id).trim() ===
+                    String(clientGallery.id).trim()
+            ).length;
+    }
+
+
+    const photoInfo =
+        document.createElement("div");
+
+    photoInfo.className =
+        "gallery-count";
+
+    photoInfo.textContent =
+        photoCount === 1
+            ? "1 photo"
+            : `${photoCount} photos`;
 
 
         const actions =
