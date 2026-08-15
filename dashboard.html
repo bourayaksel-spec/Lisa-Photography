@@ -199,25 +199,35 @@
 
         <h3>Add Client</h3>
 
-        <form id="add-client-form" class="add-client-form">
+     <form id="add-client-form" class="add-client-form">
 
-            <input
-                type="text"
-                id="client-name"
-                placeholder="Client name"
-                required
-            >
-<input
-    type="email"
-    id="client-email"
-    placeholder="Client email"
-    required
->
-            <button type="submit">
-                ADD CLIENT
-            </button>
+    <input
+        type="text"
+        id="client-name"
+        placeholder="Client name"
+        required
+    >
 
-        </form>
+    <input
+        type="email"
+        id="client-email"
+        placeholder="Client email"
+        required
+    >
+
+    <input
+        type="password"
+        id="client-password"
+        placeholder="Temporary password"
+        minlength="6"
+        required
+    >
+
+    <button type="submit">
+        CREATE CLIENT
+    </button>
+
+</form>
 
     </section>
 
@@ -308,122 +318,120 @@ async function addClient(event) {
 
     event.preventDefault();
 
-    const input =
+    const nameInput =
         document.getElementById("client-name");
 
-    const clientName =
-        input.value.trim();
+    const emailInput =
+        document.getElementById("client-email");
 
-const emailInput =
-    document.getElementById("client-email");
+    const passwordInput =
+        document.getElementById("client-password");
 
-const clientEmail =
-    emailInput.value.trim();
-    if (!clientName) {
+    const name =
+        nameInput.value.trim();
+
+    const email =
+        emailInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+
+    if (!name || !email || !password) {
 
         showMessage(
-            "Please enter a client name.",
+            "Please fill in all fields.",
             "error"
         );
 
         return;
     }
 
-if (!clientEmail) {
 
-    showMessage(
-        "Please enter the client email.",
-        "error"
-    );
+    if (password.length < 6) {
 
-    return;
-}
-    showMessage(
-        "Creating client..."
-    );
+        showMessage(
+            "Password must be at least 6 characters.",
+            "error"
+        );
 
-
-    /*
-        Create client.
-    */
-
-    const {
-        data: client,
-        error: clientError
-    } = await supabaseClient
-        .from("clients")
-   .insert([
-    {
-        name: clientName,
-        email: clientEmail
+        return;
     }
-])
-        .select()
-        .single();
 
 
-    if (clientError) {
+    showMessage(
+        "Creating client account and gallery..."
+    );
+
+
+    try {
+
+        const {
+            data,
+            error
+        } = await supabaseClient.functions.invoke(
+            "create-client",
+            {
+                body: {
+                    name: name,
+                    email: email,
+                    password: password
+                }
+            }
+        );
+
+
+        if (error) {
+
+            throw error;
+        }
+
+
+        if (!data || !data.success) {
+
+            throw new Error(
+                data?.error ||
+                "Could not create client."
+            );
+        }
+
+
+        /*
+            Clear form
+        */
+
+        nameInput.value = "";
+        emailInput.value = "";
+        passwordInput.value = "";
+
+
+        showMessage(
+            "Client, login account and gallery created successfully.",
+            "success"
+        );
+
+
+        /*
+            Reload clients
+        */
+
+        await loadClients();
+
+
+    } catch (error) {
+
+        console.error(
+            "Create client error:",
+            error
+        );
 
         showMessage(
             "Error creating client: " +
-            clientError.message,
+            error.message,
             "error"
         );
-
-        return;
     }
-
-
-    /*
-        Create gallery automatically.
-    */
-
-    const slug =
-        createSlug(clientName);
-
-
-    const {
-        data: gallery,
-        error: galleryError
-    } = await supabaseClient
-        .from("galleries")
-        .insert([
-            {
-                client_id: client.id,
-                client_name: clientName,
-                slug: slug
-            }
-        ])
-        .select()
-        .single();
-
-
-    if (galleryError) {
-
-        showMessage(
-            "Client created, but gallery creation failed: " +
-            galleryError.message,
-            "error"
-        );
-
-        return;
-    }
-
-
- input.value = "";
-emailInput.value = "";
-
-
-    showMessage(
-        "Client and private gallery created successfully.",
-        "success"
-    );
-
-
-    await loadClients();
 }
-
-
 /* UPLOAD PHOTOS */
 
 async function uploadPhotos(galleryId, fileInput) {
