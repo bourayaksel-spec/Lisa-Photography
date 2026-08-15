@@ -654,41 +654,36 @@ clients.forEach(client => {
 
     name.textContent =
         client.name;
+const clientGallery =
+    galleries.find(
+        gallery =>
+            String(gallery.client_id).trim() ===
+            String(client.id).trim()
+    );
 
+let photoCount = 0;
 
-    /* PHOTO COUNT */
+if (clientGallery) {
+    photoCount =
+        photos.filter(
+            photo =>
+                String(photo.gallery_id).trim() ===
+                String(clientGallery.id).trim()
+        ).length;
+}
 
-    const clientGallery =
-        galleries.find(
-            gallery =>
-                String(gallery.client_id).trim() ===
-                String(client.id).trim()
-        );
+const photoInfo =
+    document.createElement("div");
 
-    let photoCount = 0;
+photoInfo.className =
+    "gallery-count";
 
-    if (clientGallery) {
+photoInfo.textContent =
+    photoCount === 1
+        ? "1 photo"
+        : `${photoCount} photos`;
 
-        photoCount =
-            photos.filter(
-                photo =>
-                    String(photo.gallery_id).trim() ===
-                    String(clientGallery.id).trim()
-            ).length;
-    }
-
-
-    const photoInfo =
-        document.createElement("div");
-
-    photoInfo.className =
-        "gallery-count";
-
-    photoInfo.textContent =
-        photoCount === 1
-            ? "1 photo"
-            : `${photoCount} photos`;
-
+    
 
         const actions =
             document.createElement("div");
@@ -701,12 +696,7 @@ clients.forEach(client => {
             Find gallery.
         */
 
-        const clientGallery =
-            galleries.find(
-                gallery =>
-                    String(gallery.client_id).trim() ===
-                    String(client.id).trim()
-            );
+     
 
 
         if (clientGallery) {
@@ -819,11 +809,13 @@ clients.forEach(client => {
         }
 
 
-        div.appendChild(name);
+name.appendChild(photoInfo);
 
-        div.appendChild(actions);
+div.appendChild(name);
 
-        list.appendChild(div);
+div.appendChild(actions);
+
+list.appendChild(div);
 
     });
 
