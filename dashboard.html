@@ -289,7 +289,7 @@ async function loadClients() {
     if (clientError) {
 
         list.innerHTML =
-            <p class="error">Error loading clients: ${clientError.message}</p>;
+            `<p class="error">Error loading clients: ${clientError.message}</p>`;
 
         return;
     }
@@ -319,7 +319,7 @@ async function loadClients() {
     if (galleryError) {
 
         list.innerHTML =
-            <p class="error">Error loading galleries: ${galleryError.message}</p>;
+            `<p class="error">Error loading galleries: ${galleryError.message}</p>`;
 
         return;
     }
