@@ -1,1 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Lisa Photography — Admin</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .login-box {
+            width: 90%;
+            max-width: 420px;
+            padding: 40px;
+            background: #1c1c1c;
+            border: 1px solid #333;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-weight: 400;
+        }
+
+        .subtitle {
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            background: #111;
+            color: white;
+            border: 1px solid #444;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: white;
+            color: black;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.85;
+        }
+
+        #message {
+            margin-top: 15px;
+            color: #ff7777;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-box">
+
+    <h1>Lisa Photography</h1>
+
+    <p class="subtitle">
+        Client Gallery Manager
+    </p>
+
+    <form id="login-form">
+
+        <input
+            type="email"
+            id="email"
+            placeholder="Lisa's email"
+            required
+        >
+
+        <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            required
+        >
+
+        <button type="submit">
+            LOGIN
+        </button>
+
+    </form>
+
+    <p id="message"></p>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL = "https://ilrdmzogaqfdrcyzjahk.supabase.co";
+
+const SUPABASE_KEY = "ضع-PUBLISHABLE-KEY-هنا";
+
+const supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+);
+
+const loginForm = document.getElementById("login-form");
+const message = document.getElementById("message");
+
+loginForm.addEventListener("submit", async function(event) {
+
+    event.preventDefault();
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    message.textContent = "Logging in...";
+
+    const { data, error } =
+        await supabaseClient.auth.signInWithPassword({
+            email: email,
+            password: password
+        });
+
+    if (error) {
+
+        message.textContent = error.message;
+
+        return;
+    }
+
+    message.style.color = "#7cff7c";
+    message.textContent = "Login successful!";
+
+    setTimeout(() => {
+        window.location.href = "dashboard.html";
+    }, 800);
+
+});
+
+</script>
+
+</body>
+</html>
