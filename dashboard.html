@@ -46,11 +46,7 @@
             margin: 50px auto;
         }
 
-        .welcome {
-            margin-bottom: 40px;
-        }
-
-        .welcome h2 {
+        h2 {
             font-size: 32px;
             font-weight: 400;
         }
@@ -62,23 +58,25 @@
             margin-bottom: 30px;
         }
 
-        .card h3 {
-            margin-top: 0;
-            font-size: 22px;
-            font-weight: 400;
+        .client {
+            padding: 20px 0;
+            border-bottom: 1px solid #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
         }
 
-        input {
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0 15px;
-            background: #111;
-            border: 1px solid #444;
-            color: white;
+        .client:last-child {
+            border-bottom: none;
+        }
+
+        .client-name {
+            font-size: 20px;
         }
 
         button {
-            padding: 13px 20px;
+            padding: 12px 18px;
             background: white;
             color: black;
             border: none;
@@ -95,22 +93,36 @@
             color: #aaa;
         }
 
-        .client {
-            padding: 20px 0;
-            border-bottom: 1px solid #333;
+        .gallery-info {
+            margin-top: 10px;
+            color: #aaa;
+            font-size: 14px;
         }
 
-        .client:last-child {
-            border-bottom: none;
+        .gallery-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: white;
         }
 
-        .client-name {
-            font-size: 20px;
-            margin-bottom: 10px;
+        .error {
+            color: #ff7777;
         }
 
-        .hidden {
-            display: none;
+        .success {
+            color: #7cff7c;
+        }
+
+        @media (max-width: 600px) {
+
+            .client {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .client button {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -130,59 +142,17 @@
 
 <main>
 
-    <div class="welcome">
-
-        <h2>
-            Client Gallery Manager
-        </h2>
-
-        <p>
-            Manage your clients and private galleries.
-        </p>
-
-    </div>
-
-
-    <!-- CREATE CLIENT -->
+    <h2>Client Gallery Manager</h2>
 
     <section class="card">
 
-        <h3>
-            Create New Client
-        </h3>
-
-        <form id="client-form">
-
-            <input
-                type="text"
-                id="client-name"
-                placeholder="Client name — e.g. Smith Family"
-                required
-            >
-
-            <button type="submit">
-                CREATE CLIENT
-            </button>
-
-        </form>
-
-    </section>
-
-
-    <!-- CLIENT LIST -->
-
-    <section class="card">
-
-        <h3>
-            Clients
-        </h3>
+        <h3>Clients</h3>
 
         <div id="clients-list">
             Loading clients...
         </div>
 
     </section>
-
 
     <p id="message"></p>
 
@@ -197,7 +167,7 @@ const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
 
 const SUPABASE_KEY =
-    "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
+    "ضع-PUBLISHABLE-KEY-هنا";
 
 
 const supabaseClient =
@@ -233,6 +203,9 @@ async function loadClients() {
     const list =
         document.getElementById("clients-list");
 
+    list.textContent = "Loading clients...";
+
+
     const {
         data,
         error
@@ -246,9 +219,8 @@ async function loadClients() {
 
     if (error) {
 
-        list.textContent =
-            "Error loading clients: " +
-            error.message;
+        list.innerHTML =
+            <p class="error">Error loading clients: ${error.message}</p>;
 
         return;
     }
@@ -266,7 +238,7 @@ async function loadClients() {
     list.innerHTML = "";
 
 
-    data.forEach(client => {
+    for (const client of data) {
 
         const div =
             document.createElement("div");
@@ -283,103 +255,161 @@ async function loadClients() {
             client.name;
 
 
+        const button =
+            document.createElement("button");
+
+        button.textContent =
+            "CREATE GALLERY";
+
+
+        button.addEventListener(
+            "click",
+            () => createGallery(client)
+        );
+
+
         div.appendChild(name);
+
+        div.appendChild(button);
 
         list.appendChild(div);
 
-    });
+    }
 
 }
 
 
-/* CREATE CLIENT */
+/* CREATE GALLERY */
 
-document
-    .getElementById("client-form")
-    .addEventListener("submit", async function(event) {
+async function createGallery(client) {
 
-        event.preventDefault();
+    const message =
+        document.getElementById("message");
 
-
-        const name =
-            document
-                .getElementById("client-name")
-                .value
-                .trim();
+    message.className = "";
+    message.textContent =
+        "Creating gallery...";
 
 
-        if (!name) return;
+    /*
+        Create a simple URL-safe slug.
+    */
+
+    const slug =
+        client.name
+            .toLowerCase()
+            .trim()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "");
 
 
-        const message =
-            document.getElementById("message");
+    /*
+        Create gallery in Supabase.
+    */
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("galleries")
+        .insert([
+            {
+                client_id: client.id,
+                client_name: client.name,
+                slug: slug
+            }
+        ])
+        .select()
+        .single();
 
 
-        message.textContent =
-            "Creating client...";
+    if (error) {
 
-
-        const {
-            error
-        } = await supabaseClient
-            .from("clients")
-            .insert([
-                {
-                    name: name
-                }
-            ]);
-
-
-        if (error) {
-
-            message.textContent =
-                "Error: " +
-                error.message;
-
-            return;
-        }
-
-
-        message.style.color =
-            "#7cff7c";
+        message.className = "error";
 
         message.textContent =
-            "Client created successfully.";
+            "Error creating gallery: " +
+            error.message;
+
+        return;
+    }
 
 
-        document
-            .getElementById("client-name")
-            .value = "";
+    message.className = "success";
+
+    message.textContent =
+        "Gallery created successfully.";
 
 
-        loadClients();
+    /*
+        Show the new gallery information.
+    */
 
-    });
+    const galleryUrl =
+        "gallery.html?gallery=" +
+        encodeURIComponent(data.id);
+
+
+    const info =
+        document.createElement("div");
+
+    info.className =
+        "gallery-info";
+
+
+    info.innerHTML = `
+        <strong>${data.client_name}</strong>
+        <br>
+        Gallery created.
+        <br>
+        <a
+            class="gallery-link"
+            href="${galleryUrl}"
+            target="_blank"
+        >
+            OPEN GALLERY
+        </a>
+    `;
+
+
+    /*
+        Add the result below the client list.
+    */
+
+    document
+        .getElementById("clients-list")
+        .appendChild(info);
+
+}
 
 
 /* LOGOUT */
 
 document
     .getElementById("logout")
-    .addEventListener("click", async function() {
+    .addEventListener(
+        "click",
+        async function() {
 
-        await supabaseClient.auth.signOut();
+            await supabaseClient.auth.signOut();
 
-        window.location.href =
-            "admin.html";
+            window.location.href =
+                "admin.html";
 
-    });
+        }
+    );
 
 
 /* START */
 
 (async function() {
 
-    const user = await checkUser();
+    const user =
+        await checkUser();
 
     if (user) {
 
-        loadClients();
+        await loadClients();
 
     }
 
