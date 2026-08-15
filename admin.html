@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lisa Photography — Admin</title>
+    <title>Lisa Michelle Visuals — Client Gallery Manager</title>
 
     <style>
         * {
@@ -74,7 +74,7 @@
 
 <div class="login-box">
 
-    <h1>Lisa Photography</h1>
+    <h1>Lisa Michelle Visuals</h1>
 
     <p class="subtitle">
         Client Gallery Manager
@@ -85,7 +85,8 @@
         <input
             type="email"
             id="email"
-            placeholder="Lisa's email"
+            placeholder="Email"
+            autocomplete="email"
             required
         >
 
@@ -93,6 +94,7 @@
             type="password"
             id="password"
             placeholder="Password"
+            autocomplete="current-password"
             required
         >
 
@@ -110,25 +112,36 @@
 
 <script>
 
-const SUPABASE_URL = "https://ilrdmzogaqfdrcyzjahk.supabase.co";
+const SUPABASE_URL =
+    "https://ilrdmzogaqfdrcyzjahk.supabase.co";
 
-const SUPABASE_KEY = "ضع-PUBLISHABLE-KEY-هنا";
+const SUPABASE_KEY =
+    "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
 
-const supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-);
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
-const loginForm = document.getElementById("login-form");
-const message = document.getElementById("message");
+const loginForm =
+    document.getElementById("login-form");
+
+const message =
+    document.getElementById("message");
+
 
 loginForm.addEventListener("submit", async function(event) {
 
     event.preventDefault();
 
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+    const email =
+        document.getElementById("email").value.trim();
 
+    const password =
+        document.getElementById("password").value;
+
+    message.style.color = "#aaa";
     message.textContent = "Logging in...";
 
     const { data, error } =
@@ -139,6 +152,7 @@ loginForm.addEventListener("submit", async function(event) {
 
     if (error) {
 
+        message.style.color = "#ff7777";
         message.textContent = error.message;
 
         return;
@@ -148,7 +162,9 @@ loginForm.addEventListener("submit", async function(event) {
     message.textContent = "Login successful!";
 
     setTimeout(() => {
+
         window.location.href = "dashboard.html";
+
     }, 800);
 
 });
