@@ -55,7 +55,6 @@
             background: #1b1b1b;
             border: 1px solid #333;
             padding: 30px;
-            margin-bottom: 30px;
         }
 
         .client {
@@ -75,34 +74,37 @@
             font-size: 20px;
         }
 
-        button {
+        .actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        button,
+        .button-link {
             padding: 12px 18px;
             background: white;
             color: black;
             border: none;
             cursor: pointer;
             font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        button:hover {
+        button:hover,
+        .button-link:hover {
             opacity: .85;
+        }
+
+        .secondary {
+            background: transparent;
+            color: white;
+            border: 1px solid #555;
         }
 
         #message {
             margin-top: 20px;
             color: #aaa;
-        }
-
-        .gallery-info {
-            margin-top: 10px;
-            color: #aaa;
-            font-size: 14px;
-        }
-
-        .gallery-link {
-            display: inline-block;
-            margin-top: 10px;
-            color: white;
         }
 
         .error {
@@ -120,8 +122,15 @@
                 align-items: flex-start;
             }
 
-            .client button {
+            .actions {
                 width: 100%;
+                flex-direction: column;
+            }
+
+            .actions button,
+            .actions a {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -133,7 +142,7 @@
 
     <h1>Lisa Michelle Visuals</h1>
 
-    <button id="logout">
+    <button id="logout" class="secondary">
         LOGOUT
     </button>
 
@@ -196,87 +205,6 @@ async function checkUser() {
 }
 
 
-/* LOAD CLIENTS */
-
-async function loadClients() {
-
-    const list =
-        document.getElementById("clients-list");
-
-    list.textContent = "Loading clients...";
-
-
-    const {
-        data,
-        error
-    } = await supabaseClient
-        .from("clients")
-        .select("*")
-        .order("created_at", {
-            ascending: false
-        });
-
-
-if (error) {
-
-    list.innerHTML = `<p class="error">Error loading clients: ${error.message}</p>`;
-
-    return;
-}
-
-    if (!data || data.length === 0) {
-
-        list.textContent =
-            "No clients yet.";
-
-        return;
-    }
-
-
-    list.innerHTML = "";
-
-
-    for (const client of data) {
-
-        const div =
-            document.createElement("div");
-
-        div.className = "client";
-
-
-        const name =
-            document.createElement("div");
-
-        name.className = "client-name";
-
-        name.textContent =
-            client.name;
-
-
-        const button =
-            document.createElement("button");
-
-        button.textContent =
-            "CREATE GALLERY";
-
-
-        button.addEventListener(
-            "click",
-            () => createGallery(client)
-        );
-
-
-        div.appendChild(name);
-
-        div.appendChild(button);
-
-        list.appendChild(div);
-
-    }
-
-}
-
-
 /* CREATE GALLERY */
 
 async function createGallery(client) {
@@ -289,10 +217,6 @@ async function createGallery(client) {
         "Creating gallery...";
 
 
-    /*
-        Create a simple URL-safe slug.
-    */
-
     const slug =
         client.name
             .toLowerCase()
@@ -300,10 +224,6 @@ async function createGallery(client) {
             .replace(/[^a-z0-9]+/g, "-")
             .replace(/^-+|-+$/g, "");
 
-
-    /*
-        Create gallery in Supabase.
-    */
 
     const {
         data,
@@ -339,44 +259,175 @@ async function createGallery(client) {
         "Gallery created successfully.";
 
 
+    loadClients();
+
+}
+
+
+/* LOAD CLIENTS AND THEIR GALLERIES */
+
+async function loadClients() {
+
+    const list =
+        document.getElementById("clients-list");
+
+    list.textContent =
+        "Loading clients...";
+
+
+    const {
+        data: clients,
+        error: clientError
+    } = await supabaseClient
+        .from("clients")
+        .select("*")
+        .order("created_at", {
+            ascending: false
+        });
+
+
+    if (clientError) {
+
+        list.innerHTML =
+            <p class="error">Error loading clients: ${clientError.message}</p>;
+
+        return;
+    }
+
+
+    if (!clients || clients.length === 0) {
+
+        list.textContent =
+            "No clients yet.";
+
+        return;
+    }
+
+
     /*
-        Show the new gallery information.
+        Get all galleries.
     */
 
-    const galleryUrl =
-        "gallery.html?gallery=" +
-        encodeURIComponent(data.id);
+    const {
+        data: galleries,
+        error: galleryError
+    } = await supabaseClient
+        .from("galleries")
+        .select("*");
 
 
-    const info =
-        document.createElement("div");
+    if (galleryError) {
 
-    info.className =
-        "gallery-info";
+        list.innerHTML =
+            <p class="error">Error loading galleries: ${galleryError.message}</p>;
 
-
-    info.innerHTML = `
-        <strong>${data.client_name}</strong>
-        <br>
-        Gallery created.
-        <br>
-        <a
-            class="gallery-link"
-            href="${galleryUrl}"
-            target="_blank"
-        >
-            OPEN GALLERY
-        </a>
-    `;
+        return;
+    }
 
 
-    /*
-        Add the result below the client list.
-    */
+    list.innerHTML = "";
 
-    document
-        .getElementById("clients-list")
-        .appendChild(info);
+
+    clients.forEach(client => {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "client";
+
+
+        const name =
+            document.createElement("div");
+
+        name.className =
+            "client-name";
+
+        name.textContent =
+            client.name;
+
+
+        const actions =
+            document.createElement("div");
+
+        actions.className =
+            "actions";
+
+
+        /*
+            Find gallery belonging to this client.
+        */
+
+        const clientGallery =
+            galleries.find(
+                gallery =>
+                    gallery.client_id === client.id
+            );
+
+
+        if (clientGallery) {
+
+            /*
+                Gallery already exists.
+                Show OPEN GALLERY.
+            */
+
+            const openButton =
+                document.createElement("a");
+
+            openButton.className =
+                "button-link";
+
+            openButton.textContent =
+                "OPEN GALLERY";
+
+            openButton.href =
+                "gallery.html?gallery=" +
+                encodeURIComponent(
+                    clientGallery.id
+                );
+
+            openButton.target =
+                "_blank";
+
+            actions.appendChild(
+                openButton
+            );
+
+        } else {
+
+            /*
+                No gallery yet.
+                Show CREATE GALLERY.
+            */
+
+            const createButton =
+                document.createElement("button");
+
+            createButton.textContent =
+                "CREATE GALLERY";
+
+
+            createButton.addEventListener(
+                "click",
+                () => createGallery(client)
+            );
+
+
+            actions.appendChild(
+                createButton
+            );
+
+        }
+
+
+        div.appendChild(name);
+
+        div.appendChild(actions);
+
+        list.appendChild(div);
+
+    });
 
 }
 
