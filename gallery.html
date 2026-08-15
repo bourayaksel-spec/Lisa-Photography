@@ -175,6 +175,8 @@ const params =
 const galleryId =
     params.get("gallery");
 
+const accessToken =
+    params.get("token");
 
 /* ELEMENTS */
 
@@ -205,14 +207,15 @@ async function loadGallery() {
         Get gallery information.
     */
 
-    const {
-        data: galleryData,
-        error: galleryError
-    } = await supabaseClient
-        .from("galleries")
-        .select("*")
-        .eq("id", galleryId)
-        .single();
+ const {
+    data: galleryData,
+    error: galleryError
+} = await supabaseClient
+    .from("galleries")
+    .select("*")
+    .eq("id", galleryId)
+    .eq("access_token", accessToken)
+    .single();
 
 
     if (galleryError) {
