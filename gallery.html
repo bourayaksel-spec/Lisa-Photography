@@ -1,1 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <title>Client Gallery — Lisa Michelle Visuals</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            text-align: center;
+            padding: 45px 20px 30px;
+            border-bottom: 1px solid #333;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 400;
+        }
+
+        header p {
+            color: #999;
+            margin-top: 10px;
+        }
+
+        main {
+            width: 92%;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        #gallery-title {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 40px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .photo {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: opacity .3s ease;
+        }
+
+        .photo:hover {
+            opacity: .8;
+        }
+
+        #message {
+            text-align: center;
+            color: #aaa;
+            padding: 40px 10px;
+        }
+
+        .error {
+            color: #ff7777;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightbox img {
+            max-width: 95%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 700px) {
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            #gallery-title {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <h1>Lisa Michelle Visuals</h1>
+
+    <p>Private Client Gallery</p>
+
+</header>
+
+
+<main>
+
+    <h2 id="gallery-title">
+        Loading gallery...
+    </h2>
+
+    <div id="message"></div>
+
+    <div id="gallery" class="gallery"></div>
+
+</main>
+
+
+<div id="lightbox" class="lightbox">
+
+    <span class="close" id="close">&times;</span>
+
+    <img id="lightbox-image" src="" alt="Client photo">
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+
+const SUPABASE_URL =
+    "https://ilrdmzogaqfdrcyzjahk.supabase.co";
+
+const SUPABASE_KEY =
+    "ضع-PUBLISHABLE-KEY-هنا";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+/* GET GALLERY ID FROM URL */
+
+const params =
+    new URLSearchParams(window.location.search);
+
+const galleryId =
+    params.get("gallery");
+
+
+/* ELEMENTS */
+
+const title =
+    document.getElementById("gallery-title");
+
+const message =
+    document.getElementById("message");
+
+const gallery =
+    document.getElementById("gallery");
+
+
+/* LOAD GALLERY */
+
+async function loadGallery() {
+
+    if (!galleryId) {
+
+        title.textContent =
+            "Gallery not found";
+
+        return;
+    }
+
+
+    /*
+        Get gallery information.
+    */
+
+    const {
+        data: galleryData,
+        error: galleryError
+    } = await supabaseClient
+        .from("galleries")
+        .select("*")
+        .eq("id", galleryId)
+        .single();
+
+
+    if (galleryError) {
+
+        title.textContent =
+            "Gallery not found";
+
+        message.className =
+            "error";
+
+        message.textContent =
+            galleryError.message;
+
+        return;
+    }
+
+
+    title.textContent =
+        galleryData.client_name;
+
+
+    /*
+        Get photos belonging to this gallery.
+    */
+
+    const {
+        data: photos,
+        error: photosError
+    } = await supabaseClient
+        .from("gallery_photos")
+        .select("*")
+        .eq("gallery_id", galleryId)
+        .order("created_at", {
+            ascending: true
+        });
+
+
+    if (photosError) {
+
+        message.className =
+            "error";
+
+        message.textContent =
+            photosError.message;
+
+        return;
+    }
+
+
+    if (!photos || photos.length === 0) {
+
+        message.textContent =
+            "No photos have been added to this gallery yet.";
+
+        return;
+    }
+
+
+    /*
+        Create signed URLs.
+    */
+
+    for (const photo of photos) {
+
+        const {
+            data: signedData,
+            error: signedError
+        } = await supabaseClient
+            .storage
+            .from("client-galleries")
+            .createSignedUrl(
+                photo.file_path,
+                3600
+            );
+
+
+        if (signedError) {
+
+            console.error(
+                signedError
+            );
+
+            continue;
+        }
+
+
+        const img =
+            document.createElement("img");
+
+        img.className =
+            "photo";
+
+        img.src =
+            signedData.signedUrl;
+
+        img.alt =
+            photo.file_name || "Client photo";
+
+
+        img.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .getElementById("lightbox-image")
+                    .src = signedData.signedUrl;
+
+                document
+                    .getElementById("lightbox")
+                    .style.display = "flex";
+
+            }
+        );
+
+
+        gallery.appendChild(img);
+
+    }
+
+}
+
+
+/* CLOSE LIGHTBOX */
+
+document
+    .getElementById("close")
+    .addEventListener(
+        "click",
+        function() {
+
+            document
+                .getElementById("lightbox")
+                .style.display = "none";
+
+        }
+    );
+
+
+document
+    .getElementById("lightbox")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (event.target === this) {
+
+                this.style.display = "none";
+
+            }
+
+        }
+    );
+
+
+/* START */
+
+loadGallery();
+
+</script>
+
+</body>
+</html>
