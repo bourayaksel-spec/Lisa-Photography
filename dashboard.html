@@ -55,6 +55,21 @@
             background: #1b1b1b;
             border: 1px solid #333;
             padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .add-client-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .add-client-form input {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid #444;
+            background: #111;
+            color: white;
         }
 
         .client {
@@ -77,6 +92,7 @@
         .actions {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
         }
 
         button,
@@ -102,9 +118,14 @@
             border: 1px solid #555;
         }
 
+        .upload-button {
+            background: #ddd;
+        }
+
         #message {
             margin-top: 20px;
             color: #aaa;
+            line-height: 1.6;
         }
 
         .error {
@@ -115,7 +136,15 @@
             color: #7cff7c;
         }
 
+        .hidden {
+            display: none;
+        }
+
         @media (max-width: 600px) {
+
+            .add-client-form {
+                flex-direction: column;
+            }
 
             .client {
                 flex-direction: column;
@@ -153,6 +182,33 @@
 
     <h2>Client Gallery Manager</h2>
 
+
+    <!-- ADD CLIENT -->
+
+    <section class="card">
+
+        <h3>Add Client</h3>
+
+        <form id="add-client-form" class="add-client-form">
+
+            <input
+                type="text"
+                id="client-name"
+                placeholder="Client name"
+                required
+            >
+
+            <button type="submit">
+                ADD CLIENT
+            </button>
+
+        </form>
+
+    </section>
+
+
+    <!-- CLIENTS -->
+
     <section class="card">
 
         <h3>Clients</h3>
@@ -162,6 +218,7 @@
         </div>
 
     </section>
+
 
     <p id="message"></p>
 
@@ -205,35 +262,107 @@ async function checkUser() {
 }
 
 
-/* CREATE GALLERY */
+/* MESSAGE */
 
-async function createGallery(client) {
+function showMessage(text, type = "") {
 
     const message =
         document.getElementById("message");
 
-    message.className = "";
-    message.textContent =
-        "Creating gallery...";
+    message.className = type;
 
+    message.textContent = text;
+}
+
+
+/* CREATE SLUG */
+
+function createSlug(name) {
+
+    return name
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
+
+/* ADD CLIENT */
+
+async function addClient(event) {
+
+    event.preventDefault();
+
+    const input =
+        document.getElementById("client-name");
+
+    const clientName =
+        input.value.trim();
+
+
+    if (!clientName) {
+
+        showMessage(
+            "Please enter a client name.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    showMessage(
+        "Creating client..."
+    );
+
+
+    /*
+        Create client.
+    */
+
+    const {
+        data: client,
+        error: clientError
+    } = await supabaseClient
+        .from("clients")
+        .insert([
+            {
+                name: clientName
+            }
+        ])
+        .select()
+        .single();
+
+
+    if (clientError) {
+
+        showMessage(
+            "Error creating client: " +
+            clientError.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    /*
+        Create gallery automatically.
+    */
 
     const slug =
-        client.name
-            .toLowerCase()
-            .trim()
-            .replace(/[^a-z0-9]+/g, "-")
-            .replace(/^-+|-+$/g, "");
+        createSlug(clientName);
 
 
     const {
-        data,
-        error
+        data: gallery,
+        error: galleryError
     } = await supabaseClient
         .from("galleries")
         .insert([
             {
                 client_id: client.id,
-                client_name: client.name,
+                client_name: clientName,
                 slug: slug
             }
         ])
@@ -241,30 +370,187 @@ async function createGallery(client) {
         .single();
 
 
-    if (error) {
+    if (galleryError) {
 
-        message.className = "error";
-
-        message.textContent =
-            "Error creating gallery: " +
-            error.message;
+        showMessage(
+            "Client created, but gallery creation failed: " +
+            galleryError.message,
+            "error"
+        );
 
         return;
     }
 
 
-    message.className = "success";
-
-    message.textContent =
-        "Gallery created successfully.";
+    input.value = "";
 
 
-    loadClients();
+    showMessage(
+        "Client and private gallery created successfully.",
+        "success"
+    );
 
+
+    await loadClients();
 }
 
 
-/* LOAD CLIENTS AND THEIR GALLERIES */
+/* UPLOAD PHOTOS */
+
+async function uploadPhotos(galleryId, fileInput) {
+
+    const files =
+        Array.from(fileInput.files);
+
+
+    if (!files.length) {
+
+        return;
+    }
+
+
+    showMessage(
+        "Uploading " +
+        files.length +
+        " photo(s)..."
+    );
+
+
+    let uploaded = 0;
+
+
+    for (const file of files) {
+
+        try {
+
+            /*
+                Create a unique filename.
+            */
+
+            const extension =
+                file.name.includes(".")
+                    ? file.name.substring(
+                        file.name.lastIndexOf(".")
+                    )
+                    : "";
+
+            const baseName =
+                file.name
+                    .replace(/\.[^/.]+$/, "")
+                    .replace(/[^a-zA-Z0-9_-]/g, "-");
+
+
+            const uniqueName =
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .substring(2, 8) +
+                "-" +
+                baseName +
+                extension;
+
+
+            /*
+                Upload to PRIVATE bucket.
+            */
+
+            const {
+                error: uploadError
+            } = await supabaseClient
+                .storage
+                .from("client-galleries")
+                .upload(
+                    uniqueName,
+                    file,
+                    {
+                        cacheControl: "3600",
+                        upsert: false
+                    }
+                );
+
+
+            if (uploadError) {
+
+                throw uploadError;
+            }
+
+
+            /*
+                Add photo record.
+            */
+
+            const {
+                error: photoError
+            } = await supabaseClient
+                .from("gallery_photos")
+                .insert([
+                    {
+                        gallery_id: galleryId,
+                        file_name: file.name,
+                        file_path: uniqueName
+                    }
+                ]);
+
+
+            if (photoError) {
+
+                /*
+                    If database insert fails,
+                    remove uploaded file.
+                */
+
+                await supabaseClient
+                    .storage
+                    .from("client-galleries")
+                    .remove([uniqueName]);
+
+                throw photoError;
+            }
+
+
+            uploaded++;
+
+            showMessage(
+                "Uploaded " +
+                uploaded +
+                " of " +
+                files.length +
+                " photo(s)..."
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Upload error:",
+                error
+            );
+
+            showMessage(
+                "Upload error: " +
+                error.message,
+                "error"
+            );
+
+            fileInput.value = "";
+
+            return;
+        }
+    }
+
+
+    fileInput.value = "";
+
+
+    showMessage(
+        uploaded +
+        " photo(s) uploaded successfully.",
+        "success"
+    );
+}
+
+
+/* LOAD CLIENTS */
 
 async function loadClients() {
 
@@ -289,7 +575,7 @@ async function loadClients() {
     if (clientError) {
 
         list.innerHTML =
-            `<p class="error">Error loading clients: ${clientError.message}</p>`;
+            <p class="error">Error loading clients: ${clientError.message}</p>;
 
         return;
     }
@@ -305,7 +591,7 @@ async function loadClients() {
 
 
     /*
-        Get all galleries.
+        Get galleries.
     */
 
     const {
@@ -319,7 +605,7 @@ async function loadClients() {
     if (galleryError) {
 
         list.innerHTML =
-            `<p class="error">Error loading galleries: ${galleryError.message}</p>`;
+            <p class="error">Error loading galleries: ${galleryError.message}</p>;
 
         return;
     }
@@ -355,22 +641,21 @@ async function loadClients() {
 
 
         /*
-            Find gallery belonging to this client.
+            Find gallery.
         */
 
-      const clientGallery =
-    galleries.find(
-        gallery =>
-            String(gallery.client_id).trim() ===
-            String(client.id).trim()
-    );
+        const clientGallery =
+            galleries.find(
+                gallery =>
+                    String(gallery.client_id).trim() ===
+                    String(client.id).trim()
+            );
 
 
         if (clientGallery) {
 
             /*
-                Gallery already exists.
-                Show OPEN GALLERY.
+                OPEN GALLERY
             */
 
             const openButton =
@@ -391,15 +676,70 @@ async function loadClients() {
             openButton.target =
                 "_blank";
 
+
             actions.appendChild(
                 openButton
             );
 
+
+            /*
+                UPLOAD PHOTOS
+            */
+
+            const uploadButton =
+                document.createElement("button");
+
+            uploadButton.className =
+                "upload-button";
+
+            uploadButton.textContent =
+                "UPLOAD PHOTOS";
+
+
+            const fileInput =
+                document.createElement("input");
+
+            fileInput.type =
+                "file";
+
+            fileInput.accept =
+                "image/jpeg,image/png,image/webp,image/heic,image/heif";
+
+            fileInput.multiple =
+                true;
+
+            fileInput.className =
+                "hidden";
+
+
+            uploadButton.addEventListener(
+                "click",
+                () => fileInput.click()
+            );
+
+
+            fileInput.addEventListener(
+                "change",
+                () => uploadPhotos(
+                    clientGallery.id,
+                    fileInput
+                )
+            );
+
+
+            actions.appendChild(
+                uploadButton
+            );
+
+            actions.appendChild(
+                fileInput
+            );
+
+
         } else {
 
             /*
-                No gallery yet.
-                Show CREATE GALLERY.
+                CREATE GALLERY
             */
 
             const createButton =
@@ -431,6 +771,67 @@ async function loadClients() {
     });
 
 }
+
+
+/* CREATE GALLERY FOR EXISTING CLIENT */
+
+async function createGallery(client) {
+
+    showMessage(
+        "Creating gallery..."
+    );
+
+
+    const slug =
+        createSlug(client.name);
+
+
+    const {
+        data,
+        error
+    } = await supabaseClient
+        .from("galleries")
+        .insert([
+            {
+                client_id: client.id,
+                client_name: client.name,
+                slug: slug
+            }
+        ])
+        .select()
+        .single();
+
+
+    if (error) {
+
+        showMessage(
+            "Error creating gallery: " +
+            error.message,
+            "error"
+        );
+
+        return;
+    }
+
+
+    showMessage(
+        "Gallery created successfully.",
+        "success"
+    );
+
+
+    await loadClients();
+}
+
+
+/* ADD CLIENT FORM */
+
+document
+    .getElementById("add-client-form")
+    .addEventListener(
+        "submit",
+        addClient
+    );
 
 
 /* LOGOUT */
