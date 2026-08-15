@@ -207,7 +207,12 @@
                 placeholder="Client name"
                 required
             >
-
+<input
+    type="email"
+    id="client-email"
+    placeholder="Client email"
+    required
+>
             <button type="submit">
                 ADD CLIENT
             </button>
@@ -309,7 +314,11 @@ async function addClient(event) {
     const clientName =
         input.value.trim();
 
+const emailInput =
+    document.getElementById("client-email");
 
+const clientEmail =
+    emailInput.value.trim();
     if (!clientName) {
 
         showMessage(
@@ -320,7 +329,15 @@ async function addClient(event) {
         return;
     }
 
+if (!clientEmail) {
 
+    showMessage(
+        "Please enter the client email.",
+        "error"
+    );
+
+    return;
+}
     showMessage(
         "Creating client..."
     );
@@ -335,11 +352,12 @@ async function addClient(event) {
         error: clientError
     } = await supabaseClient
         .from("clients")
-        .insert([
-            {
-                name: clientName
-            }
-        ])
+   .insert([
+    {
+        name: clientName,
+        email: clientEmail
+    }
+])
         .select()
         .single();
 
@@ -392,7 +410,8 @@ async function addClient(event) {
     }
 
 
-    input.value = "";
+ input.value = "";
+emailInput.value = "";
 
 
     showMessage(
