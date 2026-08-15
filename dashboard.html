@@ -217,14 +217,12 @@ async function loadClients() {
         });
 
 
-    if (error) {
+if (error) {
 
-        list.innerHTML =
-            <p class="error">Error loading clients: ${error.message}</p>;
+    list.innerHTML = `<p class="error">Error loading clients: ${error.message}</p>`;
 
-        return;
-    }
-
+    return;
+}
 
     if (!data || data.length === 0) {
 
