@@ -139,7 +139,17 @@
         .hidden {
             display: none;
         }
+.gallery-count {
+    color: #aaa;
+    font-size: 14px;
+    margin-top: 6px;
+}
 
+.copy-button {
+    background: transparent;
+    color: white;
+    border: 1px solid #555;
+}
         @media (max-width: 600px) {
 
             .add-client-form {
@@ -610,7 +620,20 @@ async function loadClients() {
         return;
     }
 
+const {
+    data: photos,
+    error: photoError
+} = await supabaseClient
+    .from("gallery_photos")
+    .select("gallery_id");
 
+if (photoError) {
+
+    list.innerHTML =
+        `<p class="error">Error loading photos: ${photoError.message}</p>`;
+
+    return;
+}
     list.innerHTML = "";
 
 
