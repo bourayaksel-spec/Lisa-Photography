@@ -1,96 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Client Login — Lisa Michelle Visuals</title>
 
+
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+
         body {
             margin: 0;
             min-height: 100vh;
+
             background: #111;
             color: white;
+
             font-family: Arial, sans-serif;
+
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
+
         .login-box {
+
             width: 90%;
             max-width: 420px;
+
             background: #1b1b1b;
+
             border: 1px solid #333;
+
             padding: 40px;
         }
 
+
         h1 {
+
             text-align: center;
+
             font-weight: 400;
+
             margin: 0 0 10px;
         }
 
+
         p {
+
             text-align: center;
+
             color: #999;
+
             margin-bottom: 30px;
         }
 
+
         label {
+
             display: block;
+
             margin-bottom: 8px;
+
             color: #ccc;
         }
 
+
         input {
+
             width: 100%;
+
             padding: 14px;
+
             margin-bottom: 20px;
+
             background: #111;
+
             border: 1px solid #444;
+
             color: white;
+
             font-size: 16px;
         }
 
+
         button {
+
             width: 100%;
+
             padding: 14px;
+
             background: white;
+
             color: black;
+
             border: none;
+
             font-weight: bold;
+
             cursor: pointer;
         }
 
+
         button:hover {
+
             opacity: .85;
         }
 
+
+        button:disabled {
+
+            opacity: .5;
+
+            cursor: not-allowed;
+        }
+
+
         #message {
+
             margin-top: 20px;
+
             text-align: center;
+
             line-height: 1.5;
         }
 
+
         .error {
+
             color: #ff7777;
         }
+
+
+        .success {
+
+            color: #7cff7c;
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <div class="login-box">
 
-    <h1>Lisa Michelle Visuals</h1>
+    <h1>
+        Lisa Michelle Visuals
+    </h1>
 
-    <p>Private Client Gallery</p>
+
+    <p>
+        Private Client Gallery
+    </p>
+
 
     <form id="login-form">
 
@@ -98,29 +175,39 @@
             Email
         </label>
 
+
         <input
             type="email"
             id="email"
             placeholder="Your email"
+            autocomplete="email"
             required
         >
+
 
         <label for="password">
             Password
         </label>
 
+
         <input
             type="password"
             id="password"
             placeholder="Your password"
+            autocomplete="current-password"
             required
         >
 
-        <button type="submit">
+
+        <button
+            type="submit"
+            id="login-button"
+        >
             LOGIN
         </button>
 
     </form>
+
 
     <div id="message"></div>
 
@@ -129,13 +216,22 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
+
+
+/* =====================================================
+   SUPABASE
+   ===================================================== */
+
 
 const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
 
+
 const SUPABASE_KEY =
     "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
+
 
 const supabaseClient =
     window.supabase.createClient(
@@ -144,61 +240,382 @@ const supabaseClient =
     );
 
 
-document
-    .getElementById("login-form")
-    .addEventListener(
-        "submit",
-        async function(event) {
+/* =====================================================
+   GET GALLERY INFORMATION FROM LINK
+   ===================================================== */
 
-            event.preventDefault();
 
-            const email =
-                document
-                    .getElementById("email")
-                    .value
-                    .trim();
+const params =
+    new URLSearchParams(
+        window.location.search
+    );
 
-            const password =
-                document
-                    .getElementById("password")
-                    .value;
 
-            const message =
-                document.getElementById("message");
+const galleryId =
+    params.get("gallery");
 
-            message.className = "";
-            message.textContent =
-                "Logging in...";
+
+const accessToken =
+    params.get("token");
+
+
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
+
+
+const loginForm =
+    document.getElementById(
+        "login-form"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const loginButton =
+    document.getElementById(
+        "login-button"
+    );
+
+
+/* =====================================================
+   CHECK GALLERY LINK
+   ===================================================== */
+
+
+if (
+    !galleryId ||
+    !accessToken
+) {
+
+    loginForm.style.display =
+        "none";
+
+
+    message.className =
+        "error";
+
+
+    message.textContent =
+        "Invalid or incomplete gallery link.";
+}
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        if (
+            !galleryId ||
+            !accessToken
+        ) {
+
+            return;
+        }
+
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+
+        message.className = "";
+
+
+        message.textContent =
+            "Logging in...";
+
+
+        loginButton.disabled =
+            true;
+
+
+        try {
+
+
+            /* =========================================
+               1. SUPABASE LOGIN
+               ========================================= */
 
 
             const {
-                data,
-                error
-            } = await supabaseClient.auth.signInWithPassword({
-                email: email,
-                password: password
-            });
+                data: authData,
+                error: authError
+            } =
+                await supabaseClient
+                    .auth
+                    .signInWithPassword({
+
+                        email:
+                            email,
+
+                        password:
+                            password
+
+                    });
 
 
-            if (error) {
+            if (
+                authError ||
+                !authData.user
+            ) {
 
-                message.className =
-                    "error";
-
-                message.textContent =
-                    "Invalid email or password.";
-
-                return;
+                throw new Error(
+                    "Invalid email or password."
+                );
             }
 
 
-            window.location.href =
-                "client-gallery-new.html";
+            const user =
+                authData.user;
+
+
+            /* =========================================
+               2. GET CLIENT RECORD
+               ========================================= */
+
+
+            const {
+                data: client,
+                error: clientError
+            } =
+                await supabaseClient
+                    .from("clients")
+                    .select(
+                        "id, user_id, email, name"
+                    )
+                    .eq(
+                        "user_id",
+                        user.id
+                    )
+                    .maybeSingle();
+
+
+            if (
+                clientError
+            ) {
+
+                console.error(
+                    "Client lookup error:",
+                    clientError
+                );
+
+                throw new Error(
+                    "Could not verify client account."
+                );
+            }
+
+
+            if (
+                !client
+            ) {
+
+                throw new Error(
+                    "This account is not registered as a client."
+                );
+            }
+
+
+            /* =========================================
+               3. VERIFY EMAIL
+               ========================================= */
+
+
+            if (
+                client.email &&
+                client.email.toLowerCase() !==
+                user.email.toLowerCase()
+            ) {
+
+                throw new Error(
+                    "This account does not match the client record."
+                );
+            }
+
+
+            /* =========================================
+               4. VERIFY GALLERY
+               ========================================= */
+
+
+            const {
+                data: gallery,
+                error: galleryError
+            } =
+                await supabaseClient
+                    .from("galleries")
+                    .select(
+                        "id, client_id, client_name, access_token"
+                    )
+                    .eq(
+                        "id",
+                        galleryId
+                    )
+                    .eq(
+                        "access_token",
+                        accessToken
+                    )
+                    .maybeSingle();
+
+
+            if (
+                galleryError
+            ) {
+
+                console.error(
+                    "Gallery lookup error:",
+                    galleryError
+                );
+
+                throw new Error(
+                    "Could not verify gallery."
+                );
+            }
+
+
+            if (
+                !gallery
+            ) {
+
+                throw new Error(
+                    "Invalid gallery link."
+                );
+            }
+
+
+            /* =========================================
+               5. MAKE SURE GALLERY BELONGS TO CLIENT
+               ========================================= */
+
+
+            if (
+                String(gallery.client_id) !==
+                String(client.id)
+            ) {
+
+                throw new Error(
+                    "This gallery does not belong to your account."
+                );
+            }
+
+
+            /* =========================================
+               6. SUCCESS
+               ========================================= */
+
+
+            message.className =
+                "success";
+
+
+            message.textContent =
+                "Login successful. Opening your gallery...";
+
+
+            /*
+                Save the verified gallery information
+                temporarily in sessionStorage.
+
+                This disappears when the browser session
+                ends.
+            */
+
+
+            sessionStorage.setItem(
+                "client_gallery_id",
+                gallery.id
+            );
+
+
+            sessionStorage.setItem(
+                "client_gallery_token",
+                gallery.access_token
+            );
+
+
+            /* =========================================
+               7. OPEN GALLERY
+               ========================================= */
+
+
+            setTimeout(
+                function() {
+
+                    window.location.href =
+                        "gallery.html?gallery=" +
+                        encodeURIComponent(
+                            gallery.id
+                        ) +
+                        "&token=" +
+                        encodeURIComponent(
+                            gallery.access_token
+                        );
+
+                },
+                500
+            );
+
+
+        } catch (error) {
+
+
+            console.error(
+                "Client login error:",
+                error
+            );
+
+
+            /*
+                If verification fails after login,
+                sign the user out.
+            */
+
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            message.className =
+                "error";
+
+
+            message.textContent =
+                error.message ||
+                "Login failed.";
+
+
+            loginButton.disabled =
+                false;
 
         }
-    );
+
+    }
+);
+
 
 </script>
 
 </body>
+
 </html>
