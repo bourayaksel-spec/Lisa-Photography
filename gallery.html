@@ -1,160 +1,474 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Client Gallery — Lisa Michelle Visuals</title>
 
+
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+
         body {
+
             margin: 0;
+
+            min-height: 100vh;
+
             background: #111;
+
             color: #fff;
+
             font-family: Arial, sans-serif;
         }
 
+
         header {
+
             text-align: center;
+
             padding: 45px 20px 30px;
+
             border-bottom: 1px solid #333;
         }
 
+
         header h1 {
+
             margin: 0;
+
             font-size: 28px;
+
             font-weight: 400;
         }
 
+
         header p {
+
             color: #999;
+
             margin-top: 10px;
         }
 
+
         main {
+
             width: 92%;
+
             max-width: 1200px;
+
             margin: 50px auto;
         }
 
-        #gallery-title {
-            text-align: center;
-            font-size: 32px;
-            font-weight: 400;
-            margin-bottom: 40px;
+
+        /* LOGIN */
+
+        #login-section {
+
+            width: 90%;
+
+            max-width: 420px;
+
+            margin: 70px auto;
+
+            background: #1b1b1b;
+
+            border: 1px solid #333;
+
+            padding: 35px;
         }
 
+
+        #login-section h2 {
+
+            margin-top: 0;
+
+            font-weight: 400;
+
+            text-align: center;
+        }
+
+
+        #login-section p {
+
+            color: #999;
+
+            text-align: center;
+
+            line-height: 1.6;
+        }
+
+
+        #login-form input {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 12px;
+
+            background: #111;
+
+            color: white;
+
+            border: 1px solid #444;
+
+            font-size: 15px;
+        }
+
+
+        #login-form button {
+
+            width: 100%;
+
+            padding: 14px;
+
+            margin-top: 15px;
+
+            background: white;
+
+            color: black;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        #login-form button:hover {
+
+            opacity: .85;
+        }
+
+
+        #login-message {
+
+            margin-top: 15px;
+
+            color: #ff7777;
+
+            text-align: center;
+
+            line-height: 1.5;
+        }
+
+
+        /* GALLERY */
+
+        #gallery-section {
+
+            display: none;
+        }
+
+
+        .gallery-header {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+
+        #gallery-title {
+
+            font-size: 32px;
+
+            font-weight: 400;
+
+            margin-bottom: 10px;
+        }
+
+
+        #gallery-message {
+
+            color: #aaa;
+        }
+
+
+        #logout {
+
+            margin-top: 15px;
+
+            padding: 10px 18px;
+
+            background: transparent;
+
+            color: white;
+
+            border: 1px solid #555;
+
+            cursor: pointer;
+        }
+
+
+        #logout:hover {
+
+            background: #222;
+        }
+
+
         .gallery {
+
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
             gap: 15px;
         }
 
+
         .photo {
+
             width: 100%;
+
             aspect-ratio: 1 / 1;
+
             object-fit: cover;
+
             display: block;
+
             cursor: pointer;
+
             transition: opacity .3s ease;
         }
 
+
         .photo:hover {
+
             opacity: .8;
         }
 
-        #message {
-            text-align: center;
-            color: #aaa;
-            padding: 40px 10px;
-        }
 
         .error {
-            color: #ff7777;
+
+            color: #ff7777 !important;
         }
 
+
+        .success {
+
+            color: #7cff7c !important;
+        }
+
+
+        /* LIGHTBOX */
+
         .lightbox {
+
             display: none;
+
             position: fixed;
+
             inset: 0;
+
             background: rgba(0,0,0,.95);
+
             z-index: 1000;
+
             align-items: center;
+
             justify-content: center;
+
             padding: 20px;
         }
 
+
         .lightbox img {
+
             max-width: 95%;
+
             max-height: 90vh;
+
             object-fit: contain;
         }
 
+
         .close {
+
             position: absolute;
+
             top: 20px;
+
             right: 30px;
+
             font-size: 40px;
+
             cursor: pointer;
         }
+
 
         @media (max-width: 700px) {
 
             .gallery {
-                grid-template-columns: repeat(2, 1fr);
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
                 gap: 8px;
             }
 
+
             #gallery-title {
+
                 font-size: 25px;
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <header>
 
-    <h1>Lisa Michelle Visuals</h1>
+    <h1>
+        Lisa Michelle Visuals
+    </h1>
 
-    <p>Private Client Gallery</p>
+    <p>
+        Private Client Gallery
+    </p>
 
 </header>
 
 
 <main>
 
-    <h2 id="gallery-title">
-        Loading gallery...
-    </h2>
 
-    <div id="message"></div>
+    <!-- LOGIN -->
 
-    <div id="gallery" class="gallery"></div>
+    <section id="login-section">
+
+        <h2>
+            Client Login
+        </h2>
+
+        <p>
+            Please enter the email and password
+            provided by Lisa.
+        </p>
+
+
+        <form id="login-form">
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email"
+                autocomplete="email"
+                required
+            >
+
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                autocomplete="current-password"
+                required
+            >
+
+
+            <button type="submit">
+                LOGIN
+            </button>
+
+        </form>
+
+
+        <div id="login-message"></div>
+
+    </section>
+
+
+    <!-- GALLERY -->
+
+    <section id="gallery-section">
+
+        <div class="gallery-header">
+
+            <h2 id="gallery-title">
+                Loading gallery...
+            </h2>
+
+
+            <div id="gallery-message"></div>
+
+
+            <button id="logout">
+                LOGOUT
+            </button>
+
+        </div>
+
+
+        <div
+            id="gallery"
+            class="gallery"
+        ></div>
+
+    </section>
+
 
 </main>
 
 
-<div id="lightbox" class="lightbox">
+<!-- LIGHTBOX -->
 
-    <span class="close" id="close">&times;</span>
+<div
+    id="lightbox"
+    class="lightbox"
+>
 
-    <img id="lightbox-image" src="" alt="Client photo">
+    <span
+        class="close"
+        id="close"
+    >
+        &times;
+    </span>
+
+
+    <img
+        id="lightbox-image"
+        src=""
+        alt="Client photo"
+    >
 
 </div>
 
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+
 <script>
+
+
+/* =====================================================
+   SUPABASE
+   ===================================================== */
+
 
 const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
+
 
 const SUPABASE_KEY =
     "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
@@ -167,108 +481,330 @@ const supabaseClient =
     );
 
 
-/* GET GALLERY ID FROM URL */
+/* =====================================================
+   URL
+   ===================================================== */
+
 
 const params =
-    new URLSearchParams(window.location.search);
+    new URLSearchParams(
+        window.location.search
+    );
+
 
 const galleryId =
     params.get("gallery");
 
-const accessToken =
-    params.get("token");
 
-/* ELEMENTS */
+/* =====================================================
+   ELEMENTS
+   ===================================================== */
 
-const title =
-    document.getElementById("gallery-title");
 
-const message =
-    document.getElementById("message");
+const loginSection =
+    document.getElementById(
+        "login-section"
+    );
+
+
+const gallerySection =
+    document.getElementById(
+        "gallery-section"
+    );
+
+
+const loginForm =
+    document.getElementById(
+        "login-form"
+    );
+
+
+const loginMessage =
+    document.getElementById(
+        "login-message"
+    );
+
+
+const galleryTitle =
+    document.getElementById(
+        "gallery-title"
+    );
+
+
+const galleryMessage =
+    document.getElementById(
+        "gallery-message"
+    );
+
 
 const gallery =
-    document.getElementById("gallery");
+    document.getElementById(
+        "gallery"
+    );
 
 
-/* LOAD GALLERY */
+/* =====================================================
+   LOGIN MESSAGE
+   ===================================================== */
 
-async function loadGallery() {
+
+function showLoginMessage(
+    text,
+    type = ""
+) {
+
+    loginMessage.className =
+        type;
+
+    loginMessage.textContent =
+        text;
+}
+
+
+/* =====================================================
+   GET CURRENT USER
+   ===================================================== */
+
+
+async function getCurrentUser() {
+
+    const {
+        data: {
+            user
+        },
+        error
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
+
+    if (error || !user) {
+
+        return null;
+    }
+
+
+    return user;
+}
+
+
+/* =====================================================
+   VERIFY GALLERY OWNERSHIP
+   ===================================================== */
+
+
+async function verifyGalleryOwnership(
+    user
+) {
 
     if (!galleryId) {
 
-        title.textContent =
-            "Gallery not found";
-
-        return;
+        return {
+            success: false,
+            error: "Gallery link is invalid."
+        };
     }
 
 
     /*
-        Get gallery information.
+        Find the gallery.
     */
 
- const {
-    data: galleryData,
-    error: galleryError
-} = await supabaseClient
-    .from("galleries")
-    .select("*")
-    .eq("id", galleryId)
-    .eq("access_token", accessToken)
-    .single();
+
+    const {
+        data: galleryData,
+        error: galleryError
+    } =
+        await supabaseClient
+            .from("galleries")
+            .select("*")
+            .eq("id", galleryId)
+            .maybeSingle();
 
 
     if (galleryError) {
 
-        title.textContent =
-            "Gallery not found";
+        console.error(
+            "Gallery error:",
+            galleryError
+        );
 
-        message.className =
+        return {
+            success: false,
+            error: "Could not access this gallery."
+        };
+    }
+
+
+    if (!galleryData) {
+
+        return {
+            success: false,
+            error: "Gallery not found."
+        };
+    }
+
+
+    /*
+        Find client belonging to
+        logged-in user.
+    */
+
+
+    const {
+        data: client,
+        error: clientError
+    } =
+        await supabaseClient
+            .from("clients")
+            .select("*")
+            .eq("id", galleryData.client_id)
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+
+    if (clientError) {
+
+        console.error(
+            "Client verification error:",
+            clientError
+        );
+
+        return {
+            success: false,
+            error: "Could not verify your account."
+        };
+    }
+
+
+    if (!client) {
+
+        return {
+            success: false,
+            error:
+                "You do not have permission to view this gallery."
+        };
+    }
+
+
+    return {
+        success: true,
+        gallery: galleryData,
+        client: client
+    };
+}
+
+
+/* =====================================================
+   LOAD GALLERY
+   ===================================================== */
+
+
+async function loadGallery(
+    user
+) {
+
+    galleryMessage.textContent =
+        "Checking gallery access...";
+
+
+    const result =
+        await verifyGalleryOwnership(
+            user
+        );
+
+
+    if (!result.success) {
+
+        galleryTitle.textContent =
+            "Access denied";
+
+
+        galleryMessage.className =
             "error";
 
-        message.textContent =
-            galleryError.message;
+
+        galleryMessage.textContent =
+            result.error;
+
+
+        gallerySection.style.display =
+            "block";
+
 
         return;
     }
 
 
-    title.textContent =
+    const galleryData =
+        result.gallery;
+
+
+    galleryTitle.textContent =
         galleryData.client_name;
 
 
+    galleryMessage.className =
+        "";
+
+
+    galleryMessage.textContent =
+        "Your private gallery";
+
+
     /*
-        Get photos belonging to this gallery.
+        Get photos.
     */
+
 
     const {
         data: photos,
         error: photosError
-    } = await supabaseClient
-        .from("gallery_photos")
-        .select("*")
-        .eq("gallery_id", galleryId)
-        .order("created_at", {
-            ascending: true
-        });
+    } =
+        await supabaseClient
+            .from("gallery_photos")
+            .select("*")
+            .eq(
+                "gallery_id",
+                galleryData.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
 
 
     if (photosError) {
 
-        message.className =
+        console.error(
+            "Photos error:",
+            photosError
+        );
+
+
+        galleryMessage.className =
             "error";
 
-        message.textContent =
-            photosError.message;
+
+        galleryMessage.textContent =
+            "Could not load photos.";
+
 
         return;
     }
 
 
-    if (!photos || photos.length === 0) {
+    if (
+        !photos ||
+        photos.length === 0
+    ) {
 
-        message.textContent =
+        galleryMessage.textContent =
             "No photos have been added to this gallery yet.";
+
 
         return;
     }
@@ -278,91 +814,308 @@ async function loadGallery() {
         Create signed URLs.
     */
 
-    for (const photo of photos) {
 
-        const {
-            data: signedData,
-            error: signedError
-        } = await supabaseClient
-            .storage
-            .from("client-galleries")
-            .createSignedUrl(
-                photo.file_path,
-                3600
+    let loadedPhotos =
+        0;
+
+
+    for (
+        const photo of photos
+    ) {
+
+        try {
+
+            const {
+                data: signedData,
+                error: signedError
+            } =
+                await supabaseClient
+                    .storage
+                    .from(
+                        "client-galleries"
+                    )
+                    .createSignedUrl(
+                        photo.file_path,
+                        3600
+                    );
+
+
+            if (
+                signedError ||
+                !signedData ||
+                !signedData.signedUrl
+            ) {
+
+                console.error(
+                    "Signed URL error:",
+                    photo.file_path,
+                    signedError
+                );
+
+                continue;
+            }
+
+
+            const img =
+                document.createElement(
+                    "img"
+                );
+
+
+            img.className =
+                "photo";
+
+
+            img.src =
+                signedData.signedUrl;
+
+
+            img.alt =
+                photo.file_name ||
+                "Client photo";
+
+
+            img.addEventListener(
+                "click",
+                function() {
+
+                    document
+                        .getElementById(
+                            "lightbox-image"
+                        )
+                        .src =
+                        signedData.signedUrl;
+
+
+                    document
+                        .getElementById(
+                            "lightbox"
+                        )
+                        .style.display =
+                        "flex";
+
+                }
             );
 
 
-        if (signedError) {
+            gallery.appendChild(
+                img
+            );
+
+
+            loadedPhotos++;
+
+
+        } catch (error) {
 
             console.error(
-                signedError
+                "Photo loading error:",
+                error
             );
 
-            continue;
         }
 
-
-        const img =
-            document.createElement("img");
-
-        img.className =
-            "photo";
-
-        img.src =
-            signedData.signedUrl;
-
-        img.alt =
-            photo.file_name || "Client photo";
+    }
 
 
-        img.addEventListener(
-            "click",
-            function() {
+    if (loadedPhotos === 0) {
 
-                document
-                    .getElementById("lightbox-image")
-                    .src = signedData.signedUrl;
-
-                document
-                    .getElementById("lightbox")
-                    .style.display = "flex";
-
-            }
-        );
+        galleryMessage.className =
+            "error";
 
 
-        gallery.appendChild(img);
+        galleryMessage.textContent =
+            "Photos were found, but could not be loaded.";
+
+    } else {
+
+        galleryMessage.textContent =
+            loadedPhotos +
+            (
+                loadedPhotos === 1
+                    ? " photo"
+                    : " photos"
+            );
 
     }
 
 }
 
 
-/* CLOSE LIGHTBOX */
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+
+        const email =
+            document
+                .getElementById("email")
+                .value
+                .trim();
+
+
+        const password =
+            document
+                .getElementById("password")
+                .value;
+
+
+        showLoginMessage(
+            "Logging in..."
+        );
+
+
+        /*
+            Sign in using Supabase Auth.
+        */
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .auth
+                .signInWithPassword({
+                    email: email,
+                    password: password
+                });
+
+
+        if (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            showLoginMessage(
+                "Invalid email or password.",
+                "error"
+            );
+
+
+            return;
+        }
+
+
+        if (
+            !data ||
+            !data.user
+        ) {
+
+            showLoginMessage(
+                "Login failed.",
+                "error"
+            );
+
+
+            return;
+        }
+
+
+        showLoginMessage(
+            "Login successful.",
+            "success"
+        );
+
+
+        /*
+            Hide login.
+        */
+
+
+        loginSection.style.display =
+            "none";
+
+
+        gallerySection.style.display =
+            "block";
+
+
+        /*
+            Verify ownership.
+        */
+
+
+        await loadGallery(
+            data.user
+        );
+
+    }
+);
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
 
 document
-    .getElementById("close")
+    .getElementById(
+        "logout"
+    )
+    .addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            window.location.reload();
+
+        }
+    );
+
+
+/* =====================================================
+   LIGHTBOX CLOSE
+   ===================================================== */
+
+
+document
+    .getElementById(
+        "close"
+    )
     .addEventListener(
         "click",
         function() {
 
             document
-                .getElementById("lightbox")
-                .style.display = "none";
+                .getElementById(
+                    "lightbox"
+                )
+                .style.display =
+                "none";
 
         }
     );
 
 
 document
-    .getElementById("lightbox")
+    .getElementById(
+        "lightbox"
+    )
     .addEventListener(
         "click",
         function(event) {
 
-            if (event.target === this) {
+            if (
+                event.target === this
+            ) {
 
-                this.style.display = "none";
+                this.style.display =
+                    "none";
 
             }
 
@@ -370,11 +1123,85 @@ document
     );
 
 
-/* START */
+/* =====================================================
+   START
+   ===================================================== */
 
-loadGallery();
+
+(async function() {
+
+
+    if (!galleryId) {
+
+        loginSection.style.display =
+            "none";
+
+
+        gallerySection.style.display =
+            "block";
+
+
+        galleryTitle.textContent =
+            "Invalid Gallery Link";
+
+
+        galleryMessage.className =
+            "error";
+
+
+        galleryMessage.textContent =
+            "The gallery link is missing a gallery ID.";
+
+
+        return;
+    }
+
+
+    /*
+        Check whether the browser already
+        has a logged-in client session.
+    */
+
+
+    const user =
+        await getCurrentUser();
+
+
+    if (user) {
+
+        loginSection.style.display =
+            "none";
+
+
+        gallerySection.style.display =
+            "block";
+
+
+        await loadGallery(
+            user
+        );
+
+    } else {
+
+        /*
+            No login.
+            Show Client Login.
+        */
+
+
+        loginSection.style.display =
+            "block";
+
+
+        gallerySection.style.display =
+            "none";
+
+    }
+
+})();
 
 </script>
 
 </body>
+
 </html>
