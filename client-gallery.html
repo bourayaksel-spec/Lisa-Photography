@@ -285,150 +285,116 @@ document
 
 async function loadClientGallery() {
 
-    /*
-        1. Get logged-in Auth user
-    */
+    message.className = "";
+    message.textContent = "Loading your gallery...";
+
+    console.log("1. Loading client gallery...");
+
+    /* 1. Get logged-in user */
 
     const {
-        data: {
-            user
-        },
+        data: { user },
         error: userError
-    } =
-        await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser();
 
+    console.log("AUTH USER:", user);
+    console.log("AUTH ERROR:", userError);
 
     if (userError || !user) {
+        console.error("No authenticated user.");
 
-        window.location.href =
-            "client-login.html";
-
+        window.location.href = "client-login.html";
         return;
     }
 
 
-    /*
-        2. Find client using user_id
-    */
+    /* 2. Find client */
 
     const {
         data: client,
         error: clientError
-    } =
-        await supabaseClient
-            .from("clients")
-            .select("*")
-            .eq(
-                "user_id",
-                user.id
-            )
-            .single();
+    } = await supabaseClient
+        .from("clients")
+        .select("id, name, email, user_id")
+        .eq("user_id", user.id)
+        .single();
 
+    console.log("CLIENT:", client);
+    console.log("CLIENT ERROR:", clientError);
 
     if (clientError || !client) {
 
-        message.className =
-            "error";
+        message.className = "error";
 
         message.textContent =
             "Client account not found.";
 
-        console.error(
-            "Client error:",
-            clientError
-        );
-
         return;
     }
 
 
-    /*
-        3. Display client name
-    */
+    /* 3. Display client name */
 
     clientNameElement.textContent =
-        client.name;
+        client.name || "Your memories.";
 
 
-    /*
-        4. Find this client's gallery
-    */
+    /* 4. Find gallery */
 
     const {
         data: galleryData,
         error: galleryError
-    } =
-        await supabaseClient
-            .from("galleries")
-            .select("*")
-            .eq(
-                "client_id",
-                client.id
-            )
-            .single();
+    } = await supabaseClient
+        .from("galleries")
+        .select("id, client_id, client_name")
+        .eq("client_id", client.id)
+        .single();
 
+    console.log("GALLERY:", galleryData);
+    console.log("GALLERY ERROR:", galleryError);
 
     if (galleryError || !galleryData) {
 
-        message.className =
-            "error";
+        message.className = "error";
 
         message.textContent =
             "Gallery not found.";
 
-        console.error(
-            "Gallery error:",
-            galleryError
-        );
-
         return;
     }
 
 
-    /*
-        5. Get photos
-    */
+    /* 5. Get photos */
 
     const {
         data: photos,
         error: photosError
-    } =
-        await supabaseClient
-            .from("gallery_photos")
-            .select("*")
-            .eq(
-                "gallery_id",
-                galleryData.id
-            )
-            .order(
-                "created_at",
-                {
-                    ascending: true
-                }
-            );
+    } = await supabaseClient
+        .from("gallery_photos")
+        .select("id, gallery_id, file_path, file_name, created_at")
+        .eq("gallery_id", galleryData.id)
+        .order("created_at", {
+            ascending: true
+        });
 
+    console.log("PHOTOS:", photos);
+    console.log("PHOTOS ERROR:", photosError);
 
     if (photosError) {
 
-        message.className =
-            "error";
+        message.className = "error";
 
         message.textContent =
-            "Could not load photos.";
-
-        console.error(
-            "Photos error:",
-            photosError
-        );
+            "Could not load photos: " +
+            photosError.message;
 
         return;
     }
 
 
-    if (
-        !photos ||
-        photos.length === 0
-    ) {
+    if (!photos || photos.length === 0) {
+
+        message.className = "error";
 
         message.textContent =
             "No photos have been added to your gallery yet.";
@@ -437,33 +403,45 @@ async function loadClientGallery() {
     }
 
 
-    /*
-        6. Create signed URLs
-    */
+    /* 6. Create signed URLs */
 
-    for (
-        const photo of photos
-    ) {
+    let loadedPhotos = 0;
+
+    for (const photo of photos) {
+
+        console.log(
+            "Creating signed URL for:",
+            photo.file_path
+        );
 
         const {
             data: signedData,
             error: signedError
-        } =
-            await supabaseClient
-                .storage
-                .from(
-                    "client-galleries"
-                )
-                .createSignedUrl(
-                    photo.file_path,
-                    3600
-                );
+        } = await supabaseClient
+            .storage
+            .from("client-galleries")
+            .createSignedUrl(
+                photo.file_path,
+                3600
+            );
+
+
+        console.log(
+            "SIGNED URL:",
+            signedData
+        );
+
+        console.log(
+            "SIGNED ERROR:",
+            signedError
+        );
 
 
         if (signedError) {
 
             console.error(
                 "Signed URL error:",
+                photo.file_path,
                 signedError
             );
 
@@ -471,19 +449,24 @@ async function loadClientGallery() {
         }
 
 
-        const img =
-            document.createElement(
-                "img"
+        if (!signedData || !signedData.signedUrl) {
+
+            console.error(
+                "No signed URL returned for:",
+                photo.file_path
             );
 
+            continue;
+        }
 
-        img.className =
-            "photo";
 
+        const img =
+            document.createElement("img");
+
+        img.className = "photo";
 
         img.src =
             signedData.signedUrl;
-
 
         img.alt =
             photo.file_name ||
@@ -495,17 +478,12 @@ async function loadClientGallery() {
             function() {
 
                 document
-                    .getElementById(
-                        "lightbox-image"
-                    )
+                    .getElementById("lightbox-image")
                     .src =
                     signedData.signedUrl;
 
-
                 document
-                    .getElementById(
-                        "lightbox"
-                    )
+                    .getElementById("lightbox")
                     .style.display =
                     "flex";
 
@@ -513,14 +491,37 @@ async function loadClientGallery() {
         );
 
 
-        gallery.appendChild(
-            img
-        );
+        gallery.appendChild(img);
 
+        loadedPhotos++;
     }
 
-}
 
+    console.log(
+        "TOTAL PHOTOS:",
+        photos.length
+    );
+
+    console.log(
+        "LOADED PHOTOS:",
+        loadedPhotos
+    );
+
+
+    if (loadedPhotos === 0) {
+
+        message.className = "error";
+
+        message.textContent =
+            "Photos were found, but their secure URLs could not be created. Check the browser Console.";
+
+        return;
+    }
+
+
+    message.textContent = "";
+
+}
 
 /* LOGOUT */
 
