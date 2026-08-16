@@ -594,12 +594,9 @@ async function getCurrentUser() {
    ===================================================== */
 
 
-async function verifyGalleryOwnership(
-    user
-) {
+async function verifyGalleryOwnership(user) {
 
     if (!galleryId) {
-
         return {
             success: false,
             error: "Gallery link is invalid."
@@ -607,10 +604,9 @@ async function verifyGalleryOwnership(
     }
 
 
-    /*
-        Find the gallery.
-    */
-
+    /* =================================================
+       1. GET GALLERY
+       ================================================= */
 
     const {
         data: galleryData,
@@ -618,7 +614,9 @@ async function verifyGalleryOwnership(
     } =
         await supabaseClient
             .from("galleries")
-            .select("*")
+            .select(
+                "id, client_id, client_name, access_token"
+            )
             .eq("id", galleryId)
             .maybeSingle();
 
@@ -646,11 +644,49 @@ async function verifyGalleryOwnership(
     }
 
 
+    /* =================================================
+       2. CHECK IF USER IS ADMIN
+       ================================================= */
+
+    const {
+        data: adminUser,
+        error: adminError
+    } =
+        await supabaseClient
+            .from("admin_users")
+            .select("user_id")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+
+    if (adminError) {
+
+        console.error(
+            "Admin verification error:",
+            adminError
+        );
+
+    }
+
+
     /*
-        Find client belonging to
-        logged-in user.
+        ADMIN CAN OPEN ANY GALLERY
     */
 
+    if (adminUser) {
+
+        return {
+            success: true,
+            gallery: galleryData,
+            client: null,
+            isAdmin: true
+        };
+    }
+
+
+    /* =================================================
+       3. CHECK CLIENT OWNERSHIP
+       ================================================= */
 
     const {
         data: client,
@@ -658,9 +694,17 @@ async function verifyGalleryOwnership(
     } =
         await supabaseClient
             .from("clients")
-            .select("*")
-            .eq("id", galleryData.client_id)
-            .eq("user_id", user.id)
+            .select(
+                "id, user_id, email, name"
+            )
+            .eq(
+                "id",
+                galleryData.client_id
+            )
+            .eq(
+                "user_id",
+                user.id
+            )
             .maybeSingle();
 
 
@@ -678,6 +722,10 @@ async function verifyGalleryOwnership(
     }
 
 
+    /* =================================================
+       4. CLIENT DOES NOT OWN THIS GALLERY
+       ================================================= */
+
     if (!client) {
 
         return {
@@ -688,14 +736,17 @@ async function verifyGalleryOwnership(
     }
 
 
+    /* =================================================
+       5. CLIENT IS VERIFIED
+       ================================================= */
+
     return {
         success: true,
         gallery: galleryData,
-        client: client
+        client: client,
+        isAdmin: false
     };
 }
-
-
 /* =====================================================
    LOAD GALLERY
    ===================================================== */
