@@ -1,15 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Lisa Michelle Visuals — Dashboard</title>
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Lisa Michelle Visuals — Dashboard
+    </title>
+
 
     <style>
+
         * {
             box-sizing: border-box;
         }
+
 
         body {
             margin: 0;
@@ -18,13 +29,18 @@
             font-family: Arial, sans-serif;
         }
 
+
         header {
             padding: 25px 5%;
             border-bottom: 1px solid #333;
+
             display: flex;
             justify-content: space-between;
             align-items: center;
+
+            gap: 20px;
         }
+
 
         header h1 {
             margin: 0;
@@ -32,24 +48,24 @@
             font-weight: 400;
         }
 
-        #logout {
-            background: transparent;
-            color: white;
-            border: 1px solid #555;
-            padding: 10px 18px;
-            cursor: pointer;
-        }
 
         main {
             width: 90%;
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 50px auto;
         }
+
 
         h2 {
             font-size: 32px;
             font-weight: 400;
         }
+
+
+        h3 {
+            font-weight: 400;
+        }
+
 
         .card {
             background: #1b1b1b;
@@ -58,130 +74,405 @@
             margin-bottom: 30px;
         }
 
+
         .add-client-form {
-            display: flex;
+            display: grid;
+
+            grid-template-columns:
+                1fr
+                1fr
+                1fr
+                auto;
+
             gap: 10px;
+
             margin-top: 20px;
         }
 
+
         .add-client-form input {
-            flex: 1;
+            width: 100%;
             padding: 14px;
+
             border: 1px solid #444;
+
             background: #111;
             color: white;
         }
 
-        .client {
-            padding: 20px 0;
-            border-bottom: 1px solid #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .client:last-child {
-            border-bottom: none;
-        }
-
-        .client-name {
-            font-size: 20px;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
 
         button,
         .button-link {
+
             padding: 12px 18px;
+
             background: white;
             color: black;
+
             border: none;
+
             cursor: pointer;
+
             font-weight: bold;
+
             text-decoration: none;
+
             display: inline-block;
         }
+
 
         button:hover,
         .button-link:hover {
             opacity: .85;
         }
 
+
         .secondary {
+
             background: transparent;
             color: white;
+
             border: 1px solid #555;
         }
 
+
+        .danger {
+
+            background: #7a2020;
+            color: white;
+        }
+
+
+        .replace-button {
+
+            background: #444;
+            color: white;
+        }
+
+
         .upload-button {
+
             background: #ddd;
+            color: black;
         }
 
-        #message {
-            margin-top: 20px;
+
+        .copy-button {
+
+            background: transparent;
+            color: white;
+
+            border: 1px solid #555;
+        }
+
+
+        .client {
+
+            padding: 25px 0;
+
+            border-bottom: 1px solid #333;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 25px;
+        }
+
+
+        .client:last-child {
+            border-bottom: none;
+        }
+
+
+        .client-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+
+        .client-name {
+
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+
+        .client-email {
+
+            color: #888;
+            font-size: 14px;
+        }
+
+
+        .gallery-count {
+
             color: #aaa;
-            line-height: 1.6;
+            font-size: 14px;
+
+            margin-top: 8px;
         }
 
-        .error {
-            color: #ff7777;
+
+        .actions {
+
+            display: flex;
+
+            gap: 8px;
+
+            flex-wrap: wrap;
+
+            justify-content: flex-end;
         }
 
-        .success {
-            color: #7cff7c;
+
+        .actions button,
+        .actions a {
+            white-space: nowrap;
         }
+
 
         .hidden {
             display: none;
         }
-.gallery-count {
-    color: #aaa;
-    font-size: 14px;
-    margin-top: 6px;
-}
 
-.copy-button {
-    background: transparent;
-    color: white;
-    border: 1px solid #555;
-}
-        @media (max-width: 600px) {
+
+        #message {
+
+            margin-top: 20px;
+
+            color: #aaa;
+
+            line-height: 1.6;
+        }
+
+
+        .error {
+            color: #ff7777 !important;
+        }
+
+
+        .success {
+            color: #7cff7c !important;
+        }
+
+
+        /* PHOTOS */
+
+
+        .photos-section {
+
+            margin-top: 25px;
+
+            padding-top: 20px;
+
+            border-top: 1px solid #333;
+        }
+
+
+        .photos-title {
+
+            color: #aaa;
+
+            font-size: 14px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .photos-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+
+        .photo-card {
+
+            position: relative;
+
+            background: #111;
+
+            border: 1px solid #333;
+
+            overflow: hidden;
+        }
+
+
+        .photo-card img {
+
+            width: 100%;
+
+            aspect-ratio: 1 / 1;
+
+            object-fit: cover;
+
+            display: block;
+
+            cursor: pointer;
+        }
+
+
+        .photo-actions {
+
+            display: flex;
+
+            gap: 5px;
+
+            padding: 7px;
+        }
+
+
+        .photo-actions button {
+
+            flex: 1;
+
+            padding: 8px 5px;
+
+            font-size: 11px;
+        }
+
+
+        /* LIGHTBOX */
+
+
+        .lightbox {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, .95);
+
+            z-index: 9999;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 20px;
+        }
+
+
+        .lightbox img {
+
+            max-width: 95vw;
+
+            max-height: 90vh;
+
+            object-fit: contain;
+        }
+
+
+        .lightbox-close {
+
+            position: absolute;
+
+            top: 20px;
+
+            right: 30px;
+
+            font-size: 40px;
+
+            cursor: pointer;
+        }
+
+
+        @media (max-width: 850px) {
 
             .add-client-form {
-                flex-direction: column;
+
+                grid-template-columns:
+                    1fr
+                    1fr;
             }
 
-            .client {
+
+            .photos-grid {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            header {
+
                 flex-direction: column;
+
                 align-items: flex-start;
             }
 
-            .actions {
-                width: 100%;
+
+            .add-client-form {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .client {
+
                 flex-direction: column;
             }
 
+
+            .actions {
+
+                width: 100%;
+
+                justify-content: flex-start;
+            }
+
+
             .actions button,
             .actions a {
-                width: 100%;
+
+                flex: 1;
+
                 text-align: center;
             }
+
+
+            .photos-grid {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <header>
 
-    <h1>Lisa Michelle Visuals</h1>
+    <h1>
+        Lisa Michelle Visuals
+    </h1>
 
-    <button id="logout" class="secondary">
+
+    <button
+        id="logout"
+        class="secondary"
+    >
         LOGOUT
     </button>
 
@@ -190,44 +481,55 @@
 
 <main>
 
-    <h2>Client Gallery Manager</h2>
+    <h2>
+        Client Gallery Manager
+    </h2>
 
 
     <!-- ADD CLIENT -->
 
     <section class="card">
 
-        <h3>Add Client</h3>
+        <h3>
+            Add Client
+        </h3>
 
-     <form id="add-client-form" class="add-client-form">
 
-    <input
-        type="text"
-        id="client-name"
-        placeholder="Client name"
-        required
-    >
+        <form
+            id="add-client-form"
+            class="add-client-form"
+        >
 
-    <input
-        type="email"
-        id="client-email"
-        placeholder="Client email"
-        required
-    >
+            <input
+                type="text"
+                id="client-name"
+                placeholder="Client name"
+                required
+            >
 
-    <input
-        type="password"
-        id="client-password"
-        placeholder="Temporary password"
-        minlength="6"
-        required
-    >
 
-    <button type="submit">
-        CREATE CLIENT
-    </button>
+            <input
+                type="email"
+                id="client-email"
+                placeholder="Client email"
+                required
+            >
 
-</form>
+
+            <input
+                type="password"
+                id="client-password"
+                placeholder="Temporary password"
+                minlength="6"
+                required
+            >
+
+
+            <button type="submit">
+                CREATE CLIENT
+            </button>
+
+        </form>
 
     </section>
 
@@ -236,7 +538,10 @@
 
     <section class="card">
 
-        <h3>Clients</h3>
+        <h3>
+            Clients
+        </h3>
+
 
         <div id="clients-list">
             Loading clients...
@@ -250,12 +555,39 @@
 </main>
 
 
+<!-- LIGHTBOX -->
+
+<div
+    id="lightbox"
+    class="lightbox"
+>
+
+    <span
+        id="lightbox-close"
+        class="lightbox-close"
+    >
+        &times;
+    </span>
+
+
+    <img
+        id="lightbox-image"
+        src=""
+        alt="Photo"
+    >
+
+</div>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 
 <script>
 
+
 const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
+
 
 const SUPABASE_KEY =
     "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
@@ -268,76 +600,126 @@ const supabaseClient =
     );
 
 
-/* CHECK LOGIN */
+/* =====================================================
+   MESSAGE
+   ===================================================== */
+
+
+function showMessage(
+    text,
+    type = ""
+) {
+
+    const message =
+        document.getElementById(
+            "message"
+        );
+
+
+    message.className =
+        type;
+
+
+    message.textContent =
+        text;
+}
+
+
+/* =====================================================
+   CHECK LOGIN
+   ===================================================== */
+
 
 async function checkUser() {
 
     const {
-        data: { user }
-    } = await supabaseClient.auth.getUser();
+        data: {
+            user
+        }
+    } =
+        await supabaseClient
+            .auth
+            .getUser();
+
 
     if (!user) {
 
-        window.location.href = "admin.html";
+        window.location.href =
+            "admin.html";
 
         return null;
     }
+
 
     return user;
 }
 
 
-/* MESSAGE */
+/* =====================================================
+   CREATE SLUG
+   ===================================================== */
 
-function showMessage(text, type = "") {
-
-    const message =
-        document.getElementById("message");
-
-    message.className = type;
-
-    message.textContent = text;
-}
-
-
-/* CREATE SLUG */
 
 function createSlug(name) {
 
     return name
         .toLowerCase()
         .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replace(
+            /[^a-z0-9]+/g,
+            "-"
+        )
+        .replace(
+            /^-+|-+$/g,
+            "");
 }
 
 
-/* ADD CLIENT */
+/* =====================================================
+   CREATE CLIENT
+   ===================================================== */
+
 
 async function addClient(event) {
 
     event.preventDefault();
 
+
     const nameInput =
-        document.getElementById("client-name");
+        document.getElementById(
+            "client-name"
+        );
+
 
     const emailInput =
-        document.getElementById("client-email");
+        document.getElementById(
+            "client-email"
+        );
+
 
     const passwordInput =
-        document.getElementById("client-password");
+        document.getElementById(
+            "client-password"
+        );
+
 
     const name =
         nameInput.value.trim();
 
+
     const email =
         emailInput.value.trim();
+
 
     const password =
         passwordInput.value;
 
 
-    if (!name || !email || !password) {
+    if (
+        !name ||
+        !email ||
+        !password
+    ) {
 
         showMessage(
             "Please fill in all fields.",
@@ -348,7 +730,9 @@ async function addClient(event) {
     }
 
 
-    if (password.length < 6) {
+    if (
+        password.length < 6
+    ) {
 
         showMessage(
             "Password must be at least 6 characters.",
@@ -369,36 +753,44 @@ async function addClient(event) {
         const {
             data,
             error
-        } = await supabaseClient.functions.invoke(
-            "super-handler",
-            {
-                body: {
-                    name: name,
-                    email: email,
-                    password: password
-                }
-            }
-        );
+        } =
+            await supabaseClient
+                .functions
+                .invoke(
+                    "super-handler",
+                    {
+                        body: {
+                            action:
+                                "create_client",
+
+                            name:
+                                name,
+
+                            email:
+                                email,
+
+                            password:
+                                password
+                        }
+                    }
+                );
 
 
-       if (error) {
+        if (error) {
 
-    console.error("FUNCTION ERROR:", error);
+            console.error(
+                "FUNCTION ERROR:",
+                error
+            );
 
-    if (error.context) {
-        try {
-            const errorBody = await error.context.json();
-            console.error("FUNCTION RESPONSE:", errorBody);
-        } catch (e) {
-            console.error("Could not read function response.");
+            throw error;
         }
-    }
-
-    throw error;
-}
 
 
-        if (!data || !data.success) {
+        if (
+            !data ||
+            !data.success
+        ) {
 
             throw new Error(
                 data?.error ||
@@ -407,12 +799,10 @@ async function addClient(event) {
         }
 
 
-        /*
-            Clear form
-        */
-
         nameInput.value = "";
+
         emailInput.value = "";
+
         passwordInput.value = "";
 
 
@@ -421,10 +811,6 @@ async function addClient(event) {
             "success"
         );
 
-
-        /*
-            Reload clients
-        */
 
         await loadClients();
 
@@ -436,6 +822,7 @@ async function addClient(event) {
             error
         );
 
+
         showMessage(
             "Error creating client: " +
             error.message,
@@ -443,16 +830,27 @@ async function addClient(event) {
         );
     }
 }
-/* UPLOAD PHOTOS */
 
-async function uploadPhotos(galleryId, fileInput) {
+
+/* =====================================================
+   UPLOAD PHOTOS
+   ===================================================== */
+
+
+async function uploadPhotos(
+    galleryId,
+    fileInput
+) {
 
     const files =
-        Array.from(fileInput.files);
+        Array.from(
+            fileInput.files
+        );
 
 
-    if (!files.length) {
-
+    if (
+        files.length === 0
+    ) {
         return;
     }
 
@@ -467,13 +865,11 @@ async function uploadPhotos(galleryId, fileInput) {
     let uploaded = 0;
 
 
-    for (const file of files) {
+    for (
+        const file of files
+    ) {
 
         try {
-
-            /*
-                Create a unique filename.
-            */
 
             const extension =
                 file.name.includes(".")
@@ -482,10 +878,17 @@ async function uploadPhotos(galleryId, fileInput) {
                     )
                     : "";
 
+
             const baseName =
                 file.name
-                    .replace(/\.[^/.]+$/, "")
-                    .replace(/[^a-zA-Z0-9_-]/g, "-");
+                    .replace(
+                        /\.[^/.]+$/,
+                        ""
+                    )
+                    .replace(
+                        /[^a-zA-Z0-9_-]/g,
+                        "-"
+                    );
 
 
             const uniqueName =
@@ -493,71 +896,85 @@ async function uploadPhotos(galleryId, fileInput) {
                 "-" +
                 Math.random()
                     .toString(36)
-                    .substring(2, 8) +
+                    .substring(
+                        2,
+                        8
+                    ) +
                 "-" +
                 baseName +
                 extension;
 
 
-            /*
-                Upload to PRIVATE bucket.
-            */
-
             const {
-                error: uploadError
-            } = await supabaseClient
-                .storage
-                .from("client-galleries")
-                .upload(
-                    uniqueName,
-                    file,
-                    {
-                        cacheControl: "3600",
-                        upsert: false
-                    }
-                );
+                error:
+                    uploadError
+            } =
+                await supabaseClient
+                    .storage
+                    .from(
+                        "client-galleries"
+                    )
+                    .upload(
+                        uniqueName,
+                        file,
+                        {
+                            cacheControl:
+                                "3600",
+
+                            upsert:
+                                false
+                        }
+                    );
 
 
-            if (uploadError) {
-
+            if (
+                uploadError
+            ) {
                 throw uploadError;
             }
 
 
-            /*
-                Add photo record.
-            */
-
             const {
-                error: photoError
-            } = await supabaseClient
-                .from("gallery_photos")
-                .insert([
-                    {
-                        gallery_id: galleryId,
-                        file_name: file.name,
-                        file_path: uniqueName
-                    }
-                ]);
+                error:
+                    photoError
+            } =
+                await supabaseClient
+                    .from(
+                        "gallery_photos"
+                    )
+                    .insert([
+                        {
+                            gallery_id:
+                                galleryId,
+
+                            file_name:
+                                file.name,
+
+                            file_path:
+                                uniqueName
+                        }
+                    ]);
 
 
-            if (photoError) {
-
-                /*
-                    If database insert fails,
-                    remove uploaded file.
-                */
+            if (
+                photoError
+            ) {
 
                 await supabaseClient
                     .storage
-                    .from("client-galleries")
-                    .remove([uniqueName]);
+                    .from(
+                        "client-galleries"
+                    )
+                    .remove([
+                        uniqueName
+                    ]);
 
                 throw photoError;
             }
 
 
             uploaded++;
+
 
             showMessage(
                 "Uploaded " +
@@ -567,6 +984,7 @@ async function uploadPhotos(galleryId, fileInput) {
                 " photo(s)..."
             );
 
+
         } catch (error) {
 
             console.error(
@@ -574,20 +992,27 @@ async function uploadPhotos(galleryId, fileInput) {
                 error
             );
 
+
             showMessage(
                 "Upload error: " +
                 error.message,
                 "error"
             );
 
-            fileInput.value = "";
+
+            fileInput.value =
+                "";
+
+
+            await loadClients();
 
             return;
         }
     }
 
 
-    fileInput.value = "";
+    fileInput.value =
+        "";
 
 
     showMessage(
@@ -595,318 +1020,20 @@ async function uploadPhotos(galleryId, fileInput) {
         " photo(s) uploaded successfully.",
         "success"
     );
-}
 
-async function copyGalleryLink(gallery) {
 
-    const link =
-        window.location.origin +
-        "/Lisa-Photography/gallery.html?gallery=" +
-        encodeURIComponent(gallery.id) +
-        "&token=" +
-        encodeURIComponent(gallery.access_token);
-
-    try {
-
-        await navigator.clipboard.writeText(link);
-
-        showMessage(
-            "Gallery link copied successfully.",
-            "success"
-        );
-
-    } catch (error) {
-
-        console.error(error);
-
-        showMessage(
-            "Could not copy the gallery link.",
-            "error"
-        );
-    }
-}
-    
-/* LOAD CLIENTS */
-
-async function loadClients() {
-
-    const list =
-        document.getElementById("clients-list");
-
-    list.textContent =
-        "Loading clients...";
-
-
-    const {
-        data: clients,
-        error: clientError
-    } = await supabaseClient
-        .from("clients")
-        .select("*")
-        .order("created_at", {
-            ascending: false
-        });
-
-
-    if (clientError) {
-
-        list.innerHTML =
-            `<p class="error">Error loading clients: ${clientError.message}</p>`;
-
-        return;
-    }
-
-
-    if (!clients || clients.length === 0) {
-
-        list.textContent =
-            "No clients yet.";
-
-        return;
-    }
-
-
-    /*
-        Get galleries.
-    */
-
-    const {
-        data: galleries,
-        error: galleryError
-    } = await supabaseClient
-        .from("galleries")
-        .select("*");
-
-
-    if (galleryError) {
-
-        list.innerHTML =
-            `<p class="error">Error loading galleries: ${galleryError.message}</p>`;
-
-        return;
-    }
-
-const {
-    data: photos,
-    error: photoError
-} = await supabaseClient
-    .from("gallery_photos")
-    .select("gallery_id");
-
-if (photoError) {
-
-    list.innerHTML =
-        `<p class="error">Error loading photos: ${photoError.message}</p>`;
-
-    return;
-}
-    list.innerHTML = "";
-
-
-clients.forEach(client => {
-
-    const div =
-        document.createElement("div");
-
-    div.className =
-        "client";
-
-
-    const name =
-        document.createElement("div");
-
-    name.className =
-        "client-name";
-
-    name.textContent =
-        client.name;
-const clientGallery =
-    galleries.find(
-        gallery =>
-            String(gallery.client_id).trim() ===
-            String(client.id).trim()
-    );
-
-let photoCount = 0;
-
-if (clientGallery) {
-    photoCount =
-        photos.filter(
-            photo =>
-                String(photo.gallery_id).trim() ===
-                String(clientGallery.id).trim()
-        ).length;
-}
-
-const photoInfo =
-    document.createElement("div");
-
-photoInfo.className =
-    "gallery-count";
-
-photoInfo.textContent =
-    photoCount === 1
-        ? "1 photo"
-        : `${photoCount} photos`;
-
-    
-
-        const actions =
-            document.createElement("div");
-
-        actions.className =
-            "actions";
-
-
-        /*
-            Find gallery.
-        */
-
-     
-
-
-        if (clientGallery) {
-
-            /*
-                OPEN GALLERY
-            */
-
-            const openButton =
-                document.createElement("a");
-
-            openButton.className =
-                "button-link";
-
-            openButton.textContent =
-                "OPEN GALLERY";
-
-           openButton.href =
-    "gallery.html?gallery=" +
-    encodeURIComponent(clientGallery.id) +
-    "&token=" +
-    encodeURIComponent(clientGallery.access_token);
-
-            openButton.target =
-                "_blank";
-
-
-            actions.appendChild(
-                openButton
-            );
-const copyButton =
-    document.createElement("button");
-
-copyButton.className =
-    "copy-button";
-
-copyButton.textContent =
-    "COPY LINK";
-
-copyButton.addEventListener(
-    "click",
-    () => copyGalleryLink(clientGallery)
-);
-
-actions.appendChild(
-    copyButton
-);
-
-            /*
-                UPLOAD PHOTOS
-            */
-
-            const uploadButton =
-                document.createElement("button");
-
-            uploadButton.className =
-                "upload-button";
-
-            uploadButton.textContent =
-                "UPLOAD PHOTOS";
-
-
-            const fileInput =
-                document.createElement("input");
-
-            fileInput.type =
-                "file";
-
-            fileInput.accept =
-                "image/jpeg,image/png,image/webp,image/heic,image/heif";
-
-            fileInput.multiple =
-                true;
-
-            fileInput.className =
-                "hidden";
-
-
-            uploadButton.addEventListener(
-                "click",
-                () => fileInput.click()
-            );
-
-
-            fileInput.addEventListener(
-                "change",
-                () => uploadPhotos(
-                    clientGallery.id,
-                    fileInput
-                )
-            );
-
-
-            actions.appendChild(
-                uploadButton
-            );
-
-            actions.appendChild(
-                fileInput
-            );
-
-
-        } else {
-
-            /*
-                CREATE GALLERY
-            */
-
-            const createButton =
-                document.createElement("button");
-
-            createButton.textContent =
-                "CREATE GALLERY";
-
-
-            createButton.addEventListener(
-                "click",
-                () => createGallery(client)
-            );
-
-
-            actions.appendChild(
-                createButton
-            );
-
-        }
-
-
-name.appendChild(photoInfo);
-
-div.appendChild(name);
-
-div.appendChild(actions);
-
-list.appendChild(div);
-
-    });
-
+    await loadClients();
 }
 
 
-/* CREATE GALLERY FOR EXISTING CLIENT */
+/* =====================================================
+   CREATE GALLERY
+   ===================================================== */
 
-async function createGallery(client) {
+
+async function createGallery(
+    client
+) {
 
     showMessage(
         "Creating gallery..."
@@ -914,23 +1041,38 @@ async function createGallery(client) {
 
 
     const slug =
-        createSlug(client.name);
+        createSlug(
+            client.name
+        );
+
+
+    const accessToken =
+        crypto.randomUUID();
 
 
     const {
         data,
         error
-    } = await supabaseClient
-        .from("galleries")
-        .insert([
-            {
-                client_id: client.id,
-                client_name: client.name,
-                slug: slug
-            }
-        ])
-        .select()
-        .single();
+    } =
+        await supabaseClient
+            .from("galleries")
+            .insert([
+                {
+                    client_id:
+                        client.id,
+
+                    client_name:
+                        client.name,
+
+                    slug:
+                        slug,
+
+                    access_token:
+                        accessToken
+                }
+            ])
+            .select()
+            .single();
 
 
     if (error) {
@@ -955,49 +1097,1373 @@ async function createGallery(client) {
 }
 
 
-/* ADD CLIENT FORM */
+/* =====================================================
+   COPY GALLERY LINK
+   ===================================================== */
+
+
+async function copyGalleryLink(
+    gallery
+) {
+
+    const link =
+        window.location.origin +
+        "/Lisa-Photography/gallery.html?gallery=" +
+        encodeURIComponent(
+            gallery.id
+        ) +
+        "&token=" +
+        encodeURIComponent(
+            gallery.access_token
+        );
+
+
+    try {
+
+        await navigator
+            .clipboard
+            .writeText(
+                link
+            );
+
+
+        showMessage(
+            "Gallery link copied successfully.",
+            "success"
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            error
+        );
+
+
+        showMessage(
+            "Could not copy the gallery link.",
+            "error"
+        );
+    }
+}
+
+
+/* =====================================================
+   CREATE SIGNED URL
+   ===================================================== */
+
+
+async function getSignedUrl(
+    filePath
+) {
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from(
+                "client-galleries"
+            )
+            .createSignedUrl(
+                filePath,
+                3600
+            );
+
+
+    if (
+        error ||
+        !data
+    ) {
+
+        console.error(
+            "Signed URL error:",
+            error
+        );
+
+        return null;
+    }
+
+
+    return data.signedUrl;
+}
+
+
+/* =====================================================
+   LIGHTBOX
+   ===================================================== */
+
+
+function openLightbox(
+    url
+) {
+
+    const lightbox =
+        document.getElementById(
+            "lightbox"
+        );
+
+
+    const image =
+        document.getElementById(
+            "lightbox-image"
+        );
+
+
+    image.src =
+        url;
+
+
+    lightbox.style.display =
+        "flex";
+}
+
 
 document
-    .getElementById("add-client-form")
+    .getElementById(
+        "lightbox-close"
+    )
+    .addEventListener(
+        "click",
+        () => {
+
+            document
+                .getElementById(
+                    "lightbox"
+                )
+                .style.display =
+                "none";
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "lightbox"
+    )
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                this.style.display =
+                    "none";
+            }
+        }
+    );
+
+
+/* =====================================================
+   DELETE PHOTO
+   ===================================================== */
+
+
+async function deletePhoto(
+    photo
+) {
+
+    const confirmed =
+        confirm(
+            Delete "${photo.file_name}"?\n\nThis cannot be undone.
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    showMessage(
+        "Deleting photo..."
+    );
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .functions
+                .invoke(
+                    "super-handler",
+                    {
+                        body: {
+                            action:
+                                "delete_photo",
+
+                            photo_id:
+                                photo.id
+                        }
+                    }
+                );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            !data ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data?.error ||
+                "Could not delete photo."
+            );
+        }
+
+
+        showMessage(
+            "Photo deleted successfully.",
+            "success"
+        );
+
+
+        await loadClients();
+
+
+    } catch (error) {
+
+        console.error(
+            "Delete photo error:",
+            error
+        );
+
+
+        showMessage(
+            "Error deleting photo: " +
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =====================================================
+   REPLACE PHOTO
+   ===================================================== */
+
+
+async function replacePhoto(
+    photo
+) {
+
+    const confirmed =
+        confirm(
+            Replace "${photo.file_name}"?\n\nThe old photo will be permanently deleted.
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "file";
+
+
+    input.accept =
+        "image/jpeg,image/png,image/webp,image/heic,image/heif";
+
+
+    input.click();
+
+
+    input.addEventListener(
+        "change",
+        async function() {
+
+            const file =
+                input.files[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            showMessage(
+                "Uploading replacement..."
+            );
+
+
+            try {
+
+                /*
+                    Upload new file first.
+                    This prevents losing the old
+                    image if the upload fails.
+                */
+
+
+                const extension =
+                    file.name.includes(".")
+                        ? file.name.substring(
+                            file.name.lastIndexOf(".")
+                        )
+                        : "";
+
+
+                const baseName =
+                    file.name
+                        .replace(
+                            /\.[^/.]+$/,
+                            ""
+                        )
+                        .replace(
+                            /[^a-zA-Z0-9_-]/g,
+                            "-"
+                        );
+
+
+                const newPath =
+                    Date.now() +
+                    "-" +
+                    Math.random()
+                        .toString(36)
+                        .substring(
+                            2,
+                            8
+                        ) +
+                    "-" +
+                    baseName +
+                    extension;
+
+
+                const {
+                    error:
+                        uploadError
+                } =
+                    await supabaseClient
+                        .storage
+                        .from(
+                            "client-galleries"
+                        )
+                        .upload(
+                            newPath,
+                            file,
+                            {
+                                cacheControl:
+                                    "3600",
+
+                                upsert:
+                                    false
+                            }
+                        );
+
+
+                if (
+                    uploadError
+                ) {
+                    throw uploadError;
+                }
+
+
+                /*
+                    Update database record.
+                */
+
+
+                const {
+                    error:
+                        updateError
+                } =
+                    await supabaseClient
+                        .from(
+                            "gallery_photos"
+                        )
+                        .update({
+                            file_name:
+                                file.name,
+
+                            file_path:
+                                newPath
+                        })
+                        .eq(
+                            "id",
+                            photo.id
+                        );
+
+
+                if (
+                    updateError
+                ) {
+
+                    /*
+                        Roll back uploaded file.
+                    */
+
+                    await supabaseClient
+                        .storage
+                        .from(
+                            "client-galleries"
+                        )
+                        .remove([
+                            newPath
+                        ]);
+
+                    throw updateError;
+                }
+
+
+                /*
+                    Delete old file.
+                */
+
+                const {
+                    error:
+                        removeError
+                } =
+                    await supabaseClient
+                        .storage
+                        .from(
+                            "client-galleries"
+                        )
+                        .remove([
+                            photo.file_path
+                        ]);
+
+
+                if (
+                    removeError
+                ) {
+
+                    console.warn(
+                        "New image saved, but old image could not be removed:",
+                        removeError
+                    );
+                }
+
+
+                showMessage(
+                    "Photo replaced successfully.",
+                    "success"
+                );
+
+
+                await loadClients();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Replace photo error:",
+                    error
+                );
+
+
+                showMessage(
+                    "Error replacing photo: " +
+                    error.message,
+                    "error"
+                );
+            }
+
+        }
+    );
+}
+
+
+/* =====================================================
+   DELETE CLIENT
+   ===================================================== */
+
+
+async function deleteClient(
+    client
+) {
+
+    const confirmed =
+        confirm(
+            DELETE CLIENT: ${client.name}\n\n +
+            This will permanently delete:\n +
+            • Client account\n +
+            • Login account\n +
+            • Gallery\n +
+            • All photos\n\n +
+            This action cannot be undone.
+        );
+
+
+    if (!confirmed) {
+        return;
+    }
+
+
+    const secondConfirm =
+        prompt(
+            Type DELETE to permanently delete ${client.name}:
+        );
+
+
+    if (
+        secondConfirm !==
+        "DELETE"
+    ) {
+
+        showMessage(
+            "Deletion cancelled."
+        );
+
+        return;
+    }
+
+
+    showMessage(
+        "Deleting client and all related files..."
+    );
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .functions
+                .invoke(
+                    "super-handler",
+                    {
+                        body: {
+                            action:
+                                "delete_client",
+
+                            client_id:
+                                client.id
+                        }
+                    }
+                );
+
+
+        if (error) {
+            throw error;
+        }
+
+
+        if (
+            !data ||
+            !data.success
+        ) {
+
+            throw new Error(
+                data?.error ||
+                "Could not delete client."
+            );
+        }
+
+
+        showMessage(
+            "Client, gallery, photos and login account deleted successfully.",
+            "success"
+        );
+
+
+        await loadClients();
+
+
+    } catch (error) {
+
+        console.error(
+            "Delete client error:",
+            error
+        );
+
+
+        showMessage(
+            "Error deleting client: " +
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+/* =====================================================
+   LOAD CLIENTS
+   ===================================================== */
+
+
+async function loadClients() {
+
+    const list =
+        document.getElementById(
+            "clients-list"
+        );
+
+
+    list.textContent =
+        "Loading clients...";
+
+
+    /*
+        Clients
+    */
+
+
+    const {
+        data: clients,
+        error: clientError
+    } =
+        await supabaseClient
+            .from("clients")
+            .select("*")
+            .order(
+                "created_at",
+                {
+                    ascending:
+                        false
+                }
+            );
+
+
+    if (
+        clientError
+    ) {
+
+        list.innerHTML =
+            `<p class="error">
+                Error loading clients:
+                ${clientError.message}
+            </p>`;
+
+        return;
+    }
+
+
+    if (
+        !clients ||
+        clients.length === 0
+    ) {
+
+        list.textContent =
+            "No clients yet.";
+
+        return;
+    }
+
+
+    /*
+        Galleries
+    */
+
+
+    const {
+        data: galleries,
+        error: galleryError
+    } =
+        await supabaseClient
+            .from("galleries")
+            .select("*");
+
+
+    if (
+        galleryError
+    ) {
+
+        list.innerHTML =
+            `<p class="error">
+                Error loading galleries:
+                ${galleryError.message}
+            </p>`;
+
+        return;
+    }
+
+
+    /*
+        Photos
+    */
+
+
+    const {
+        data: photos,
+        error: photoError
+    } =
+        await supabaseClient
+            .from("gallery_photos")
+            .select("*");
+
+
+    if (
+        photoError
+    ) {
+
+        list.innerHTML =
+            `<p class="error">
+                Error loading photos:
+                ${photoError.message}
+            </p>`;
+
+        return;
+    }
+
+
+    list.innerHTML =
+        "";
+
+
+    /*
+        CLIENT LOOP
+    */
+
+
+    for (
+        const client of clients
+    ) {
+
+        const div =
+            document.createElement(
+                "div"
+            );
+
+
+        div.className =
+            "client";
+
+
+        const clientInfo =
+            document.createElement(
+                "div"
+            );
+
+
+        clientInfo.className =
+            "client-info";
+
+
+        const name =
+            document.createElement(
+                "div"
+            );
+
+
+        name.className =
+            "client-name";
+
+
+        name.textContent =
+            client.name;
+
+
+        const email =
+            document.createElement(
+                "div"
+            );
+
+
+        email.className =
+            "client-email";
+
+
+        email.textContent =
+            client.email ||
+            "";
+
+
+        clientInfo.appendChild(
+            name
+        );
+
+
+        clientInfo.appendChild(
+            email
+        );
+
+
+        /*
+            Find gallery
+        */
+
+
+        const clientGallery =
+            galleries.find(
+                gallery =>
+                    String(
+                        gallery.client_id
+                    ).trim() ===
+                    String(
+                        client.id
+                    ).trim()
+            );
+
+
+        let clientPhotos =
+            [];
+
+
+        if (
+            clientGallery
+        ) {
+
+            clientPhotos =
+                photos.filter(
+                    photo =>
+                        String(
+                            photo.gallery_id
+                        ).trim() ===
+                        String(
+                            clientGallery.id
+                        ).trim()
+                );
+        }
+
+
+        const photoInfo =
+            document.createElement(
+                "div"
+            );
+
+
+        photoInfo.className =
+            "gallery-count";
+
+
+        photoInfo.textContent =
+            clientPhotos.length === 1
+                ? "1 photo"
+                : ${clientPhotos.length} photos;
+
+
+        clientInfo.appendChild(
+            photoInfo
+        );
+
+
+        /*
+            ACTIONS
+        */
+
+
+        const actions =
+            document.createElement(
+                "div"
+            );
+
+
+        actions.className =
+            "actions";
+
+
+        if (
+            clientGallery
+        ) {
+
+            /*
+                OPEN GALLERY
+            */
+
+
+            const openButton =
+                document.createElement(
+                    "a"
+                );
+
+
+            openButton.className =
+                "button-link";
+
+
+            openButton.textContent =
+                "OPEN GALLERY";
+
+
+            openButton.href =
+                "gallery.html?gallery=" +
+                encodeURIComponent(
+                    clientGallery.id
+                ) +
+                "&token=" +
+                encodeURIComponent(
+                    clientGallery.access_token
+                );
+
+
+            openButton.target =
+                "_blank";
+
+
+            actions.appendChild(
+                openButton
+            );
+
+
+            /*
+                COPY LINK
+            */
+
+
+            const copyButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            copyButton.className =
+                "copy-button";
+
+
+            copyButton.textContent =
+                "COPY LINK";
+
+
+            copyButton.addEventListener(
+                "click",
+                () =>
+                    copyGalleryLink(
+                        clientGallery
+                    )
+            );
+
+
+            actions.appendChild(
+                copyButton
+            );
+
+
+            /*
+                UPLOAD
+            */
+
+
+            const uploadButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            uploadButton.className =
+                "upload-button";
+
+
+            uploadButton.textContent =
+                "UPLOAD PHOTOS";
+
+
+            const fileInput =
+                document.createElement(
+                    "input"
+                );
+
+
+            fileInput.type =
+                "file";
+
+
+            fileInput.accept =
+                "image/jpeg,image/png,image/webp,image/heic,image/heif";
+
+
+            fileInput.multiple =
+                true;
+
+
+            fileInput.className =
+                "hidden";
+
+
+            uploadButton.addEventListener(
+                "click",
+                () =>
+                    fileInput.click()
+            );
+
+
+            fileInput.addEventListener(
+                "change",
+                () =>
+                    uploadPhotos(
+                        clientGallery.id,
+                        fileInput
+                    )
+            );
+
+
+            actions.appendChild(
+                uploadButton
+            );
+
+
+            actions.appendChild(
+                fileInput
+            );
+
+        } else {
+
+            /*
+                CREATE GALLERY
+            */
+
+
+            const createButton =
+                document.createElement(
+                    "button"
+                );
+
+
+            createButton.textContent =
+                "CREATE GALLERY";
+
+
+            createButton.addEventListener(
+                "click",
+                () =>
+                    createGallery(
+                        client
+                    )
+            );
+
+
+            actions.appendChild(
+                createButton
+            );
+        }
+
+
+        /*
+            DELETE CLIENT
+        */
+
+
+        const deleteClientButton =
+            document.createElement(
+                "button"
+            );
+
+
+        deleteClientButton.className =
+            "danger";
+
+
+        deleteClientButton.textContent =
+            "DELETE CLIENT";
+
+
+        deleteClientButton.addEventListener(
+            "click",
+            () =>
+                deleteClient(
+                    client
+                )
+        );
+
+
+        actions.appendChild(
+            deleteClientButton
+        );
+
+
+        div.appendChild(
+            clientInfo
+        );
+
+
+        div.appendChild(
+            actions
+        );
+
+
+        list.appendChild(
+            div
+        );
+
+
+        /*
+            PHOTOS SECTION
+        */
+
+
+        if (
+            clientGallery &&
+            clientPhotos.length > 0
+        ) {
+
+            const photosSection =
+                document.createElement(
+                    "div"
+                );
+
+
+            photosSection.className =
+                "photos-section";
+
+
+            const photosTitle =
+                document.createElement(
+                    "div"
+                );
+
+
+            photosTitle.className =
+                "photos-title";
+
+
+            photosTitle.textContent =
+                "Gallery Photos";
+
+
+            photosSection.appendChild(
+                photosTitle
+            );
+
+
+            const photosGrid =
+                document.createElement(
+                    "div"
+                );
+
+
+            photosGrid.className =
+                "photos-grid";
+
+
+            for (
+                const photo of clientPhotos
+            ) {
+
+                const photoCard =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                photoCard.className =
+                    "photo-card";
+
+
+                const image =
+                    document.createElement(
+                        "img"
+                    );
+
+
+                image.alt =
+                    photo.file_name ||
+                    "Client photo";
+
+
+                image.src =
+                    "";
+
+
+                const signedUrl =
+                    await getSignedUrl(
+                        photo.file_path
+                    );
+
+
+                if (
+                    signedUrl
+                ) {
+
+                    image.src =
+                        signedUrl;
+
+
+                    image.addEventListener(
+                        "click",
+                        () =>
+                            openLightbox(
+                                signedUrl
+                            )
+                    );
+
+                } else {
+
+                    image.alt =
+                        "Could not load image";
+
+                    image.style.opacity =
+                        ".3";
+                }
+
+
+                photoCard.appendChild(
+                    image
+                );
+
+
+                /*
+                    PHOTO ACTIONS
+                */
+
+
+                const photoActions =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                photoActions.className =
+                    "photo-actions";
+
+
+                /*
+                    REPLACE
+                */
+
+
+                const replaceButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                replaceButton.className =
+                    "replace-button";
+
+
+                replaceButton.textContent =
+                    "REPLACE";
+
+
+                replaceButton.addEventListener(
+                    "click",
+                    () =>
+                        replacePhoto(
+                            photo
+                        )
+                );
+
+
+                /*
+                    DELETE
+                */
+
+
+                const deleteButton =
+                    document.createElement(
+                        "button"
+                    );
+
+
+                deleteButton.className =
+                    "danger";
+
+
+                deleteButton.textContent =
+                    "DELETE";
+
+
+                deleteButton.addEventListener(
+                    "click",
+                    () =>
+                        deletePhoto(
+                            photo
+                        )
+                );
+
+
+                photoActions.appendChild(
+                    replaceButton
+                );
+
+
+                photoActions.appendChild(
+                    deleteButton
+                );
+
+
+                photoCard.appendChild(
+                    photoActions
+                );
+
+
+                photosGrid.appendChild(
+                    photoCard
+                );
+            }
+
+
+            photosSection.appendChild(
+                photosGrid
+            );
+
+
+            list.appendChild(
+                photosSection
+            );
+        }
+    }
+}
+
+
+/* =====================================================
+   ADD CLIENT FORM
+   ===================================================== */
+
+
+document
+    .getElementById(
+        "add-client-form"
+    )
     .addEventListener(
         "submit",
         addClient
     );
 
 
-/* LOGOUT */
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
 
 document
-    .getElementById("logout")
+    .getElementById(
+        "logout"
+    )
     .addEventListener(
         "click",
         async function() {
 
-            await supabaseClient.auth.signOut();
+            await supabaseClient
+                .auth
+                .signOut();
+
 
             window.location.href =
                 "admin.html";
-
         }
     );
 
 
-/* START */
+/* =====================================================
+   START
+   ===================================================== */
+
 
 (async function() {
 
     const user =
         await checkUser();
 
+
     if (user) {
 
         await loadClients();
-
     }
 
 })();
 
+
 </script>
 
 </body>
+
 </html>
