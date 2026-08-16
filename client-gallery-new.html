@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Private Gallery | Lisa Michelle Visuals</title>
+
+    <meta
+        name="description"
+        content="Private client gallery by Lisa Michelle Visuals."
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #111;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 30px;
+            border-bottom: 1px solid #333;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 400;
+        }
+
+        header p {
+            color: #999;
+            margin-top: 10px;
+        }
+
+        main {
+            width: 92%;
+            max-width: 1200px;
+            margin: 50px auto;
+        }
+
+        #client-name {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .intro {
+            text-align: center;
+            color: #999;
+            margin-bottom: 40px;
+        }
+
+        #message {
+            text-align: center;
+            color: #aaa;
+            padding: 30px;
+        }
+
+        .error {
+            color: #ff7777;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .photo {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: cover;
+            display: block;
+            cursor: pointer;
+            transition: opacity .3s ease;
+        }
+
+        .photo:hover {
+            opacity: .8;
+        }
+
+        .logout {
+            display: block;
+            margin: 0 auto 30px;
+            padding: 10px 20px;
+            background: transparent;
+            color: white;
+            border: 1px solid #555;
+            cursor: pointer;
+        }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .lightbox img {
+            max-width: 95%;
+            max-height: 90vh;
+            object-fit: contain;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #333;
+            color: #777;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 700px) {
+
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            #client-name {
+                font-size: 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+    <h1>
+        Lisa Michelle Visuals
+    </h1>
+
+    <p>
+        Private Client Gallery
+    </p>
+
+</header>
+
+
+<main>
+
+    <button
+        id="logout"
+        class="logout"
+    >
+        LOGOUT
+    </button>
+
+
+    <h2 id="client-name">
+        Loading...
+    </h2>
+
+
+    <p class="intro">
+        A private collection of photographs
+        captured by Lisa Michelle Visuals.
+    </p>
+
+
+    <div id="message"></div>
+
+
+    <div
+        id="gallery"
+        class="gallery"
+    ></div>
+
+</main>
+
+
+<div
+    id="lightbox"
+    class="lightbox"
+>
+
+    <span
+        id="close"
+        class="close"
+    >
+        &times;
+    </span>
+
+    <img
+        id="lightbox-image"
+        src=""
+        alt="Client photograph"
+    >
+
+</div>
+
+
+<footer>
+
+    © <span id="year"></span>
+    Lisa Michelle Visuals.
+    All rights reserved.
+
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+
+const SUPABASE_URL =
+    "https://ilrdmzogaqfdrcyzjahk.supabase.co";
+
+
+const SUPABASE_KEY =
+    "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
+
+
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+
+const clientNameElement =
+    document.getElementById(
+        "client-name"
+    );
+
+
+const message =
+    document.getElementById(
+        "message"
+    );
+
+
+const gallery =
+    document.getElementById(
+        "gallery"
+    );
+
+
+/* CURRENT YEAR */
+
+document
+    .getElementById("year")
+    .textContent =
+        new Date().getFullYear();
+
+
+/* LOAD CLIENT GALLERY */
+
+async function loadClientGallery() {
+
+    /*
+        1. Get logged-in Auth user
+    */
+
+    const {
+        data: {
+            user
+        },
+        error: userError
+    } =
+        await supabaseClient.auth.getUser();
+
+
+    if (userError || !user) {
+
+        window.location.href =
+            "client-login.html";
+
+        return;
+    }
+
+
+    /*
+        2. Find client using user_id
+    */
+
+    const {
+        data: client,
+        error: clientError
+    } =
+        await supabaseClient
+            .from("clients")
+            .select("*")
+            .eq(
+                "user_id",
+                user.id
+            )
+            .single();
+
+
+    if (clientError || !client) {
+
+        message.className =
+            "error";
+
+        message.textContent =
+            "Client account not found.";
+
+        console.error(
+            "Client error:",
+            clientError
+        );
+
+        return;
+    }
+
+
+    /*
+        3. Display client name
+    */
+
+    clientNameElement.textContent =
+        client.name;
+
+
+    /*
+        4. Find this client's gallery
+    */
+
+    const {
+        data: galleryData,
+        error: galleryError
+    } =
+        await supabaseClient
+            .from("galleries")
+            .select("*")
+            .eq(
+                "client_id",
+                client.id
+            )
+            .single();
+
+
+    if (galleryError || !galleryData) {
+
+        message.className =
+            "error";
+
+        message.textContent =
+            "Gallery not found.";
+
+        console.error(
+            "Gallery error:",
+            galleryError
+        );
+
+        return;
+    }
+
+
+    /*
+        5. Get photos
+    */
+
+    const {
+        data: photos,
+        error: photosError
+    } =
+        await supabaseClient
+            .from("gallery_photos")
+            .select("*")
+            .eq(
+                "gallery_id",
+                galleryData.id
+            )
+            .order(
+                "created_at",
+                {
+                    ascending: true
+                }
+            );
+
+
+    if (photosError) {
+
+        message.className =
+            "error";
+
+        message.textContent =
+            "Could not load photos.";
+
+        console.error(
+            "Photos error:",
+            photosError
+        );
+
+        return;
+    }
+
+
+    if (
+        !photos ||
+        photos.length === 0
+    ) {
+
+        message.textContent =
+            "No photos have been added to your gallery yet.";
+
+        return;
+    }
+
+
+    /*
+        6. Create signed URLs
+    */
+
+    for (
+        const photo of photos
+    ) {
+
+        const {
+            data: signedData,
+            error: signedError
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    "client-galleries"
+                )
+                .createSignedUrl(
+                    photo.file_path,
+                    3600
+                );
+
+
+        if (signedError) {
+
+            console.error(
+                "Signed URL error:",
+                signedError
+            );
+
+            continue;
+        }
+
+
+        const img =
+            document.createElement(
+                "img"
+            );
+
+
+        img.className =
+            "photo";
+
+
+        img.src =
+            signedData.signedUrl;
+
+
+        img.alt =
+            photo.file_name ||
+            "Client photograph";
+
+
+        img.addEventListener(
+            "click",
+            function() {
+
+                document
+                    .getElementById(
+                        "lightbox-image"
+                    )
+                    .src =
+                    signedData.signedUrl;
+
+
+                document
+                    .getElementById(
+                        "lightbox"
+                    )
+                    .style.display =
+                    "flex";
+
+            }
+        );
+
+
+        gallery.appendChild(
+            img
+        );
+
+    }
+
+}
+
+
+/* LOGOUT */
+
+document
+    .getElementById("logout")
+    .addEventListener(
+        "click",
+        async function() {
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+            window.location.href =
+                "client-login.html";
+
+        }
+    );
+
+
+/* CLOSE LIGHTBOX */
+
+document
+    .getElementById("close")
+    .addEventListener(
+        "click",
+        function() {
+
+            document
+                .getElementById(
+                    "lightbox"
+                )
+                .style.display =
+                "none";
+
+        }
+    );
+
+
+document
+    .getElementById("lightbox")
+    .addEventListener(
+        "click",
+        function(event) {
+
+            if (
+                event.target === this
+            ) {
+
+                this.style.display =
+                    "none";
+
+            }
+
+        }
+    );
+
+
+/* START */
+
+loadClientGallery();
+
+
+</script>
+
+
+</body>
+
+</html>
