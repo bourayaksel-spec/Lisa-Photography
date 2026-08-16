@@ -381,10 +381,21 @@ async function addClient(event) {
         );
 
 
-        if (error) {
+       if (error) {
 
-            throw error;
+    console.error("FUNCTION ERROR:", error);
+
+    if (error.context) {
+        try {
+            const errorBody = await error.context.json();
+            console.error("FUNCTION RESPONSE:", errorBody);
+        } catch (e) {
+            console.error("Could not read function response.");
         }
+    }
+
+    throw error;
+}
 
 
         if (!data || !data.success) {
