@@ -780,11 +780,11 @@ photoInfo.textContent =
             openButton.textContent =
                 "OPEN GALLERY";
 
-            openButton.href =
-                "gallery.html?gallery=" +
-                encodeURIComponent(
-                    clientGallery.id
-                );
+           openButton.href =
+    "gallery.html?gallery=" +
+    encodeURIComponent(clientGallery.id) +
+    "&token=" +
+    encodeURIComponent(clientGallery.access_token);
 
             openButton.target =
                 "_blank";
