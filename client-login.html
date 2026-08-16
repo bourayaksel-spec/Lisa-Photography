@@ -244,20 +244,13 @@ const supabaseClient =
    GET GALLERY INFORMATION FROM LINK
    ===================================================== */
 
-
 const params =
     new URLSearchParams(
         window.location.search
     );
 
-
 const galleryId =
     params.get("gallery");
-
-
-const accessToken =
-    params.get("token");
-
 
 /* =====================================================
    ELEMENTS
@@ -286,24 +279,17 @@ const loginButton =
    CHECK GALLERY LINK
    ===================================================== */
 
-
-if (
-    !galleryId ||
-    !accessToken
-) {
+if (!galleryId) {
 
     loginForm.style.display =
         "none";
 
-
     message.className =
         "error";
 
-
     message.textContent =
-        "Invalid or incomplete gallery link.";
+        "Invalid gallery link.";
 }
-
 
 /* =====================================================
    LOGIN
@@ -458,24 +444,20 @@ loginForm.addEventListener(
                ========================================= */
 
 
-            const {
-                data: gallery,
-                error: galleryError
-            } =
-                await supabaseClient
-                    .from("galleries")
-                    .select(
-                        "id, client_id, client_name, access_token"
-                    )
-                    .eq(
-                        "id",
-                        galleryId
-                    )
-                    .eq(
-                        "access_token",
-                        accessToken
-                    )
-                    .maybeSingle();
+           const {
+    data: gallery,
+    error: galleryError
+} =
+    await supabaseClient
+        .from("galleries")
+        .select(
+            "id, client_id, client_name"
+        )
+        .eq(
+            "id",
+            galleryId
+        )
+        .maybeSingle();
 
 
             if (
@@ -519,96 +501,75 @@ loginForm.addEventListener(
             }
 
 
-            /* =========================================
-               6. SUCCESS
-               ========================================= */
+        /* =========================================
+   6. SUCCESS
+   ========================================= */
+
+message.className =
+    "success";
+
+message.textContent =
+    "Login successful. Opening your gallery...";
 
 
-            message.className =
-                "success";
+/*
+    Save the verified gallery ID
+    temporarily for this browser session.
+*/
+
+sessionStorage.setItem(
+    "client_gallery_id",
+    gallery.id
+);
 
 
-            message.textContent =
-                "Login successful. Opening your gallery...";
+/* =========================================
+   7. OPEN GALLERY
+   ========================================= */
 
+setTimeout(
+    function() {
 
-            /*
-                Save the verified gallery information
-                temporarily in sessionStorage.
-
-                This disappears when the browser session
-                ends.
-            */
-
-
-            sessionStorage.setItem(
-                "client_gallery_id",
+        window.location.href =
+            "gallery.html?gallery=" +
+            encodeURIComponent(
                 gallery.id
             );
 
-
-            sessionStorage.setItem(
-                "client_gallery_token",
-                gallery.access_token
-            );
+    },
+    500
+);
 
 
-            /* =========================================
-               7. OPEN GALLERY
-               ========================================= */
+} catch (error) {
+
+    console.error(
+        "Client login error:",
+        error
+    );
 
 
-            setTimeout(
-                function() {
+    /*
+        If verification fails after login,
+        sign the user out.
+    */
 
-                    window.location.href =
-                        "gallery.html?gallery=" +
-                        encodeURIComponent(
-                            gallery.id
-                        ) +
-                        "&token=" +
-                        encodeURIComponent(
-                            gallery.access_token
-                        );
-
-                },
-                500
-            );
+    await supabaseClient
+        .auth
+        .signOut();
 
 
-        } catch (error) {
+    message.className =
+        "error";
 
+    message.textContent =
+        error.message ||
+        "Login failed.";
 
-            console.error(
-                "Client login error:",
-                error
-            );
+    loginButton.disabled =
+        false;
 
-
-            /*
-                If verification fails after login,
-                sign the user out.
-            */
-
-
-            await supabaseClient
-                .auth
-                .signOut();
-
-
-            message.className =
-                "error";
-
-
-            message.textContent =
-                error.message ||
-                "Login failed.";
-
-
-            loginButton.disabled =
-                false;
-
-        }
+}
 
     }
 );
