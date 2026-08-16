@@ -1102,51 +1102,32 @@ async function createGallery(
    ===================================================== */
 
 
-async function copyGalleryLink(
-    gallery
-) {
+async function copyGalleryLink(gallery) {
 
     const link =
         window.location.origin +
-        "/Lisa-Photography/gallery.html?gallery=" +
-        encodeURIComponent(
-            gallery.id
-        ) +
-        "&token=" +
-        encodeURIComponent(
-            gallery.access_token
-        );
-
+        "/Lisa-Photography/client-login.html?gallery=" +
+        encodeURIComponent(gallery.id);
 
     try {
 
-        await navigator
-            .clipboard
-            .writeText(
-                link
-            );
-
+        await navigator.clipboard.writeText(link);
 
         showMessage(
-            "Gallery link copied successfully.",
+            "Client login link copied successfully.",
             "success"
         );
 
-
     } catch (error) {
 
-        console.error(
-            error
-        );
-
+        console.error(error);
 
         showMessage(
-            "Could not copy the gallery link.",
+            "Could not copy the client login link.",
             "error"
         );
     }
 }
-
 
 /* =====================================================
    CREATE SIGNED URL
