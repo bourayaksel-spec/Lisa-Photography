@@ -1269,7 +1269,7 @@ async function deletePhoto(
 
     const confirmed =
         confirm(
-            Delete "${photo.file_name}"?\n\nThis cannot be undone.
+            `Delete "${photo.file_name}"?\n\nThis cannot be undone.`
         );
 
 
@@ -1359,7 +1359,7 @@ async function replacePhoto(
 
     const confirmed =
         confirm(
-            Replace "${photo.file_name}"?\n\nThe old photo will be permanently deleted.
+            `Replace "${photo.file_name}"?\n\nThe old photo will be permanently deleted.`
         );
 
 
@@ -1591,13 +1591,13 @@ async function deleteClient(
 
     const confirmed =
         confirm(
-            DELETE CLIENT: ${client.name}\n\n +
-            This will permanently delete:\n +
-            • Client account\n +
-            • Login account\n +
-            • Gallery\n +
-            • All photos\n\n +
-            This action cannot be undone.
+            `DELETE CLIENT: ${client.name}\n\n` +
+            `This will permanently delete:\n` +
+            `• Client account\n` +
+            `• Login account\n` +
+            `• Gallery\n` +
+            `• All photos\n\n` +
+            `This action cannot be undone.`
         );
 
 
@@ -1608,7 +1608,7 @@ async function deleteClient(
 
     const secondConfirm =
         prompt(
-            Type DELETE to permanently delete ${client.name}:
+            `Type DELETE to permanently delete ${client.name}:`
         );
 
 
@@ -1938,7 +1938,7 @@ async function loadClients() {
         photoInfo.textContent =
             clientPhotos.length === 1
                 ? "1 photo"
-                : ${clientPhotos.length} photos;
+                : `${clientPhotos.length} photos`;
 
 
         clientInfo.appendChild(
