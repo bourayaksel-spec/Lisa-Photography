@@ -52,50 +52,83 @@ body {
 
 
 /* =====================================================
-   HEADER POLISH — 8.4
+   HEADER
 ===================================================== */
 
 header {
-    box-shadow:
-        0 8px 35px rgba(0,0,0,.18);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    min-height: 76px;
+    padding: 16px 5%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    background: rgba(9,9,9,.82);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
-#logout {
-    position: relative;
-
-    overflow: hidden;
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
 }
 
-#logout::before {
-    content: "";
+.brand-mark {
+    width: 40px;
+    height: 40px;
 
-    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    inset: 0;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 50%;
+
+    font-family: Georgia, serif;
+    font-size: 18px;
 
     background:
         linear-gradient(
-            110deg,
-            transparent 30%,
-            rgba(255,255,255,.15),
-            transparent 70%
+            145deg,
+            rgba(255,255,255,.1),
+            rgba(255,255,255,.025)
         );
-
-    transform:
-        translateX(-120%);
-
-    transition:
-        transform .5s ease;
 }
 
-#logout:hover::before {
-    transform:
-        translateX(120%);
+.brand-text h1 {
+    margin: 0;
+
+    font-family: Georgia, "Times New Roman", serif;
+
+    font-size: 18px;
+    font-weight: 400;
+
+    letter-spacing: .04em;
 }
 
-#logout {
-    min-width: 88px;
+.brand-text span {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #777;
+
+    font-size: 9px;
+    letter-spacing: .2em;
+
+    text-transform: uppercase;
 }
+
 
 /* =====================================================
    MAIN
@@ -155,7 +188,7 @@ main > .hero h2 {
 
 
 /* =====================================================
-   STATS — 8.4
+   STATS
 ===================================================== */
 
 .stats {
@@ -164,22 +197,21 @@ main > .hero h2 {
     grid-template-columns:
         repeat(3, 1fr);
 
-    gap: 14px;
+    gap: 15px;
 
-    margin-bottom: 28px;
+    margin-bottom: 25px;
 }
 
 .stat-card {
     position: relative;
 
-    min-height: 135px;
-
     padding: 24px;
+
+    min-height: 125px;
 
     overflow: hidden;
 
-    border:
-        1px solid rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.09);
 
     border-radius: 16px;
 
@@ -187,42 +219,15 @@ main > .hero h2 {
         linear-gradient(
             145deg,
             rgba(255,255,255,.055),
-            rgba(255,255,255,.012)
+            rgba(255,255,255,.015)
         );
 
     box-shadow:
-        0 18px 55px rgba(0,0,0,.2);
+        0 20px 60px rgba(0,0,0,.2);
 
     transition:
         transform .25s ease,
         border-color .25s ease;
-}
-
-.stat-card:hover {
-    transform: translateY(-3px);
-
-    border-color:
-        rgba(255,255,255,.18);
-}
-
-.stat-card::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-    height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.28),
-            transparent
-        );
 }
 
 .stat-card::after {
@@ -230,56 +235,49 @@ main > .hero h2 {
 
     position: absolute;
 
-    right: -35px;
+    right: -30px;
     bottom: -45px;
 
-    width: 130px;
-    height: 130px;
-
-    border:
-        1px solid rgba(255,255,255,.045);
+    width: 110px;
+    height: 110px;
 
     border-radius: 50%;
 
-    pointer-events: none;
+    border: 1px solid rgba(255,255,255,.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(255,255,255,.18);
 }
 
 .stat-label {
-    position: relative;
-
-    z-index: 2;
-
     color: #777;
 
-    font-size: 9px;
+    font-size: 10px;
+    font-weight: 600;
 
-    font-weight: 700;
-
-    letter-spacing: .18em;
+    letter-spacing: .16em;
 
     text-transform: uppercase;
 }
 
 .stat-number {
-    position: relative;
-
-    z-index: 2;
-
-    margin-top: 16px;
+    margin-top: 14px;
 
     font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-    font-size: 44px;
+    font-size: 40px;
 
     font-weight: 400;
 
     line-height: 1;
-
-    letter-spacing: -.03em;
 }
+
 
 /* =====================================================
    GENERAL CARDS
@@ -369,26 +367,60 @@ h3 {
 
 
 /* =====================================================
-   ADD CLIENT — 8.4
+   ADD CLIENT FORM
 ===================================================== */
 
 .add-client-form {
-    padding-top: 5px;
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        auto;
+
+    gap: 12px;
+
+    margin-top: 25px;
 }
 
-.add-client-form > button {
-    min-width: 150px;
+.add-client-form input {
+    width: 100%;
+
+    padding: 15px 16px;
+
+    color: #fff;
+
+    background: rgba(0,0,0,.42);
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    border-radius: 10px;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
+
+.add-client-form input::placeholder {
+    color: #5f5f5f;
+}
+
+.add-client-form input:focus {
+    background: rgba(255,255,255,.035);
+
+    border-color: rgba(255,255,255,.35);
 
     box-shadow:
-        0 8px 25px rgba(255,255,255,.05);
+        0 0 0 3px rgba(255,255,255,.035);
 }
 
-.add-client-form > button:hover {
-    background: #fff;
 
-    box-shadow:
-        0 12px 35px rgba(255,255,255,.08);
-}
 /* =====================================================
    PASSWORD
 ===================================================== */
@@ -1495,410 +1527,7 @@ button:active,
     }
 
 }
-/* =====================================================
-   8.3 — PREMIUM PHOTO GALLERY
-===================================================== */
 
-.photos-section {
-    position: relative;
-
-    margin-top: 0;
-
-    padding: 24px;
-
-    border: 1px solid rgba(255,255,255,.07);
-
-    border-radius: 16px;
-
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.025),
-            rgba(255,255,255,.008)
-        );
-}
-
-.photos-title {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 15px;
-
-    margin-bottom: 18px;
-}
-
-.photos-title::after {
-    content: "CLICK PHOTO TO PREVIEW";
-
-    color: #444;
-
-    font-size: 8px;
-
-    letter-spacing: .14em;
-}
-
-
-/* PHOTO GRID */
-
-.photos-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(4, minmax(0, 1fr));
-
-    gap: 14px;
-}
-
-
-/* PHOTO CARD */
-
-.photo-card {
-    position: relative;
-
-    overflow: hidden;
-
-    background: #0d0d0d;
-
-    border:
-        1px solid rgba(255,255,255,.08);
-
-    border-radius: 12px;
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.2);
-
-    transition:
-        transform .3s ease,
-        border-color .3s ease,
-        box-shadow .3s ease;
-}
-
-.photo-card:hover {
-    transform: translateY(-4px);
-
-    border-color:
-        rgba(255,255,255,.2);
-
-    box-shadow:
-        0 20px 45px rgba(0,0,0,.45);
-}
-
-
-/* IMAGE */
-
-.photo-card img {
-    display: block;
-
-    width: 100%;
-
-    aspect-ratio: 4 / 3;
-
-    object-fit: cover;
-
-    background: #111;
-
-    cursor: zoom-in;
-
-    transition:
-        transform .5s cubic-bezier(.2,.7,.2,1),
-        filter .3s ease;
-}
-
-.photo-card:hover img {
-    transform: scale(1.06);
-
-    filter: brightness(1.08);
-}
-
-
-/* IMAGE ACTIONS */
-
-.photo-actions {
-    display: grid;
-
-    grid-template-columns:
-        1fr 1fr;
-
-    gap: 6px;
-
-    padding: 8px;
-
-    background:
-        rgba(10,10,10,.97);
-
-    border-top:
-        1px solid rgba(255,255,255,.06);
-}
-
-.photo-actions button {
-    min-height: 35px;
-
-    padding: 7px 5px;
-
-    font-size: 8px;
-
-    letter-spacing: .08em;
-
-    border-radius: 7px;
-}
-
-
-/* REPLACE */
-
-.photo-actions .replace-button {
-    color: #ccc;
-
-    background: #202020;
-
-    border-color: #333;
-}
-
-.photo-actions .replace-button:hover {
-    color: #fff;
-
-    background: #2c2c2c;
-}
-
-
-/* DELETE */
-
-.photo-actions .danger {
-    color: #ffb7b7;
-
-    background:
-        rgba(75,20,20,.7);
-
-    border-color:
-        rgba(255,90,90,.16);
-}
-
-.photo-actions .danger:hover {
-    background:
-        #5a2020;
-}
-
-
-/* =====================================================
-   LIGHTBOX 8.3
-===================================================== */
-
-.lightbox {
-    padding: 20px;
-
-    background:
-        rgba(0,0,0,.97);
-
-    backdrop-filter:
-        blur(10px);
-
-    -webkit-backdrop-filter:
-        blur(10px);
-}
-
-.lightbox img {
-    max-width: 94vw;
-
-    max-height: 88vh;
-
-    border-radius: 6px;
-
-    object-fit: contain;
-
-    box-shadow:
-        0 30px 100px rgba(0,0,0,.85);
-
-    animation:
-        lightboxImageIn .25s ease;
-}
-
-@keyframes lightboxImageIn {
-
-    from {
-        opacity: 0;
-
-        transform:
-            scale(.96);
-    }
-
-    to {
-        opacity: 1;
-
-        transform:
-            scale(1);
-    }
-}
-
-.lightbox-close {
-    top: 20px;
-
-    right: 20px;
-
-    width: 46px;
-
-    height: 46px;
-
-    background:
-        rgba(255,255,255,.08);
-
-    border:
-        1px solid rgba(255,255,255,.12);
-
-    font-size: 28px;
-}
-
-.lightbox-close:hover {
-    background:
-        rgba(255,255,255,.16);
-}
-
-
-/* =====================================================
-   TABLET
-===================================================== */
-
-@media (max-width: 950px) {
-
-    .photos-grid {
-        grid-template-columns:
-            repeat(3, minmax(0, 1fr));
-    }
-
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 650px) {
-
-    .photos-section {
-        padding: 18px 15px;
-    }
-
-    .photos-title {
-        align-items: flex-start;
-
-        flex-direction: column;
-
-        gap: 5px;
-    }
-
-    .photos-title::after {
-        content: "TAP PHOTO TO PREVIEW";
-
-        font-size: 7px;
-    }
-
-    .photos-grid {
-        grid-template-columns:
-            repeat(2, minmax(0, 1fr));
-
-        gap: 8px;
-    }
-
-    .photo-card {
-        border-radius: 9px;
-    }
-
-    .photo-card img {
-        aspect-ratio: 1 / 1;
-    }
-
-    .photo-actions {
-        gap: 4px;
-
-        padding: 6px;
-    }
-
-    .photo-actions button {
-        min-height: 32px;
-
-        font-size: 7px;
-    }
-
-    .lightbox {
-        padding: 8px;
-    }
-
-    .lightbox img {
-        max-width: 96vw;
-
-        max-height: 86vh;
-    }
-
-}
-
-
-/* =====================================================
-   VERY SMALL PHONES
-===================================================== */
-
-@media (max-width: 400px) {
-
-    .photos-grid {
-        gap: 6px;
-    }
-
-    .photo-actions {
-        grid-template-columns:
-            1fr;
-    }
-
-    .photo-actions button {
-        min-height: 30px;
-    }
-
-}
-   /* =====================================================
-   8.4 — MOBILE POLISH
-===================================================== */
-
-@media (max-width: 650px) {
-
-    .stats {
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 9px;
-
-        margin-bottom: 20px;
-    }
-
-    .stat-card {
-        min-height: 105px;
-
-        padding: 17px;
-    }
-
-    .stat-card:last-child {
-        grid-column: 1 / -1;
-    }
-
-    .stat-number {
-        margin-top: 12px;
-
-        font-size: 34px;
-    }
-
-    .stat-label {
-        font-size: 8px;
-
-        letter-spacing: .14em;
-    }
-
-    #logout {
-        min-width: 78px;
-
-        min-height: 38px;
-
-        padding: 8px 12px;
-    }
-
-}
 </style>
 
 </head>
