@@ -54,93 +54,118 @@ document.addEventListener("DOMContentLoaded", function () {
        LOAD ONE FOLDER
     ========================================= */
 
-    async function loadFolder(category) {
+   async function loadFolder(category) {
 
-        const response = await fetch(
-            SUPABASE_URL +
-            "/storage/v1/object/list/" +
-            BUCKET,
-            {
-                method: "POST",
+    const response = await fetch(
 
-                headers: {
-                    "apikey": SUPABASE_KEY,
-                    "Authorization":
-                        "Bearer " + SUPABASE_KEY,
-                    "Content-Type":
-                        "application/json"
-                },
+        SUPABASE_URL +
+        "/storage/v1/object/list/" +
+        BUCKET_NAME,
 
-                body: JSON.stringify({
+        {
+            method: "POST",
 
-                    prefix: category + "/",
+            headers: {
+                "Authorization":
+                    "Bearer " + SUPABASE_PUBLISHABLE_KEY,
 
-                    limit: 1000,
+                "apikey":
+                    SUPABASE_PUBLISHABLE_KEY,
 
-                    offset: 0,
+                "Content-Type":
+                    "application/json"
+            },
 
-                    sortBy: {
-                        column: "name",
-                        order: "asc"
-                    }
+            body: JSON.stringify({
 
-                })
-            }
+                prefix: category + "/",
+
+                limit: 1000,
+
+                offset: 0,
+
+                sortBy: {
+                    column: "name",
+                    order: "asc"
+                }
+
+            })
+        }
+    );
+
+
+    if (!response.ok) {
+
+        const errorText = await response.text();
+
+        console.error(
+            "Supabase error for " + category,
+            errorText
         );
 
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Unable to load " + category
-            );
-
-        }
-
-
-        const files =
-            await response.json();
-
-
-       return files
-    .filter(function (file) {
-
-        if (!file || !file.name) {
-            return false;
-        }
-
-        const extension =
-            file.name
-                .split(".")
-                .pop()
-                .toLowerCase();
-
-        return [
-            "webp",
-            "jpg",
-            "jpeg",
-            "png"
-        ].includes(extension);
-
-    })
-            .map(function (file) {
-
-                return {
-
-                    path:
-                        category +
-                        "/" +
-                        file.name,
-
-                    category:
-                        category
-
-                };
-
-            });
-
+        throw new Error(
+            "Unable to load folder: " + category
+        );
     }
 
+
+    const files = await response.json();
+
+
+    console.log(
+        "Supabase files in " + category + ":",
+        files
+    );
+
+
+    return files
+
+        .filter(function (file) {
+
+            return (
+                file &&
+                file.name &&
+                !file.name.endsWith("/")
+            );
+
+        })
+
+        .filter(function (file) {
+
+            const extension =
+                file.name
+                    .split(".")
+                    .pop()
+                    .toLowerCase();
+
+            return [
+                "jpg",
+                "jpeg",
+                "png",
+                "webp",
+                "gif",
+                "avif"
+            ].includes(extension);
+
+        })
+
+        .map(function (file) {
+
+            return {
+
+                path:
+                    category +
+                    "/" +
+                    file.name,
+
+                category:
+                    category
+
+            };
+
+        });
+
+}
 
     /* =========================================
        CREATE IMAGE
