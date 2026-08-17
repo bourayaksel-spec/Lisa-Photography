@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-
     /* =========================================================
        SUPABASE CONFIGURATION
     ========================================================= */
@@ -13,6 +12,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const BUCKET_NAME = "portfolio";
 
+    /*
+       IMPORTANT:
+
+       Homepage Portfolio:
+       portfolio/featured/
+
+       More Work:
+       portfolio/portraits/
+       portfolio/couples/
+       portfolio/sports/
+       portfolio/landscapes/
+       portfolio/real-estate/
+       portfolio/lifestyle/
+    */
+
+    const FEATURED_FOLDER = "featured";
 
     const categories = [
         "portraits",
@@ -24,23 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
     ];
 
 
-    /*
-       Number of images displayed on the homepage.
-
-       MORE WORK contains the complete portfolio.
-    */
-
-    const HOME_IMAGE_LIMIT = 20;
-
-
-
     /* =========================================================
        BOOKING FORM
     ========================================================= */
 
     const bookingForm =
         document.getElementById("booking-form");
-
 
     if (bookingForm) {
 
@@ -50,18 +54,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 event.preventDefault();
 
-
                 const submitButton =
                     bookingForm.querySelector(
                         "button[type='submit']"
                     );
 
+                if (submitButton) {
 
-                submitButton.disabled = true;
+                    submitButton.disabled = true;
+                    submitButton.textContent = "SENDING...";
 
-                submitButton.textContent =
-                    "SENDING...";
-
+                }
 
                 try {
 
@@ -70,25 +73,19 @@ document.addEventListener("DOMContentLoaded", function () {
                             bookingForm.action,
                             {
                                 method: "POST",
-                                body: new FormData(
-                                    bookingForm
-                                ),
+                                body: new FormData(bookingForm),
                                 headers: {
-                                    "Accept":
-                                        "application/json"
+                                    "Accept": "application/json"
                                 }
                             }
                         );
-
 
                     if (response.ok) {
 
                         bookingForm.innerHTML = `
                             <div class="form-success">
 
-                                <h3>
-                                    Thank you.
-                                </h3>
+                                <h3>Thank you.</h3>
 
                                 <p>
                                     Your request has been received successfully.
@@ -98,16 +95,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         `;
 
-                    }
+                    } else {
 
-                    else {
+                        if (submitButton) {
 
-                        submitButton.disabled =
-                            false;
+                            submitButton.disabled = false;
+                            submitButton.textContent =
+                                "SEND REQUEST";
 
-                        submitButton.textContent =
-                            "SEND REQUEST";
-
+                        }
 
                         alert(
                             "Something went wrong. Please try again."
@@ -115,19 +111,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     }
 
-                }
+                } catch (error) {
 
-                catch (error) {
+                    console.error(
+                        "Booking error:",
+                        error
+                    );
 
-                    console.error(error);
+                    if (submitButton) {
 
+                        submitButton.disabled = false;
+                        submitButton.textContent =
+                            "SEND REQUEST";
 
-                    submitButton.disabled =
-                        false;
-
-                    submitButton.textContent =
-                        "SEND REQUEST";
-
+                    }
 
                     alert(
                         "Unable to send your request. Please try again."
@@ -141,47 +138,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        PORTFOLIO ELEMENTS
     ========================================================= */
 
     const gallery =
-        document.getElementById(
-            "portfolio-gallery"
-        );
-
+        document.getElementById("portfolio-gallery");
 
     const portfolioLoading =
-        document.getElementById(
-            "portfolio-loading"
-        );
-
+        document.getElementById("portfolio-loading");
 
     const portfolioError =
-        document.getElementById(
-            "portfolio-error"
-        );
-
+        document.getElementById("portfolio-error");
 
     const filterButtons =
-        document.querySelectorAll(
-            ".filter-btn"
-        );
+        document.querySelectorAll(".filter-btn");
 
 
-    let currentFilter =
-        "all";
-
+    let currentFilter = "all";
 
 
     /* =========================================================
        SUPABASE PUBLIC IMAGE URL
     ========================================================= */
 
-    function getPublicImageUrl(
-        filePath
-    ) {
+    function getPublicImageUrl(filePath) {
 
         return (
             SUPABASE_URL +
@@ -194,14 +175,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        ALT TEXT
     ========================================================= */
 
-    function createAltText(
-        category
-    ) {
+    function createAltText(category) {
 
         const names = {
 
@@ -225,7 +203,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         };
 
-
         return (
             names[category] ||
             "Photography by Lisa Michelle Visuals"
@@ -234,14 +211,23 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
-       LOAD ONE SUPABASE FOLDER
+       LOAD FEATURED CATEGORY
+       
+       Example:
+       
+       featured/couples/01.webp
+       featured/portraits/01.webp
     ========================================================= */
 
-    async function loadFolder(
-        category
-    ) {
+    async function loadFeaturedCategory(category) {
+
+        const prefix =
+            FEATURED_FOLDER +
+            "/" +
+            category +
+            "/";
+
 
         const response =
             await fetch(
@@ -270,8 +256,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     body: JSON.stringify({
 
-                        prefix:
-                            category + "/",
+                        prefix: prefix,
 
                         limit: 1000,
 
@@ -295,7 +280,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!response.ok) {
 
             throw new Error(
-                "Folder failed: " +
+                "Featured folder failed: " +
                 category
             );
 
@@ -308,10 +293,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return files
             .filter(function (file) {
-
-                /*
-                   Ignore empty folder placeholders.
-                */
 
                 if (
                     !file ||
@@ -333,10 +314,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
 
 
-                /*
-                   We only want actual files.
-                */
-
                 return (
                     file.metadata ||
                     file.id
@@ -348,8 +325,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 return {
 
                     path:
-                        category +
-                        "/" +
+                        prefix +
                         file.name,
 
                     category:
@@ -365,33 +341,24 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        CREATE GALLERY ITEM
     ========================================================= */
 
-    function createGalleryItem(
-        file
-    ) {
+    function createGalleryItem(file) {
 
         const item =
-            document.createElement(
-                "div"
-            );
-
+            document.createElement("div");
 
         item.className =
             "gallery-item";
-
 
         item.dataset.category =
             file.category;
 
 
         const image =
-            document.createElement(
-                "img"
-            );
+            document.createElement("img");
 
 
         image.src =
@@ -409,18 +376,14 @@ document.addEventListener("DOMContentLoaded", function () {
         image.loading =
             "lazy";
 
-
         image.decoding =
             "async";
-
 
         image.draggable =
             false;
 
 
-        /*
-           Protect image from right click.
-        */
+        /* Prevent right click */
 
         image.addEventListener(
             "contextmenu",
@@ -432,26 +395,19 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /*
-           Open Lightbox.
-        */
+        /* Open lightbox */
 
         image.addEventListener(
             "click",
             function () {
 
-                openLightbox(
-                    image
-                );
+                openLightbox(image);
 
             }
         );
 
 
-        /*
-           If an image cannot load,
-           remove it from the gallery.
-        */
+        /* Image loading error */
 
         image.addEventListener(
             "error",
@@ -468,27 +424,27 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        item.appendChild(
-            image
-        );
+        item.appendChild(image);
 
-
-        gallery.appendChild(
-            item
-        );
+        gallery.appendChild(item);
 
     }
 
 
-
     /* =========================================================
        LOAD PORTFOLIO
+       
+       ONLY reads:
+       
+       portfolio/featured/
     ========================================================= */
 
     async function loadPortfolio() {
 
         if (!gallery) {
+
             return;
+
         }
 
 
@@ -517,7 +473,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /*
-               Load all six folders.
+               Load each Featured category.
             */
 
             for (
@@ -527,19 +483,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 try {
 
                     const files =
-                        await loadFolder(
+                        await loadFeaturedCategory(
                             category
                         );
 
 
                     allFiles =
-                        allFiles.concat(
-                            files
-                        );
+                        allFiles.concat(files);
 
-                }
-
-                catch (error) {
+                } catch (error) {
 
                     console.warn(
                         error.message
@@ -551,8 +503,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /*
-               Sort alphabetically by
-               category and filename.
+               Sort images.
+
+               Category first,
+               filename second.
             */
 
             allFiles.sort(
@@ -583,23 +537,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /*
-               Homepage shows only
-               the first 9 images.
+               Display ALL Featured images.
+
+               No HOME_IMAGE_LIMIT anymore.
+
+               If you have 17 Featured images,
+               all 17 will appear.
             */
 
-            const homeFiles =
-                allFiles.slice(
-                    0,
-                    HOME_IMAGE_LIMIT
-                );
-
-
-            homeFiles.forEach(
+            allFiles.forEach(
                 function (file) {
 
-                    createGalleryItem(
-                        file
-                    );
+                    createGalleryItem(file);
 
                 }
             );
@@ -613,18 +562,14 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            /*
-               If there are no images.
-            */
-
             if (
-                homeFiles.length === 0
+                allFiles.length === 0
             ) {
 
                 if (portfolioError) {
 
                     portfolioError.textContent =
-                        "No photographs found.";
+                        "No featured photographs found.";
 
                     portfolioError.style.display =
                         "block";
@@ -633,9 +578,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-        }
-
-        catch (error) {
+        } catch (error) {
 
             console.error(
                 "Portfolio loading error:",
@@ -653,6 +596,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (portfolioError) {
 
+                portfolioError.textContent =
+                    "Unable to load the portfolio.";
+
                 portfolioError.style.display =
                     "block";
 
@@ -663,9 +609,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
-       GET VISIBLE GALLERY IMAGES
+       GET VISIBLE IMAGES
     ========================================================= */
 
     function getVisibleGalleryImages() {
@@ -678,123 +623,83 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const images =
-            gallery.querySelectorAll(
-                "img"
-            );
+            gallery.querySelectorAll("img");
 
 
-        return Array.from(
-            images
-        ).filter(
-            function (image) {
+        return Array.from(images)
+            .filter(function (image) {
 
                 const item =
-                    image.closest(
-                        ".gallery-item"
-                    );
+                    image.closest(".gallery-item");
 
 
                 return (
                     item &&
-                    !item.classList.contains(
-                        "hidden"
-                    )
+                    !item.classList.contains("hidden")
                 );
 
-            }
-        );
+            });
 
     }
 
 
-
     /* =========================================================
-       LIGHTBOX
+       LIGHTBOX ELEMENTS
     ========================================================= */
 
     const lightbox =
-        document.getElementById(
-            "lightbox"
-        );
-
+        document.getElementById("lightbox");
 
     const lightboxImage =
-        document.getElementById(
-            "lightbox-image"
-        );
-
+        document.getElementById("lightbox-image");
 
     const closeButton =
-        document.querySelector(
-            ".close"
-        );
-
+        document.querySelector(".close");
 
     const previousButton =
-        document.getElementById(
-            "prev"
-        );
-
+        document.getElementById("prev");
 
     const nextButton =
-        document.getElementById(
-            "next"
-        );
-
+        document.getElementById("next");
 
     const lightboxCounter =
-        document.getElementById(
-            "lightbox-counter"
-        );
+        document.getElementById("lightbox-counter");
 
 
-    let currentImage =
-        0;
-
+    let currentImage = 0;
 
 
     /* =========================================================
        OPEN LIGHTBOX
     ========================================================= */
 
-    function openLightbox(
-        image
-    ) {
+    function openLightbox(image) {
 
         const visibleImages =
             getVisibleGalleryImages();
 
 
         const index =
-            visibleImages.indexOf(
-                image
-            );
+            visibleImages.indexOf(image);
 
 
-        if (
-            index === -1
-        ) {
+        if (index === -1) {
 
             return;
 
         }
 
 
-        showGalleryImage(
-            index
-        );
+        showGalleryImage(index);
 
     }
-
 
 
     /* =========================================================
        SHOW LIGHTBOX IMAGE
     ========================================================= */
 
-    function showGalleryImage(
-        index
-    ) {
+    function showGalleryImage(index) {
 
         const visibleImages =
             getVisibleGalleryImages();
@@ -811,9 +716,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        if (
-            index < 0
-        ) {
+        if (index < 0) {
 
             index = 0;
 
@@ -821,8 +724,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (
-            index >=
-            visibleImages.length
+            index >= visibleImages.length
         ) {
 
             index =
@@ -836,9 +738,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const image =
-            visibleImages[
-                currentImage
-            ];
+            visibleImages[currentImage];
 
 
         lightboxImage.src =
@@ -864,7 +764,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        UPDATE LIGHTBOX
     ========================================================= */
@@ -884,9 +783,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        if (
-            lightboxCounter
-        ) {
+        if (lightboxCounter) {
 
             lightboxCounter.textContent =
                 `${currentImage + 1} / ${visibleImages.length}`;
@@ -894,9 +791,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        if (
-            previousButton
-        ) {
+        if (previousButton) {
 
             previousButton.style.visibility =
                 currentImage === 0
@@ -906,9 +801,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        if (
-            nextButton
-        ) {
+        if (nextButton) {
 
             nextButton.style.visibility =
                 currentImage ===
@@ -921,7 +814,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        CLOSE LIGHTBOX
     ========================================================= */
@@ -929,7 +821,9 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeLightbox() {
 
         if (!lightbox) {
+
             return;
+
         }
 
 
@@ -945,13 +839,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (lightboxImage) {
 
-            lightboxImage.src =
-                "";
+            lightboxImage.src = "";
 
         }
 
     }
-
 
 
     if (closeButton) {
@@ -964,9 +856,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
-       NEXT IMAGE
+       NEXT
     ========================================================= */
 
     if (nextButton) {
@@ -996,9 +887,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
-       PREVIOUS IMAGE
+       PREVIOUS
     ========================================================= */
 
     if (previousButton) {
@@ -1007,9 +897,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function () {
 
-                if (
-                    currentImage > 0
-                ) {
+                if (currentImage > 0) {
 
                     showGalleryImage(
                         currentImage - 1
@@ -1023,7 +911,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        CLICK OUTSIDE LIGHTBOX
     ========================================================= */
@@ -1035,8 +922,7 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 if (
-                    event.target ===
-                    lightbox
+                    event.target === lightbox
                 ) {
 
                     closeLightbox();
@@ -1049,9 +935,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
-       KEYBOARD NAVIGATION
+       KEYBOARD
     ========================================================= */
 
     document.addEventListener(
@@ -1060,8 +945,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (
                 !lightbox ||
-                lightbox.style.display !==
-                    "flex"
+                lightbox.style.display !== "flex"
             ) {
 
                 return;
@@ -1070,8 +954,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (
-                event.key ===
-                "Escape"
+                event.key === "Escape"
             ) {
 
                 closeLightbox();
@@ -1080,8 +963,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             else if (
-                event.key ===
-                "ArrowRight"
+                event.key === "ArrowRight"
             ) {
 
                 if (nextButton) {
@@ -1094,8 +976,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             else if (
-                event.key ===
-                "ArrowLeft"
+                event.key === "ArrowLeft"
             ) {
 
                 if (previousButton) {
@@ -1110,13 +991,11 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-
     /* =========================================================
        MOBILE SWIPE
     ========================================================= */
 
-    let touchStartX =
-        0;
+    let touchStartX = 0;
 
 
     if (lightboxImage) {
@@ -1126,8 +1005,7 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 touchStartX =
-                    event.changedTouches[0]
-                        .screenX;
+                    event.changedTouches[0].screenX;
 
             }
         );
@@ -1138,8 +1016,7 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 const touchEndX =
-                    event.changedTouches[0]
-                        .screenX;
+                    event.changedTouches[0].screenX;
 
 
                 const distance =
@@ -1178,7 +1055,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        PORTFOLIO FILTERS
     ========================================================= */
@@ -1193,10 +1069,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     currentFilter =
                         button.dataset.filter;
 
-
-                    /*
-                       Active button.
-                    */
 
                     filterButtons.forEach(
                         function (btn) {
@@ -1214,16 +1086,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
 
-                    /*
-                       Filter homepage images.
-                    */
-
                     if (gallery) {
 
                         const items =
                             gallery.querySelectorAll(
                                 ".gallery-item"
                             );
+
+
+                        let visibleCount = 0;
 
 
                         items.forEach(
@@ -1244,9 +1115,9 @@ document.addEventListener("DOMContentLoaded", function () {
                                         "hidden"
                                     );
 
-                                }
+                                    visibleCount++;
 
-                                else {
+                                } else {
 
                                     item.classList.add(
                                         "hidden"
@@ -1257,15 +1128,40 @@ document.addEventListener("DOMContentLoaded", function () {
                             }
                         );
 
+
+                        closeLightbox();
+
+
+                        /*
+                           If no image exists
+                           in this category.
+                        */
+
+                        if (
+                            portfolioError &&
+                            currentFilter !== "all"
+                        ) {
+
+                            if (
+                                visibleCount === 0
+                            ) {
+
+                                portfolioError.textContent =
+                                    "No photographs found in this category.";
+
+                                portfolioError.style.display =
+                                    "block";
+
+                            } else {
+
+                                portfolioError.style.display =
+                                    "none";
+
+                            }
+
+                        }
+
                     }
-
-
-                    /*
-                       Close lightbox after
-                       changing filter.
-                    */
-
-                    closeLightbox();
 
                 }
             );
@@ -1274,21 +1170,15 @@ document.addEventListener("DOMContentLoaded", function () {
     );
 
 
-
     /* =========================================================
        MOBILE MENU
     ========================================================= */
 
     const menuToggle =
-        document.querySelector(
-            ".menu-toggle"
-        );
-
+        document.querySelector(".menu-toggle");
 
     const navLinks =
-        document.querySelector(
-            ".nav-links"
-        );
+        document.querySelector(".nav-links");
 
 
     if (
@@ -1345,7 +1235,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
        STAR RATING
     ========================================================= */
@@ -1354,7 +1243,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.querySelectorAll(
             ".stars .star"
         );
-
 
     const ratingValue =
         document.getElementById(
@@ -1393,17 +1281,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                             if (
-                                itemRating <=
-                                rating
+                                itemRating <= rating
                             ) {
 
                                 item.classList.add(
                                     "selected"
                                 );
 
-                            }
-
-                            else {
+                            } else {
 
                                 item.classList.remove(
                                     "selected"
@@ -1419,7 +1304,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     );
-
 
 
     /* =========================================================
@@ -1447,12 +1331,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
 
-                submitButton.disabled =
-                    true;
+                if (submitButton) {
 
+                    submitButton.disabled = true;
+                    submitButton.textContent =
+                        "SENDING...";
 
-                submitButton.textContent =
-                    "SENDING...";
+                }
 
 
                 try {
@@ -1473,9 +1358,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         );
 
 
-                    if (
-                        response.ok
-                    ) {
+                    if (response.ok) {
 
                         reviewForm.innerHTML = `
                             <div class="form-success">
@@ -1492,17 +1375,15 @@ document.addEventListener("DOMContentLoaded", function () {
                             </div>
                         `;
 
-                    }
+                    } else {
 
-                    else {
+                        if (submitButton) {
 
-                        submitButton.disabled =
-                            false;
+                            submitButton.disabled = false;
+                            submitButton.textContent =
+                                "SUBMIT REVIEW";
 
-
-                        submitButton.textContent =
-                            "SUBMIT REVIEW";
-
+                        }
 
                         alert(
                             "Something went wrong. Please try again."
@@ -1510,20 +1391,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     }
 
-                }
+                } catch (error) {
 
-                catch (error) {
-
-                    console.error(error);
-
-
-                    submitButton.disabled =
-                        false;
+                    console.error(
+                        "Review error:",
+                        error
+                    );
 
 
-                    submitButton.textContent =
-                        "SUBMIT REVIEW";
+                    if (submitButton) {
 
+                        submitButton.disabled = false;
+                        submitButton.textContent =
+                            "SUBMIT REVIEW";
+
+                    }
 
                     alert(
                         "Unable to send your review. Please try again."
@@ -1537,9 +1419,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-
     /* =========================================================
-       AUTOMATIC COPYRIGHT YEAR
+       COPYRIGHT YEAR
     ========================================================= */
 
     const currentYears =
@@ -1556,7 +1437,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
     );
-
 
 
     /* =========================================================
@@ -1587,9 +1467,8 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-
     /* =========================================================
-       START PORTFOLIO
+       START
     ========================================================= */
 
     loadPortfolio();
