@@ -54,72 +54,61 @@ document.addEventListener("DOMContentLoaded", function () {
        LOAD ONE FOLDER
     ========================================= */
 
-   async function loadFolder(category) {
+  async function loadFolder(category) {
 
-    const response = await fetch(
-
+    const url =
         SUPABASE_URL +
         "/storage/v1/object/list/" +
-        BUCKET_NAME,
+        BUCKET_NAME;
 
-        {
-            method: "POST",
+    const response = await fetch(url, {
+        method: "POST",
 
-            headers: {
-                "Authorization":
-                    "Bearer " + SUPABASE_PUBLISHABLE_KEY,
+        headers: {
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Authorization":
+                "Bearer " + SUPABASE_PUBLISHABLE_KEY,
+            "Content-Type": "application/json"
+        },
 
-                "apikey":
-                    SUPABASE_PUBLISHABLE_KEY,
+        body: JSON.stringify({
+            prefix: category + "/",
+            limit: 1000,
+            offset: 0
+        })
+    });
 
-                "Content-Type":
-                    "application/json"
-            },
+    const text = await response.text();
 
-            body: JSON.stringify({
-
-                prefix: category + "/",
-
-                limit: 1000,
-
-                offset: 0,
-
-                sortBy: {
-                    column: "name",
-                    order: "asc"
-                }
-
-            })
-        }
+    console.log(
+        "FOLDER:",
+        category,
+        "STATUS:",
+        response.status,
+        "RESPONSE:",
+        text
     );
 
-
     if (!response.ok) {
-
-        const errorText = await response.text();
-
-        console.error(
-            "Supabase error for " + category,
-            errorText
-        );
-
         throw new Error(
-            "Unable to load folder: " + category
+            "Supabase returned " +
+            response.status +
+            " for " +
+            category
         );
     }
 
+    let files;
 
-    const files = await response.json();
-
-
-    console.log(
-        "Supabase files in " + category + ":",
-        files
-    );
-
+    try {
+        files = JSON.parse(text);
+    } catch (error) {
+        throw new Error(
+            "Invalid Supabase response"
+        );
+    }
 
     return files
-
         .filter(function (file) {
 
             return (
@@ -129,42 +118,14 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
         })
-
-        .filter(function (file) {
-
-            const extension =
-                file.name
-                    .split(".")
-                    .pop()
-                    .toLowerCase();
-
-            return [
-                "jpg",
-                "jpeg",
-                "png",
-                "webp",
-                "gif",
-                "avif"
-            ].includes(extension);
-
-        })
-
         .map(function (file) {
 
             return {
-
-                path:
-                    category +
-                    "/" +
-                    file.name,
-
-                category:
-                    category
-
+                path: category + "/" + file.name,
+                category: category
             };
 
         });
-
 }
 
     /* =========================================
