@@ -1334,201 +1334,96 @@ async function deletePhoto(
    ===================================================== */
 
 
-async function replacePhoto(
-    photo
-) {
+async function replacePhoto(photo) {
 
     const confirmed =
         confirm(
-            `Replace "${photo.file_name}"?\n\nThe old photo will be permanently deleted.`
+            Replace "${photo.file_name}"?\n\n +
+            The old photo will be permanently replaced.
         );
-
 
     if (!confirmed) {
         return;
     }
 
-
     const input =
-        document.createElement(
-            "input"
-        );
+        document.createElement("input");
 
-
-    input.type =
-        "file";
-
+    input.type = "file";
 
     input.accept =
         "image/jpeg,image/png,image/webp,image/heic,image/heif";
 
-
     input.click();
-
 
     input.addEventListener(
         "change",
-        async function() {
+        async function () {
 
             const file =
                 input.files[0];
-
 
             if (!file) {
                 return;
             }
 
-
             showMessage(
                 "Uploading replacement..."
             );
 
-
             try {
 
                 /*
-                    Upload new file first.
-                    This prevents losing the old
-                    image if the upload fails.
-                */
-
-
-                const extension =
-                    file.name.includes(".")
-                        ? file.name.substring(
-                            file.name.lastIndexOf(".")
-                        )
-                        : "";
-
-
-                const baseName =
-                    file.name
-                        .replace(
-                            /\.[^/.]+$/,
-                            ""
-                        )
-                        .replace(
-                            /[^a-zA-Z0-9_-]/g,
-                            "-"
-                        );
-
-
-                const newPath =
-                    Date.now() +
-                    "-" +
-                    Math.random()
-                        .toString(36)
-                        .substring(
-                            2,
-                            8
-                        ) +
-                    "-" +
-                    baseName +
-                    extension;
-
+                 * IMPORTANT:
+                 * Use the SAME storage path.
+                 *
+                 * This replaces the existing Storage
+                 * object instead of creating a new path.
+                 */
 
                 const {
-                    error:
-                        uploadError
+                    error: uploadError
                 } =
                     await supabaseClient
                         .storage
-                        .from(
-                            "client-galleries"
-                        )
+                        .from("client-galleries")
                         .upload(
-                            newPath,
+                            photo.file_path,
                             file,
                             {
-                                cacheControl:
-                                    "3600",
-
-                                upsert:
-                                    false
+                                cacheControl: "3600",
+                                upsert: true,
+                                contentType:
+                                    file.type || "application/octet-stream"
                             }
                         );
 
-
-                if (
-                    uploadError
-                ) {
+                if (uploadError) {
                     throw uploadError;
                 }
 
 
                 /*
-                    Update database record.
-                */
-
+                 * Only update the file name.
+                 *
+                 * file_path stays exactly the same.
+                 */
 
                 const {
-                    error:
-                        updateError
+                    error: updateError
                 } =
                     await supabaseClient
-                        .from(
-                            "gallery_photos"
-                        )
+                        .from("gallery_photos")
                         .update({
-                            file_name:
-                                file.name,
-
-                            file_path:
-                                newPath
+                            file_name: file.name
                         })
                         .eq(
                             "id",
                             photo.id
                         );
 
-
-                if (
-                    updateError
-                ) {
-
-                    /*
-                        Roll back uploaded file.
-                    */
-
-                    await supabaseClient
-                        .storage
-                        .from(
-                            "client-galleries"
-                        )
-                        .remove([
-                            newPath
-                        ]);
-
+                if (updateError) {
                     throw updateError;
-                }
-
-
-                /*
-                    Delete old file.
-                */
-
-                const {
-                    error:
-                        removeError
-                } =
-                    await supabaseClient
-                        .storage
-                        .from(
-                            "client-galleries"
-                        )
-                        .remove([
-                            photo.file_path
-                        ]);
-
-
-                if (
-                    removeError
-                ) {
-
-                    console.warn(
-                        "New image saved, but old image could not be removed:",
-                        removeError
-                    );
                 }
 
 
@@ -1537,6 +1432,10 @@ async function replacePhoto(
                     "success"
                 );
 
+
+                /*
+                 * Reload clients and photos.
+                 */
 
                 await loadClients();
 
@@ -1548,7 +1447,6 @@ async function replacePhoto(
                     error
                 );
 
-
                 showMessage(
                     "Error replacing photo: " +
                     error.message,
@@ -1559,7 +1457,6 @@ async function replacePhoto(
         }
     );
 }
-
 
 /* =====================================================
    DELETE CLIENT
