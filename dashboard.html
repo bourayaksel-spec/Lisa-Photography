@@ -1338,8 +1338,8 @@ async function replacePhoto(photo) {
 
     const confirmed =
         confirm(
-            Replace "${photo.file_name}"?\n\n +
-            The old photo will be permanently replaced.
+            `Replace "${photo.file_name}"?\n\n` +
+            `The old photo will be permanently replaced.`
         );
 
     if (!confirmed) {
