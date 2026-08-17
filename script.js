@@ -439,175 +439,150 @@ document.addEventListener("DOMContentLoaded", function () {
        portfolio/featured/
     ========================================================= */
 
-    async function loadPortfolio() {
+   async function loadPortfolio() {
 
-        if (!gallery) {
+    if (!gallery) {
+        return;
+    }
 
-            return;
+    try {
+
+        if (portfolioLoading) {
+            portfolioLoading.style.display = "block";
+        }
+
+        if (portfolioError) {
+            portfolioError.style.display = "none";
+        }
+
+        gallery.innerHTML = "";
+
+        /*
+         * Load selected Large Images
+         * from portfolio_settings
+         */
+
+        const settingsResponse = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/portfolio_settings" +
+            "?select=category,large_image" +
+            "&is_visible=eq.true" +
+            "&is_featured=eq.true" +
+            "&large_image=not.is.null",
+            {
+                method: "GET",
+
+                headers: {
+                    "Authorization":
+                        "Bearer " +
+                        SUPABASE_PUBLISHABLE_KEY,
+
+                    "apikey":
+                        SUPABASE_PUBLISHABLE_KEY
+                }
+            }
+        );
+
+
+        if (!settingsResponse.ok) {
+
+            throw new Error(
+                "Could not load portfolio settings"
+            );
 
         }
 
 
-        try {
-
-            if (portfolioLoading) {
-
-                portfolioLoading.style.display =
-                    "block";
-
-            }
+        const settings =
+            await settingsResponse.json();
 
 
-            if (portfolioError) {
+        /*
+         * Create gallery items
+         * using large_image
+         */
 
-                portfolioError.style.display =
-                    "none";
-
-            }
-
-
-            gallery.innerHTML = "";
-
-
-            let allFiles = [];
-
-
-            /*
-               Load each Featured category.
-            */
-
-            for (
-                const category of categories
-            ) {
-
-                try {
-
-                    const files =
-                        await loadFeaturedCategory(
-                            category
-                        );
-
-
-                    allFiles =
-                        allFiles.concat(files);
-
-                } catch (error) {
-
-                    console.warn(
-                        error.message
-                    );
-
-                }
-
-            }
-
-
-            /*
-               Sort images.
-
-               Category first,
-               filename second.
-            */
-
-            allFiles.sort(
-                function (a, b) {
-
-                    const first =
-                        a.category +
-                        "/" +
-                        a.name;
-
-                    const second =
-                        b.category +
-                        "/" +
-                        b.name;
-
-
-                    return first.localeCompare(
-                        second,
-                        undefined,
-                        {
-                            numeric: true,
-                            sensitivity: "base"
-                        }
-                    );
-
-                }
-            );
-
-
-            /*
-               Display ALL Featured images.
-
-               No HOME_IMAGE_LIMIT anymore.
-
-               If you have 17 Featured images,
-               all 17 will appear.
-            */
-
-            allFiles.forEach(
-                function (file) {
-
-                    createGalleryItem(file);
-
-                }
-            );
-
-
-            if (portfolioLoading) {
-
-                portfolioLoading.style.display =
-                    "none";
-
-            }
-
+        settings.forEach(function (setting) {
 
             if (
-                allFiles.length === 0
+                !setting.category ||
+                !setting.large_image
             ) {
-
-                if (portfolioError) {
-
-                    portfolioError.textContent =
-                        "No featured photographs found.";
-
-                    portfolioError.style.display =
-                        "block";
-
-                }
-
+                return;
             }
 
-        } catch (error) {
 
-            console.error(
-                "Portfolio loading error:",
-                error
-            );
+            const file = {
+
+                path: setting.large_image,
+
+                category:
+                    setting.category.toLowerCase(),
+
+                name:
+                    setting.large_image
+                        .split("/")
+                        .pop()
+
+            };
 
 
-            if (portfolioLoading) {
+            createGalleryItem(file);
 
-                portfolioLoading.style.display =
-                    "none";
+        });
 
-            }
 
+        if (portfolioLoading) {
+
+            portfolioLoading.style.display =
+                "none";
+
+        }
+
+
+        if (settings.length === 0) {
 
             if (portfolioError) {
 
                 portfolioError.textContent =
-                    "Unable to load the portfolio.";
+                    "No featured photographs found.";
 
                 portfolioError.style.display =
                     "block";
 
             }
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Portfolio loading error:",
+            error
+        );
+
+
+        if (portfolioLoading) {
+
+            portfolioLoading.style.display =
+                "none";
+
+        }
+
+
+        if (portfolioError) {
+
+            portfolioError.textContent =
+                "Unable to load the portfolio.";
+
+            portfolioError.style.display =
+                "block";
 
         }
 
     }
 
+}
 
     /* =========================================================
        GET VISIBLE IMAGES
