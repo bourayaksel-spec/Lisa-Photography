@@ -2401,41 +2401,60 @@ document
 
 })();
 
-/* =====================================================
-   PASSWORD VISIBILITY TOGGLE
-   ===================================================== */
+document.addEventListener("DOMContentLoaded", function () {
 
-const passwordInput =
-    document.getElementById("client-password");
+    const passwordInput =
+        document.getElementById("client-password");
 
-const passwordToggle =
-    document.getElementById("password-toggle");
+    const passwordToggle =
+        document.getElementById("password-toggle");
 
-passwordToggle.addEventListener(
-    "click",
-    function () {
+    const passwordEye =
+        document.getElementById("password-eye");
 
-        const isPassword =
-            passwordInput.type === "password";
 
-        passwordInput.type =
-            isPassword
-                ? "text"
-                : "password";
+    if (!passwordInput || !passwordToggle) {
 
-        passwordToggle.textContent =
-            isPassword
-                ? "🙈"
-                : "👁️";
-
-        passwordToggle.setAttribute(
-            "aria-label",
-            isPassword
-                ? "Hide password"
-                : "Show password"
+        console.error(
+            "Password toggle elements were not found."
         );
+
+        return;
     }
-);
+
+
+    passwordToggle.addEventListener("click", function (event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+
+        if (passwordInput.type === "password") {
+
+            passwordInput.type = "text";
+
+            passwordEye.textContent = "🙈";
+
+            passwordToggle.setAttribute(
+                "aria-label",
+                "Hide password"
+            );
+
+        } else {
+
+            passwordInput.type = "password";
+
+            passwordEye.textContent = "👁️";
+
+            passwordToggle.setAttribute(
+                "aria-label",
+                "Show password"
+            );
+        }
+
+    });
+
+});
 </script>
 
 </body>
