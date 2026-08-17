@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
-       SUPABASE CONFIGURATION
+       SUPABASE
     ========================================================= */
 
     const SUPABASE_URL =
@@ -11,6 +11,20 @@ document.addEventListener("DOMContentLoaded", function () {
         "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
 
     const BUCKET_NAME = "portfolio";
+
+
+    /* =========================================================
+       CATEGORIES
+    ========================================================= */
+
+    const categories = [
+        "portraits",
+        "couples",
+        "sports",
+        "landscapes",
+        "real-estate",
+        "lifestyle"
+    ];
 
 
     /* =========================================================
@@ -29,13 +43,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const emptyMessage =
         document.getElementById("gallery-empty");
 
-
     const filterButtons =
         document.querySelectorAll(".filter-btn");
 
 
     /* =========================================================
-       LIGHTBOX ELEMENTS
+       LIGHTBOX
     ========================================================= */
 
     const lightbox =
@@ -61,9 +74,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let currentFilter = "all";
 
+    let touchStartX = 0;
+
 
     /* =========================================================
-       STORAGE URL
+       PUBLIC IMAGE URL
     ========================================================= */
 
     function getPublicImageUrl(filePath) {
@@ -80,90 +95,133 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       DETERMINE CATEGORY
-       
-       Expected structure:
-       
-       portfolio/
-           portraits/
-           couples/
-           sports/
-           landscapes/
-           real-estate/
-           lifestyle/
+       ALT TEXT
     ========================================================= */
 
-    function getCategoryFromPath(filePath) {
+    function createAltText(category) {
 
-        const parts =
-            filePath.split("/");
+        const names = {
 
-        /*
-           Example:
+            portraits:
+                "Portrait photography by Lisa Michelle Visuals in East Alabama",
 
-           portraits/photo01.webp
+            couples:
+                "Couples photography by Lisa Michelle Visuals in East Alabama",
 
-           parts[0] = portraits
-        */
+            sports:
+                "Sports photography by Lisa Michelle Visuals in East Alabama",
 
-        if (parts.length > 1) {
+            landscapes:
+                "Landscape photography by Lisa Michelle Visuals in East Alabama",
 
-            const folder =
-                parts[0].toLowerCase();
+            "real-estate":
+                "Real estate photography by Lisa Michelle Visuals in East Alabama",
 
-            const allowedCategories = [
-                "portraits",
-                "couples",
-                "sports",
-                "landscapes",
-                "real-estate",
-                "lifestyle"
-            ];
+            lifestyle:
+                "Lifestyle photography by Lisa Michelle Visuals in East Alabama"
 
-            if (
-                allowedCategories.includes(folder)
-            ) {
-                return folder;
+        };
+
+        return (
+            names[category] ||
+            "Photography by Lisa Michelle Visuals"
+        );
+
+    }
+
+
+    /* =========================================================
+       LOAD FILES FROM ONE FOLDER
+    ========================================================= */
+
+    async function loadFolder(category) {
+
+        const response = await fetch(
+
+            SUPABASE_URL +
+            "/storage/v1/object/list/" +
+            BUCKET_NAME,
+
+            {
+
+                method: "POST",
+
+                headers: {
+
+                    "Authorization":
+                        "Bearer " +
+                        SUPABASE_PUBLISHABLE_KEY,
+
+                    "apikey":
+                        SUPABASE_PUBLISHABLE_KEY,
+
+                    "Content-Type":
+                        "application/json"
+
+                },
+
+                body: JSON.stringify({
+
+                    prefix: category + "/",
+
+                    limit: 1000,
+
+                    offset: 0,
+
+                    sortBy: {
+
+                        column: "name",
+
+                        order: "asc"
+
+                    }
+
+                })
+
             }
+
+        );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load folder: " +
+                category
+            );
 
         }
 
 
-        /*
-           If no folder exists,
-           try to determine category
-           from filename.
-        */
-
-        const filename =
-            parts[parts.length - 1]
-                .toLowerCase();
+        const files =
+            await response.json();
 
 
-        const categories = [
-            "portraits",
-            "couples",
-            "sports",
-            "landscapes",
-            "real-estate",
-            "lifestyle"
-        ];
+        return files
+            .filter(function (file) {
 
+                return (
+                    file &&
+                    file.name &&
+                    file.metadata
+                );
 
-        for (
-            const category of categories
-        ) {
+            })
+            .map(function (file) {
 
-            if (
-                filename.includes(category)
-            ) {
-                return category;
-            }
+                return {
 
-        }
+                    path:
+                        category +
+                        "/" +
+                        file.name,
 
+                    category:
+                        category
 
-        return "lifestyle";
+                };
+
+            });
 
     }
 
@@ -174,16 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function createGalleryItem(file) {
 
-        const filePath =
-            file.name;
-
-        const imageUrl =
-            getPublicImageUrl(filePath);
-
-        const category =
-            getCategoryFromPath(filePath);
-
-
         const item =
             document.createElement("div");
 
@@ -191,31 +239,36 @@ document.addEventListener("DOMContentLoaded", function () {
             "gallery-item";
 
         item.dataset.category =
-            category;
+            file.category;
 
 
         const image =
             document.createElement("img");
 
+
         image.src =
-            imageUrl;
+            getPublicImageUrl(file.path);
+
 
         image.alt =
-            createAltText(category);
+            createAltText(file.category);
 
 
         image.loading =
             "lazy";
 
+
         image.decoding =
             "async";
+
 
         image.draggable =
             false;
 
 
         /*
-           Prevent right click
+           Protect image from
+           right-click
         */
 
         image.addEventListener(
@@ -223,6 +276,32 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 event.preventDefault();
+
+            }
+        );
+
+
+        /*
+           Open lightbox
+        */
+
+        image.addEventListener(
+            "click",
+            function () {
+
+                const visibleImages =
+                    getVisibleGalleryImages();
+
+
+                const index =
+                    visibleImages.indexOf(image);
+
+
+                if (index !== -1) {
+
+                    showGalleryImage(index);
+
+                }
 
             }
         );
@@ -236,44 +315,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       ALT TEXT
-    ========================================================= */
-
-    function createAltText(category) {
-
-        const names = {
-
-            "portraits":
-                "Portrait photography by Lisa Michelle Visuals",
-
-            "couples":
-                "Couples photography by Lisa Michelle Visuals",
-
-            "sports":
-                "Sports photography by Lisa Michelle Visuals",
-
-            "landscapes":
-                "Landscape photography by Lisa Michelle Visuals",
-
-            "real-estate":
-                "Real estate photography by Lisa Michelle Visuals",
-
-            "lifestyle":
-                "Lifestyle photography by Lisa Michelle Visuals"
-
-        };
-
-
-        return (
-            names[category] ||
-            "Photography by Lisa Michelle Visuals"
-        );
-
-    }
-
-
-    /* =========================================================
-       LOAD FILES FROM SUPABASE
+       LOAD COMPLETE PORTFOLIO
     ========================================================= */
 
     async function loadPortfolio() {
@@ -290,240 +332,56 @@ document.addEventListener("DOMContentLoaded", function () {
                 "none";
 
 
-            /*
-               Get folders first
-            */
-
-            const foldersResponse =
-                await fetch(
-
-                    SUPABASE_URL +
-                    "/storage/v1/object/list/" +
-                    BUCKET_NAME,
-
-                    {
-
-                        method: "POST",
-
-                        headers: {
-
-                            "Authorization":
-                                "Bearer " +
-                                SUPABASE_PUBLISHABLE_KEY,
-
-                            "apikey":
-                                SUPABASE_PUBLISHABLE_KEY,
-
-                            "Content-Type":
-                                "application/json"
-
-                        },
-
-                        body: JSON.stringify({
-
-                            prefix: "",
-
-                            limit: 100,
-
-                            offset: 0,
-
-                            sortBy: {
-                                column: "name",
-                                order: "asc"
-                            }
-
-                        })
-
-                    }
-
-                );
-
-
-            if (
-                !foldersResponse.ok
-            ) {
-
-                throw new Error(
-                    "Unable to access Supabase Storage."
-                );
-
-            }
-
-
-            const rootFiles =
-                await foldersResponse.json();
-
-
-            /*
-               Supabase may return folders
-               as objects without metadata.
-               
-               We need to load files from
-               each category folder.
-            */
-
-            const categories = [
-
-                "portraits",
-                "couples",
-                "sports",
-                "landscapes",
-                "real-estate",
-                "lifestyle"
-
-            ];
+            gallery.innerHTML = "";
 
 
             let allFiles = [];
 
 
             /*
-               Load each category folder
+               Load every category
             */
 
             for (
                 const category of categories
             ) {
 
-                const response =
-                    await fetch(
+                try {
 
-                        SUPABASE_URL +
-                        "/storage/v1/object/list/" +
-                        BUCKET_NAME,
-
-                        {
-
-                            method: "POST",
-
-                            headers: {
-
-                                "Authorization":
-                                    "Bearer " +
-                                    SUPABASE_PUBLISHABLE_KEY,
-
-                                "apikey":
-                                    SUPABASE_PUBLISHABLE_KEY,
-
-                                "Content-Type":
-                                    "application/json"
-
-                            },
-
-                            body: JSON.stringify({
-
-                                prefix:
-                                    category + "/",
-
-                                limit: 100,
-
-                                offset: 0,
-
-                                sortBy: {
-                                    column: "name",
-                                    order: "asc"
-                                }
-
-                            })
-
-                        }
-
-                    );
+                    const files =
+                        await loadFolder(
+                            category
+                        );
 
 
-                if (!response.ok) {
-
-                    console.warn(
-                        "Could not load folder:",
-                        category
-                    );
-
-                    continue;
+                    allFiles =
+                        allFiles.concat(files);
 
                 }
 
+                catch (error) {
 
-                const files =
-                    await response.json();
+                    console.warn(
+                        "Could not load:",
+                        category,
+                        error
+                    );
 
-
-                /*
-                   Only actual files
-                   should be added.
-                */
-
-                files.forEach(function (file) {
-
-                    if (
-                        file.name &&
-                        !file.id &&
-                        !file.metadata
-                    ) {
-                        return;
-                    }
-
-
-                    /*
-                       Supabase returns the name
-                       relative to the prefix.
-
-                       Therefore rebuild full path.
-                    */
-
-                    if (
-                        file.name &&
-                        !file.name.includes("/")
-                    ) {
-
-                        allFiles.push({
-
-                            ...file,
-
-                            name:
-                                category +
-                                "/" +
-                                file.name
-
-                        });
-
-                    }
-
-                });
+                }
 
             }
 
 
             /*
-               If no category folders exist,
-               try files in the root.
+               Hide loading
             */
-
-            if (
-                allFiles.length === 0
-            ) {
-
-                rootFiles.forEach(function (file) {
-
-                    if (
-                        file.name &&
-                        file.metadata
-                    ) {
-
-                        allFiles.push(file);
-
-                    }
-
-                });
-
-            }
-
 
             loadingMessage.style.display =
                 "none";
 
 
             /*
-               No images
+               Nothing found
             */
 
             if (
@@ -539,28 +397,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /*
-               Create gallery
+               Create images
             */
 
-            allFiles.forEach(function (file) {
+            allFiles.forEach(
+                function (file) {
 
-                createGalleryItem(file);
+                    createGalleryItem(file);
 
-            });
-
-
-            /*
-               Initialize gallery
-               after images are created
-            */
-
-            initializeGallery();
+                }
+            );
 
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             console.error(
-                "Portfolio loading error:",
+                "Portfolio error:",
                 error
             );
 
@@ -583,13 +437,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function getVisibleGalleryImages() {
 
         const images =
-            document.querySelectorAll(
-                "#portfolio-gallery img"
-            );
+            gallery.querySelectorAll("img");
 
 
-        return Array.from(images).filter(
-            function (image) {
+        return Array.from(images)
+            .filter(function (image) {
 
                 const item =
                     image.closest(
@@ -604,14 +456,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     )
                 );
 
-            }
-        );
+            });
 
     }
 
 
     /* =========================================================
-       SHOW LIGHTBOX IMAGE
+       SHOW LIGHTBOX
     ========================================================= */
 
     function showGalleryImage(index) {
@@ -621,9 +472,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (
-            !visibleImages.length ||
-            !lightbox ||
-            !lightboxImage
+            !visibleImages.length
         ) {
 
             return;
@@ -631,13 +480,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-           Loop protection
-        */
-
-        if (
-            index < 0
-        ) {
+        if (index < 0) {
 
             index = 0;
 
@@ -658,16 +501,16 @@ document.addEventListener("DOMContentLoaded", function () {
             index;
 
 
+        const image =
+            visibleImages[currentImage];
+
+
         lightboxImage.src =
-            visibleImages[
-                currentImage
-            ].src;
+            image.src;
 
 
         lightboxImage.alt =
-            visibleImages[
-                currentImage
-            ].alt;
+            image.alt;
 
 
         lightbox.style.display =
@@ -704,29 +547,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-           Counter
-        */
-
-        if (
-            lightboxCounter
-        ) {
+        if (lightboxCounter) {
 
             lightboxCounter.textContent =
-                (currentImage + 1) +
-                " / " +
-                visibleImages.length;
+                `${currentImage + 1} / ${visibleImages.length}`;
 
         }
 
 
-        /*
-           Previous
-        */
-
-        if (
-            previousButton
-        ) {
+        if (previousButton) {
 
             previousButton.style.visibility =
                 currentImage === 0
@@ -736,13 +565,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        /*
-           Next
-        */
-
-        if (
-            nextButton
-        ) {
+        if (nextButton) {
 
             nextButton.style.visibility =
                 currentImage ===
@@ -756,60 +579,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       INITIALIZE GALLERY
+       CLOSE LIGHTBOX
     ========================================================= */
 
-    function initializeGallery() {
+    function closeLightbox() {
 
-        const galleryImages =
-            document.querySelectorAll(
-                "#portfolio-gallery img"
-            );
+        lightbox.style.display =
+            "none";
 
-
-        galleryImages.forEach(
-            function (image) {
-
-                image.addEventListener(
-                    "click",
-                    function () {
-
-                        const visibleImages =
-                            getVisibleGalleryImages();
-
-
-                        const index =
-                            visibleImages.indexOf(
-                                image
-                            );
-
-
-                        if (
-                            index !== -1
-                        ) {
-
-                            showGalleryImage(
-                                index
-                            );
-
-                        }
-
-                    }
-                );
-
-            }
+        lightbox.setAttribute(
+            "aria-hidden",
+            "true"
         );
+
+        lightboxImage.src = "";
 
     }
 
 
-    /* =========================================================
-       CLOSE LIGHTBOX
-    ========================================================= */
-
-    if (
-        closeButton
-    ) {
+    if (closeButton) {
 
         closeButton.addEventListener(
             "click",
@@ -819,40 +607,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    function closeLightbox() {
-
-        if (
-            !lightbox
-        ) {
-
-            return;
-
-        }
-
-
-        lightbox.style.display =
-            "none";
-
-
-        lightbox.setAttribute(
-            "aria-hidden",
-            "true"
-        );
-
-
-        lightboxImage.src =
-            "";
-
-    }
-
-
     /* =========================================================
-       NEXT IMAGE
+       NEXT
     ========================================================= */
 
-    if (
-        nextButton
-    ) {
+    if (nextButton) {
 
         nextButton.addEventListener(
             "click",
@@ -867,10 +626,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     visibleImages.length - 1
                 ) {
 
-                    currentImage++;
-
                     showGalleryImage(
-                        currentImage
+                        currentImage + 1
                     );
 
                 }
@@ -882,12 +639,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       PREVIOUS IMAGE
+       PREVIOUS
     ========================================================= */
 
-    if (
-        previousButton
-    ) {
+    if (previousButton) {
 
         previousButton.addEventListener(
             "click",
@@ -897,10 +652,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     currentImage > 0
                 ) {
 
-                    currentImage--;
-
                     showGalleryImage(
-                        currentImage
+                        currentImage - 1
                     );
 
                 }
@@ -912,33 +665,27 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       CLICK OUTSIDE IMAGE
+       CLICK OUTSIDE
     ========================================================= */
 
-    if (
-        lightbox
-    ) {
+    lightbox.addEventListener(
+        "click",
+        function (event) {
 
-        lightbox.addEventListener(
-            "click",
-            function (event) {
+            if (
+                event.target === lightbox
+            ) {
 
-                if (
-                    event.target === lightbox
-                ) {
-
-                    closeLightbox();
-
-                }
+                closeLightbox();
 
             }
-        );
 
-    }
+        }
+    );
 
 
     /* =========================================================
-       KEYBOARD NAVIGATION
+       KEYBOARD
     ========================================================= */
 
     document.addEventListener(
@@ -946,9 +693,8 @@ document.addEventListener("DOMContentLoaded", function () {
         function (event) {
 
             if (
-                !lightbox ||
                 lightbox.style.display !==
-                    "flex"
+                "flex"
             ) {
 
                 return;
@@ -965,13 +711,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            else if (
+            if (
                 event.key === "ArrowRight"
             ) {
 
-                if (
-                    nextButton
-                ) {
+                if (nextButton) {
 
                     nextButton.click();
 
@@ -980,13 +724,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            else if (
+            if (
                 event.key === "ArrowLeft"
             ) {
 
-                if (
-                    previousButton
-                ) {
+                if (previousButton) {
 
                     previousButton.click();
 
@@ -1002,86 +744,49 @@ document.addEventListener("DOMContentLoaded", function () {
        MOBILE SWIPE
     ========================================================= */
 
-    let touchStartX = 0;
+    lightboxImage.addEventListener(
+        "touchstart",
+        function (event) {
 
-    let touchEndX = 0;
+            touchStartX =
+                event.changedTouches[0].screenX;
 
-
-    if (
-        lightboxImage
-    ) {
-
-        lightboxImage.addEventListener(
-            "touchstart",
-            function (event) {
-
-                touchStartX =
-                    event.changedTouches[0]
-                        .screenX;
-
-            }
-        );
+        }
+    );
 
 
-        lightboxImage.addEventListener(
-            "touchend",
-            function (event) {
+    lightboxImage.addEventListener(
+        "touchend",
+        function (event) {
 
-                touchEndX =
-                    event.changedTouches[0]
-                        .screenX;
-
-
-                const swipeDistance =
-                    touchEndX -
-                    touchStartX;
+            const touchEndX =
+                event.changedTouches[0].screenX;
 
 
-                /*
-                   Swipe left = Next
-                */
-
-                if (
-                    swipeDistance < -50
-                ) {
-
-                    if (
-                        nextButton
-                    ) {
-
-                        nextButton.click();
-
-                    }
-
-                }
+            const distance =
+                touchEndX -
+                touchStartX;
 
 
-                /*
-                   Swipe right = Previous
-                */
+            if (distance < -50) {
 
-                else if (
-                    swipeDistance > 50
-                ) {
-
-                    if (
-                        previousButton
-                    ) {
-
-                        previousButton.click();
-
-                    }
-
-                }
+                nextButton.click();
 
             }
-        );
 
-    }
+
+            else if (distance > 50) {
+
+                previousButton.click();
+
+            }
+
+        }
+    );
 
 
     /* =========================================================
-       PORTFOLIO FILTERS
+       FILTERS
     ========================================================= */
 
     filterButtons.forEach(
@@ -1094,10 +799,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     currentFilter =
                         button.dataset.filter;
 
-
-                    /*
-                       Active button
-                    */
 
                     filterButtons.forEach(
                         function (btn) {
@@ -1115,35 +816,34 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
 
-                    /*
-                       Filter gallery
-                    */
-
                     const items =
-                        document.querySelectorAll(
-                            "#portfolio-gallery .gallery-item"
+                        gallery.querySelectorAll(
+                            ".gallery-item"
                         );
+
+
+                    let visibleCount = 0;
 
 
                     items.forEach(
                         function (item) {
 
-                            const categories =
-                                item.dataset.category
-                                    .split(" ");
+                            const category =
+                                item.dataset.category;
 
 
                             if (
                                 currentFilter ===
-                                    "all" ||
-                                categories.includes(
-                                    currentFilter
-                                )
+                                "all" ||
+                                category ===
+                                currentFilter
                             ) {
 
                                 item.classList.remove(
                                     "hidden"
                                 );
+
+                                visibleCount++;
 
                             }
 
@@ -1159,12 +859,18 @@ document.addEventListener("DOMContentLoaded", function () {
                     );
 
 
+                    closeLightbox();
+
+
                     /*
-                       Close lightbox when
-                       changing category
+                       Show empty message
+                       when filter has no images
                     */
 
-                    closeLightbox();
+                    emptyMessage.style.display =
+                        visibleCount === 0
+                            ? "block"
+                            : "none";
 
                 }
             );
@@ -1197,7 +903,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function () {
 
-                const isActive =
+                const active =
                     navLinks.classList.toggle(
                         "active"
                     );
@@ -1205,7 +911,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 menuToggle.setAttribute(
                     "aria-expanded",
-                    isActive
+                    active
                         ? "true"
                         : "false"
                 );
