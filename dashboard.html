@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -230,22 +231,6 @@ main > .hero h2 {
         border-color .25s ease;
 }
 
-.stat-card::after {
-    content: "";
-
-    position: absolute;
-
-    right: -30px;
-    bottom: -45px;
-
-    width: 110px;
-    height: 110px;
-
-    border-radius: 50%;
-
-    border: 1px solid rgba(255,255,255,.05);
-}
-
 .stat-card:hover {
     transform: translateY(-3px);
 
@@ -305,33 +290,6 @@ main > .hero h2 {
 
     box-shadow:
         0 20px 70px rgba(0,0,0,.24);
-
-    transition:
-        border-color .25s ease;
-}
-
-.card::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 8%;
-
-    width: 84%;
-    height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.25),
-            transparent
-        );
-}
-
-.card:hover {
-    border-color: rgba(255,255,255,.14);
 }
 
 .card-header {
@@ -367,7 +325,7 @@ h3 {
 
 
 /* =====================================================
-   ADD CLIENT FORM
+   ADD CLIENT
 ===================================================== */
 
 .add-client-form {
@@ -400,35 +358,10 @@ h3 {
     outline: none;
 
     font-size: 14px;
-
-    transition:
-        border-color .2s ease,
-        background .2s ease,
-        box-shadow .2s ease;
 }
-
-.add-client-form input::placeholder {
-    color: #5f5f5f;
-}
-
-.add-client-form input:focus {
-    background: rgba(255,255,255,.035);
-
-    border-color: rgba(255,255,255,.35);
-
-    box-shadow:
-        0 0 0 3px rgba(255,255,255,.035);
-}
-
-
-/* =====================================================
-   PASSWORD
-===================================================== */
 
 .password-wrapper {
     position: relative;
-
-    width: 100%;
 }
 
 .password-wrapper input {
@@ -447,34 +380,12 @@ h3 {
     min-height: 40px !important;
 
     padding: 0 !important;
-    margin: 0;
 
     transform: translateY(-50%);
-
-    color: #777;
-
-    background: transparent !important;
-
-    border: none !important;
-
-    border-radius: 8px;
-
-    box-shadow: none !important;
-
-    z-index: 10;
 }
 
 .password-toggle:hover {
-    color: #fff;
-
-    background: #252525 !important;
-
     transform: translateY(-50%);
-}
-
-.password-toggle svg {
-    width: 20px;
-    height: 20px;
 }
 
 
@@ -514,28 +425,13 @@ button,
         transform .2s ease,
         background .2s ease,
         border-color .2s ease,
-        color .2s ease,
-        box-shadow .2s ease,
-        opacity .2s ease;
+        color .2s ease;
 }
 
 button:hover,
 .button-link:hover {
     transform: translateY(-2px);
-
-    box-shadow:
-        0 10px 30px rgba(0,0,0,.3);
 }
-
-button:active,
-.button-link:active {
-    transform: translateY(0);
-}
-
-
-/* =====================================================
-   BUTTON VARIANTS
-===================================================== */
 
 .secondary {
     color: #ddd;
@@ -543,14 +439,6 @@ button:active,
     background: transparent;
 
     border-color: rgba(255,255,255,.16);
-}
-
-.secondary:hover {
-    color: #fff;
-
-    background: rgba(255,255,255,.07);
-
-    border-color: rgba(255,255,255,.3);
 }
 
 .danger {
@@ -561,10 +449,6 @@ button:active,
     border-color: rgba(255,90,90,.18);
 }
 
-.danger:hover {
-    background: #5a2020;
-}
-
 .replace-button {
     color: #ddd;
 
@@ -573,18 +457,10 @@ button:active,
     border-color: #3b3b3b;
 }
 
-.replace-button:hover {
-    background: #333;
-}
-
 .upload-button {
     color: #111;
 
     background: #dedede;
-}
-
-.upload-button:hover {
-    background: #fff;
 }
 
 .copy-button {
@@ -595,38 +471,46 @@ button:active,
     border-color: rgba(255,255,255,.16);
 }
 
-.copy-button:hover {
-    background: rgba(255,255,255,.07);
+.large-button {
+    color: #111;
+
+    background: #e8e8e8;
+
+    border-color: #fff;
+}
+
+.large-button.is-large {
+    color: #fff;
+
+    background: #151515;
+
+    border-color: rgba(255,255,255,.45);
+}
+
+.hidden {
+    display: none !important;
 }
 
 
 /* =====================================================
-   CLIENT LIST
+   CLIENTS
 ===================================================== */
 
 #clients-list {
     display: grid;
 
-    grid-template-columns:
-        1fr;
+    grid-template-columns: 1fr;
 
     gap: 18px;
 
     margin-top: 20px;
 }
 
-
-/* =====================================================
-   CLIENT CARD — 8.2
-===================================================== */
-
 .client {
-    position: relative;
-
     display: grid;
 
     grid-template-columns:
-        minmax(0, 1fr)
+        minmax(0,1fr)
         auto;
 
     align-items: center;
@@ -634,8 +518,6 @@ button:active,
     gap: 28px;
 
     padding: 25px;
-
-    margin: 0;
 
     border: 1px solid rgba(255,255,255,.09);
 
@@ -647,64 +529,10 @@ button:active,
             rgba(255,255,255,.045),
             rgba(255,255,255,.012)
         );
-
-    box-shadow:
-        0 15px 45px rgba(0,0,0,.18);
-
-    transition:
-        transform .25s ease,
-        border-color .25s ease,
-        box-shadow .25s ease;
-}
-
-.client:hover {
-    padding-left: 25px;
-
-    transform: translateY(-3px);
-
-    border-color: rgba(255,255,255,.17);
-
-    box-shadow:
-        0 22px 55px rgba(0,0,0,.28);
-}
-
-.client::before {
-    content: "";
-
-    position: absolute;
-
-    top: 0;
-    left: 8%;
-
-    width: 84%;
-    height: 1px;
-
-    background:
-        linear-gradient(
-            90deg,
-            transparent,
-            rgba(255,255,255,.18),
-            transparent
-        );
-}
-
-
-/* =====================================================
-   CLIENT INFORMATION
-===================================================== */
-
-.client-info {
-    position: relative;
-
-    min-width: 0;
-
-    padding-right: 10px;
 }
 
 .client-name {
     margin: 0 0 7px;
-
-    color: #fff;
 
     font-family:
         Georgia,
@@ -712,87 +540,16 @@ button:active,
         serif;
 
     font-size: 25px;
-
-    font-weight: 400;
-
-    letter-spacing: -.015em;
-
-    line-height: 1.15;
-
-    overflow-wrap: anywhere;
 }
 
 .client-email {
     color: #8a8a8a;
 
     font-size: 13px;
-
-    line-height: 1.5;
-
-    word-break: break-word;
 }
-
-
-/* =====================================================
-   GALLERY STATUS
-   Uses existing DOM / existing buttons.
-   NO JAVASCRIPT CHANGE.
-===================================================== */
-
-.client-info::after {
-    display: inline-flex;
-
-    align-items: center;
-
-    margin-top: 14px;
-
-    padding: 6px 10px;
-
-    border-radius: 999px;
-
-    font-size: 9px;
-    font-weight: 700;
-
-    letter-spacing: .13em;
-
-    text-transform: uppercase;
-}
-
-
-/* Gallery exists */
-
-.client:has(.button-link) .client-info::after {
-    content: "●  GALLERY READY";
-
-    color: #b9ffbf;
-
-    background: rgba(70,160,80,.1);
-
-    border: 1px solid rgba(100,255,120,.18);
-}
-
-
-/* Gallery does not exist */
-
-.client:not(:has(.button-link)) .client-info::after {
-    content: "○  NO GALLERY";
-
-    color: #999;
-
-    background: rgba(255,255,255,.035);
-
-    border: 1px solid rgba(255,255,255,.08);
-}
-
-
-/* =====================================================
-   PHOTO COUNT
-===================================================== */
 
 .gallery-count {
     display: inline-flex;
-
-    align-items: center;
 
     margin-top: 12px;
 
@@ -807,69 +564,27 @@ button:active,
     border-radius: 8px;
 
     font-size: 10px;
-    font-weight: 600;
-
-    letter-spacing: .06em;
-
-    text-transform: uppercase;
 }
-
-
-/* =====================================================
-   ACTIONS
-===================================================== */
 
 .actions {
     display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(120px, 1fr));
+        repeat(2,minmax(120px,1fr));
 
     gap: 8px;
 
     width: 330px;
-
-    max-width: 100%;
 }
 
-.actions button,
-.actions a {
-    width: 100%;
-
-    white-space: nowrap;
-
-    text-align: center;
-}
-
-
-/* Make main gallery action wider */
-
-.actions .button-link {
-    grid-column: span 2;
-}
-
-
-/* CREATE GALLERY */
-
-.client:not(:has(.button-link)) .actions {
-    grid-template-columns:
-        1fr 1fr;
-}
-
-.client:not(:has(.button-link)) .actions button:first-child {
-    grid-column: span 2;
-}
-
-
-/* DELETE CLIENT */
-
+.actions .button-link,
 .actions .danger {
     grid-column: span 2;
 }
 
 
 /* =====================================================
-   PHOTOS SECTION
+   CLIENT PHOTOS
 ===================================================== */
 
 .photos-section {
@@ -890,12 +605,6 @@ button:active,
 }
 
 .photos-title {
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
     margin-bottom: 17px;
 
     color: #777;
@@ -908,32 +617,16 @@ button:active,
     text-transform: uppercase;
 }
 
-.photos-title::before {
-    content: "";
-
-    width: 22px;
-    height: 1px;
-
-    background: rgba(255,255,255,.3);
-}
-
-
-/* =====================================================
-   PHOTOS GRID
-===================================================== */
-
 .photos-grid {
     display: grid;
 
     grid-template-columns:
-        repeat(4, minmax(0, 1fr));
+        repeat(4,minmax(0,1fr));
 
     gap: 13px;
 }
 
 .photo-card {
-    position: relative;
-
     overflow: hidden;
 
     background: #101010;
@@ -941,20 +634,6 @@ button:active,
     border: 1px solid rgba(255,255,255,.08);
 
     border-radius: 11px;
-
-    transition:
-        transform .25s ease,
-        border-color .25s ease,
-        box-shadow .25s ease;
-}
-
-.photo-card:hover {
-    transform: translateY(-4px);
-
-    border-color: rgba(255,255,255,.2);
-
-    box-shadow:
-        0 18px 40px rgba(0,0,0,.4);
 }
 
 .photo-card img {
@@ -967,25 +646,7 @@ button:active,
     object-fit: cover;
 
     cursor: zoom-in;
-
-    background: #141414;
-
-    transition:
-        transform .45s ease,
-        opacity .25s ease,
-        filter .25s ease;
 }
-
-.photo-card:hover img {
-    transform: scale(1.045);
-
-    filter: brightness(1.04);
-}
-
-
-/* =====================================================
-   PHOTO ACTIONS
-===================================================== */
 
 .photo-actions {
     display: flex;
@@ -993,13 +654,6 @@ button:active,
     gap: 6px;
 
     padding: 8px;
-
-    background:
-        linear-gradient(
-            180deg,
-            rgba(22,22,22,.98),
-            rgba(9,9,9,1)
-        );
 }
 
 .photo-actions button {
@@ -1010,8 +664,223 @@ button:active,
     padding: 7px 5px;
 
     font-size: 9px;
+}
 
-    border-radius: 7px;
+
+/* =====================================================
+   WEBSITE PORTFOLIO
+===================================================== */
+
+.portfolio-card {
+    margin-top: 35px;
+}
+
+.portfolio-intro {
+    margin: 10px 0 25px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+.portfolio-section {
+    margin-top: 30px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+
+.portfolio-section-title {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+.portfolio-section-title h4 {
+    margin: 0;
+
+    font-family: Georgia, serif;
+
+    font-size: 21px;
+
+    font-weight: 400;
+}
+
+.portfolio-section-title span {
+    color: #666;
+
+    font-size: 9px;
+
+    letter-spacing: .15em;
+
+    text-transform: uppercase;
+}
+
+
+/* =====================================================
+   CATEGORY TABS
+===================================================== */
+
+.portfolio-tabs {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin-bottom: 22px;
+}
+
+.portfolio-tab {
+    min-height: 38px;
+
+    padding: 9px 13px;
+
+    color: #888;
+
+    background: transparent;
+
+    border: 1px solid rgba(255,255,255,.1);
+
+    border-radius: 8px;
+
+    font-size: 9px;
+
+    letter-spacing: .08em;
+}
+
+.portfolio-tab.active {
+    color: #111;
+
+    background: #f1f1f1;
+
+    border-color: #fff;
+}
+
+
+/* =====================================================
+   PORTFOLIO GRID
+===================================================== */
+
+.portfolio-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4,minmax(0,1fr));
+
+    gap: 14px;
+}
+
+.portfolio-image-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: #111;
+
+    border: 1px solid rgba(255,255,255,.08);
+
+    border-radius: 12px;
+}
+
+.portfolio-image-card img {
+    display: block;
+
+    width: 100%;
+
+    aspect-ratio: 4 / 3;
+
+    object-fit: cover;
+
+    cursor: zoom-in;
+}
+
+.portfolio-image-card.large {
+    border-color: rgba(255,255,255,.5);
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,.12);
+}
+
+.large-badge {
+    position: absolute;
+
+    top: 9px;
+    left: 9px;
+
+    padding: 6px 8px;
+
+    color: #111;
+
+    background: #fff;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: .08em;
+}
+
+.portfolio-image-actions {
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 6px;
+
+    padding: 8px;
+
+    background: #0b0b0b;
+}
+
+.portfolio-image-actions button {
+    min-height: 34px;
+
+    padding: 7px 4px;
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   UPLOAD PORTFOLIO
+===================================================== */
+
+.portfolio-upload {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+
+    padding: 15px;
+
+    background: rgba(255,255,255,.025);
+
+    border: 1px solid rgba(255,255,255,.07);
+
+    border-radius: 11px;
+}
+
+.portfolio-upload-label {
+    color: #777;
+
+    font-size: 10px;
+
+    letter-spacing: .1em;
+
+    text-transform: uppercase;
 }
 
 
@@ -1031,7 +900,6 @@ button:active,
 
     max-width: calc(100% - 30px);
 
-    margin: 0;
     padding: 13px 20px;
 
     transform: translateX(-50%);
@@ -1046,12 +914,8 @@ button:active,
 
     font-size: 13px;
 
-    line-height: 1.5;
-
     box-shadow:
         0 15px 45px rgba(0,0,0,.45);
-
-    backdrop-filter: blur(16px);
 }
 
 .error {
@@ -1086,20 +950,14 @@ button:active,
     padding: 25px;
 
     background: rgba(0,0,0,.97);
-
-    animation: fadeIn .2s ease;
 }
 
 .lightbox img {
     max-width: 95vw;
+
     max-height: 90vh;
 
     object-fit: contain;
-
-    border-radius: 4px;
-
-    box-shadow:
-        0 25px 80px rgba(0,0,0,.8);
 }
 
 .lightbox-close {
@@ -1125,343 +983,115 @@ button:active,
     font-size: 32px;
 
     cursor: pointer;
-
-    transition:
-        background .2s ease,
-        transform .2s ease;
-}
-
-.lightbox-close:hover {
-    background: rgba(255,255,255,.16);
-
-    transform: rotate(90deg);
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
 }
 
 
 /* =====================================================
-   UTILITY
-===================================================== */
-
-.hidden {
-    display: none !important;
-}
-
-
-/* =====================================================
-   TABLET
+   RESPONSIVE
 ===================================================== */
 
 @media (max-width: 950px) {
 
     .add-client-form {
-        grid-template-columns:
-            1fr
-            1fr;
-    }
-
-    .add-client-form > button {
-        width: 100%;
-    }
-
-    .photos-grid {
-        grid-template-columns:
-            repeat(3, 1fr);
+        grid-template-columns: 1fr 1fr;
     }
 
     .client {
-        grid-template-columns:
-            1fr;
-
-        gap: 20px;
+        grid-template-columns: 1fr;
     }
 
     .actions {
         width: 100%;
+    }
 
+    .portfolio-grid {
         grid-template-columns:
-            repeat(3, minmax(0, 1fr));
+            repeat(3,1fr);
     }
 
-    .actions .button-link {
-        grid-column: span 1;
-    }
-
-    .actions .danger {
-        grid-column: span 1;
-    }
-
-    .client:not(:has(.button-link)) .actions button:first-child {
-        grid-column: span 1;
+    .photos-grid {
+        grid-template-columns:
+            repeat(3,1fr);
     }
 
 }
 
-
-/* =====================================================
-   MOBILE
-===================================================== */
 
 @media (max-width: 650px) {
 
     header {
         position: relative;
 
-        min-height: 68px;
-
         padding: 14px 5%;
-    }
-
-    .brand {
-        gap: 10px;
-    }
-
-    .brand-mark {
-        width: 36px;
-        height: 36px;
-
-        font-size: 16px;
-    }
-
-    .brand-text h1 {
-        font-size: 15px;
-    }
-
-    .brand-text span {
-        display: none;
-    }
-
-    header .secondary {
-        min-height: 38px;
-
-        padding: 8px 13px;
-
-        font-size: 9px;
     }
 
     main {
         width: 92%;
 
         padding:
-            38px 0
-            60px;
-    }
-
-    main > .hero h2 {
-        font-size: 38px;
-
-        line-height: 1.04;
+            38px 0 60px;
     }
 
     .stats {
         grid-template-columns:
             1fr 1fr;
-
-        gap: 10px;
-    }
-
-    .stat-card {
-        min-height: 105px;
-
-        padding: 18px;
     }
 
     .stat-card:last-child {
         grid-column: span 2;
-    }
-
-    .stat-number {
-        font-size: 32px;
-    }
-
-    .card {
-        padding: 20px;
-
-        border-radius: 15px;
-    }
-
-    .card-header {
-        align-items: flex-start;
-    }
-
-    h3 {
-        font-size: 24px;
     }
 
     .add-client-form {
         grid-template-columns: 1fr;
-
-        gap: 10px;
     }
 
-
-    /* =============================================
-       MOBILE CLIENT CARD
-    ============================================= */
-
-    #clients-list {
-        gap: 15px;
-
-        margin-top: 18px;
+    .card {
+        padding: 20px;
     }
 
     .client {
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: stretch;
-
-        gap: 20px;
-
         padding: 21px;
-
-        border-radius: 15px;
     }
 
-    .client:hover {
-        padding-left: 21px;
-
-        transform: none;
-    }
-
-    .client-info {
-        width: 100%;
-
-        padding: 0;
-    }
-
-    .client-name {
-        font-size: 23px;
-    }
-
-    .client-email {
-        font-size: 12px;
-    }
-
-    .gallery-count {
-        margin-top: 11px;
-    }
-
-    .client-info::after {
-        display: flex;
-
-        width: fit-content;
-    }
-
-
-    /* =============================================
-       MOBILE ACTIONS
-    ============================================= */
-
-    .actions,
-    .client:not(:has(.button-link)) .actions {
-        display: grid;
-
+    .actions {
         grid-template-columns:
             1fr 1fr;
+    }
 
-        width: 100%;
+    .portfolio-grid {
+        grid-template-columns:
+            repeat(2,1fr);
 
         gap: 8px;
-    }
-
-    .actions .button-link,
-    .actions .danger,
-    .client:not(:has(.button-link)) .actions button:first-child {
-        grid-column: span 2;
-    }
-
-    .actions button,
-    .actions a {
-        min-width: 0;
-
-        min-height: 43px;
-
-        padding: 11px 8px;
-
-        font-size: 9px;
-    }
-
-
-    /* =============================================
-       MOBILE PHOTOS
-    ============================================= */
-
-    .photos-section {
-        margin: -15px 0 0;
-
-        padding:
-            35px
-            21px
-            21px;
-
-        border-radius:
-            0 0 15px 15px;
     }
 
     .photos-grid {
         grid-template-columns:
-            repeat(2, minmax(0, 1fr));
+            repeat(2,1fr);
 
         gap: 8px;
     }
 
-    .photo-card {
-        border-radius: 9px;
+    .portfolio-image-actions {
+        grid-template-columns: 1fr;
     }
 
-    .photo-card img {
-        aspect-ratio: 1 / 1;
+    .portfolio-tabs {
+        overflow-x: auto;
+
+        flex-wrap: nowrap;
+
+        padding-bottom: 5px;
     }
 
-    .photo-actions {
-        gap: 5px;
-
-        padding: 6px;
-    }
-
-    .photo-actions button {
-        min-height: 32px;
-
-        padding: 6px 3px;
-
-        font-size: 8px;
-    }
-
-    .lightbox {
-        padding: 10px;
-    }
-
-    .lightbox-close {
-        top: 12px;
-        right: 12px;
-
-        width: 40px;
-        height: 40px;
+    .portfolio-tab {
+        flex: 0 0 auto;
     }
 
 }
 
 
-/* =====================================================
-   VERY SMALL PHONES
-===================================================== */
-
 @media (max-width: 400px) {
-
-    main > .hero h2 {
-        font-size: 32px;
-    }
 
     .stats {
         grid-template-columns: 1fr;
@@ -1471,59 +1101,21 @@ button:active,
         grid-column: auto;
     }
 
-    .client {
-        padding: 18px;
+    .portfolio-grid {
+        grid-template-columns: 1fr;
     }
 
-    .client:hover {
-        padding-left: 18px;
+    .photos-grid {
+        grid-template-columns: 1fr;
     }
 
-    .client-name {
-        font-size: 21px;
-    }
-
-    .actions,
-    .client:not(:has(.button-link)) .actions {
+    .actions {
         grid-template-columns: 1fr;
     }
 
     .actions .button-link,
-    .actions .danger,
-    .client:not(:has(.button-link)) .actions button:first-child {
+    .actions .danger {
         grid-column: auto;
-    }
-
-    .photos-section {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
-
-    .photos-grid {
-        gap: 7px;
-    }
-
-    .photo-actions {
-        flex-direction: column;
-    }
-
-}
-
-
-/* =====================================================
-   REDUCED MOTION
-===================================================== */
-
-@media (prefers-reduced-motion: reduce) {
-
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-
-        transition-duration: .01ms !important;
-
-        animation-duration: .01ms !important;
     }
 
 }
@@ -1535,10 +1127,6 @@ button:active,
 
 <body>
 
-
-<!-- =====================================================
-     HEADER
-===================================================== -->
 
 <header>
 
@@ -1573,213 +1161,280 @@ button:active,
 </header>
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
-
 <main>
 
 
-    <section class="hero">
+<section class="hero">
 
-        <p class="eyebrow">
-            Private Studio Dashboard
-        </p>
+    <p class="eyebrow">
+        Private Studio Dashboard
+    </p>
 
-        <h2>
-            Client Gallery
-            <br>
-            Manager
-        </h2>
+    <h2>
+        Client Gallery
+        <br>
+        Manager
+    </h2>
 
-        <div class="hero-line"></div>
+    <div class="hero-line"></div>
 
-    </section>
+</section>
 
 
-    <!-- =================================================
-         STATS
-    ================================================= -->
+<section class="stats">
 
-    <section class="stats">
+    <div class="stat-card">
 
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Total Clients
-            </div>
-
-            <div
-                class="stat-number"
-                id="stat-clients"
-            >
-                —
-            </div>
-
+        <div class="stat-label">
+            Total Clients
         </div>
 
-
-        <div class="stat-card">
-
-            <div class="stat-label">
-                Galleries
-            </div>
-
-            <div
-                class="stat-number"
-                id="stat-galleries"
-            >
-                —
-            </div>
-
+        <div
+            class="stat-number"
+            id="stat-clients"
+        >
+            —
         </div>
 
+    </div>
 
-        <div class="stat-card">
 
-            <div class="stat-label">
-                Photos
-            </div>
+    <div class="stat-card">
 
-            <div
-                class="stat-number"
-                id="stat-photos"
-            >
-                —
-            </div>
-
+        <div class="stat-label">
+            Galleries
         </div>
 
-    </section>
-
-
-    <!-- =================================================
-         ADD CLIENT
-    ================================================= -->
-
-    <section class="card">
-
-        <div class="card-header">
-
-            <h3>
-                Add Client
-            </h3>
-
-            <span class="section-label">
-                New Gallery
-            </span>
-
+        <div
+            class="stat-number"
+            id="stat-galleries"
+        >
+            —
         </div>
 
+    </div>
 
-        <form
-            id="add-client-form"
-            class="add-client-form"
+
+    <div class="stat-card">
+
+        <div class="stat-label">
+            Photos
+        </div>
+
+        <div
+            class="stat-number"
+            id="stat-photos"
+        >
+            —
+        </div>
+
+    </div>
+
+</section>
+
+
+<section class="card">
+
+    <div class="card-header">
+
+        <h3>
+            Add Client
+        </h3>
+
+        <span class="section-label">
+            New Gallery
+        </span>
+
+    </div>
+
+
+    <form
+        id="add-client-form"
+        class="add-client-form"
+    >
+
+        <input
+            type="text"
+            id="client-name"
+            placeholder="Client name"
+            required
         >
 
+        <input
+            type="email"
+            id="client-email"
+            placeholder="Client email"
+            required
+        >
+
+        <div class="password-wrapper">
+
             <input
-                type="text"
-                id="client-name"
-                placeholder="Client name"
+                type="password"
+                id="client-password"
+                placeholder="Temporary password"
+                minlength="6"
                 required
             >
 
-
-            <input
-                type="email"
-                id="client-email"
-                placeholder="Client email"
-                required
+            <button
+                type="button"
+                id="password-toggle"
+                class="password-toggle"
             >
-
-
-            <div class="password-wrapper">
-
-                <input
-                    type="password"
-                    id="client-password"
-                    placeholder="Temporary password"
-                    minlength="6"
-                    required
-                >
-
-
-                <button
-                    type="button"
-                    id="password-toggle"
-                    class="password-toggle"
-                    aria-label="Show password"
-                >
-
-                    <svg
-                        id="password-eye"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                    >
-
-                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
-
-                        <circle
-                            cx="12"
-                            cy="12"
-                            r="3"
-                        />
-
-                    </svg>
-
-                </button>
-
-            </div>
-
-
-            <button type="submit">
-                CREATE CLIENT
+                👁
             </button>
 
-        </form>
-
-    </section>
-
-
-    <!-- =================================================
-         CLIENTS
-    ================================================= -->
-
-    <section class="card">
-
-        <div class="card-header">
-
-            <h3>
-                Clients
-            </h3>
-
-            <span class="section-label">
-                Gallery Library
-            </span>
-
         </div>
 
 
-        <div id="clients-list">
-            Loading clients...
-        </div>
+        <button type="submit">
+            CREATE CLIENT
+        </button>
 
-    </section>
+    </form>
 
-
-    <p id="message"></p>
-
-</main>
+</section>
 
 
 <!-- =====================================================
-     LIGHTBOX
+     WEBSITE PORTFOLIO
 ===================================================== -->
+
+<section class="card portfolio-card">
+
+    <div class="card-header">
+
+        <h3>
+            Website Portfolio
+        </h3>
+
+        <span class="section-label">
+            Portfolio Management
+        </span>
+
+    </div>
+
+
+    <p class="portfolio-intro">
+
+        Manage the images displayed on Lisa Michelle Visuals.
+        Featured is the curated portfolio.
+        More Work is the complete archive.
+
+    </p>
+
+
+    <!-- =================================================
+         FEATURED
+    ================================================= -->
+
+    <div class="portfolio-section">
+
+        <div class="portfolio-section-title">
+
+            <h4>
+                Featured / Portfolio
+            </h4>
+
+            <span>
+                Curated Selection
+            </span>
+
+        </div>
+
+
+        <div
+            id="featured-tabs"
+            class="portfolio-tabs"
+        ></div>
+
+
+        <div
+            id="featured-upload"
+            class="portfolio-upload"
+        ></div>
+
+
+        <div
+            id="featured-grid"
+            class="portfolio-grid"
+        ></div>
+
+    </div>
+
+
+    <!-- =================================================
+         MORE WORK
+    ================================================= -->
+
+    <div class="portfolio-section">
+
+        <div class="portfolio-section-title">
+
+            <h4>
+                More Work
+            </h4>
+
+            <span>
+                Complete Archive
+            </span>
+
+        </div>
+
+
+        <div
+            id="more-work-tabs"
+            class="portfolio-tabs"
+        ></div>
+
+
+        <div
+            id="more-work-upload"
+            class="portfolio-upload"
+        ></div>
+
+
+        <div
+            id="more-work-grid"
+            class="portfolio-grid"
+        ></div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CLIENTS
+===================================================== -->
+
+<section class="card">
+
+    <div class="card-header">
+
+        <h3>
+            Clients
+        </h3>
+
+        <span class="section-label">
+            Gallery Library
+        </span>
+
+    </div>
+
+
+    <div id="clients-list">
+        Loading clients...
+    </div>
+
+</section>
+
+
+<p id="message"></p>
+
+</main>
+
 
 <div
     id="lightbox"
@@ -1792,7 +1447,6 @@ button:active,
     >
         &times;
     </span>
-
 
     <img
         id="lightbox-image"
@@ -1815,16 +1469,63 @@ button:active,
 const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
 
-
 const SUPABASE_KEY =
     "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
-
 
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
+
+
+/* =====================================================
+   PORTFOLIO CONFIGURATION
+===================================================== */
+
+const PORTFOLIO_BUCKET =
+    "portfolio";
+
+const PORTFOLIO_CATEGORIES = [
+
+    "portraits",
+    "couples",
+    "sports",
+    "landscapes",
+    "real-estate",
+    "lifestyle"
+
+];
+
+
+const CATEGORY_LABELS = {
+
+    portraits:
+        "Portraits",
+
+    couples:
+        "Couples",
+
+    sports:
+        "Sports",
+
+    landscapes:
+        "Landscapes",
+
+    "real-estate":
+        "Real Estate",
+
+    lifestyle:
+        "Lifestyle"
+
+};
+
+
+let featuredCategory =
+    "portraits";
+
+let moreWorkCategory =
+    "portraits";
 
 
 /* =====================================================
@@ -1846,7 +1547,1301 @@ function showMessage(
 
     message.textContent =
         text;
+
 }
+
+
+/* =====================================================
+   PUBLIC URL
+===================================================== */
+
+function getPortfolioPublicUrl(
+    path
+) {
+
+    return (
+        SUPABASE_URL +
+        "/storage/v1/object/public/" +
+        PORTFOLIO_BUCKET +
+        "/" +
+        path
+    );
+
+}
+
+
+/* =====================================================
+   LOAD PORTFOLIO FILES
+===================================================== */
+
+async function listPortfolioFiles(
+    section,
+    category
+) {
+
+    const folder =
+        section +
+        "/" +
+        category +
+        "/";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .storage
+            .from(
+                PORTFOLIO_BUCKET
+            )
+            .list(
+                folder,
+                {
+                    limit: 1000,
+                    offset: 0,
+                    sortBy: {
+                        column: "name",
+                        order: "asc"
+                    }
+                }
+            );
+
+
+    if (error) {
+
+        throw error;
+
+    }
+
+
+    return (
+        data || []
+    )
+        .filter(
+            file =>
+                file &&
+                file.name &&
+                file.name !==
+                    ".emptyFolderPlaceholder"
+        )
+        .filter(
+            file =>
+                file.metadata ||
+                file.id
+        )
+        .map(
+            file => ({
+
+                name:
+                    file.name,
+
+                path:
+                    folder +
+                    file.name
+
+            })
+        );
+
+}
+
+
+/* =====================================================
+   GET LARGE IMAGE
+===================================================== */
+
+async function getLargeImage(
+    section,
+    category
+) {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from(
+                    "portfolio_settings"
+                )
+                .select(
+                    "large_image"
+                )
+                .eq(
+                    "section",
+                    section
+                )
+                .eq(
+                    "category",
+                    category
+                )
+                .maybeSingle();
+
+
+        if (
+            error
+        ) {
+
+            console.warn(
+                "Could not read large image:",
+                error
+            );
+
+            return null;
+
+        }
+
+
+        return (
+            data?.large_image ||
+            null
+        );
+
+    }
+
+    catch (error) {
+
+        console.warn(
+            error
+        );
+
+        return null;
+
+    }
+
+}
+
+
+/* =====================================================
+   SET LARGE IMAGE
+===================================================== */
+
+async function setLargeImage(
+    section,
+    category,
+    imagePath
+) {
+
+    showMessage(
+        "Setting large image..."
+    );
+
+
+    const {
+        error
+    } =
+        await supabaseClient
+            .from(
+                "portfolio_settings"
+            )
+            .upsert(
+                {
+                    section:
+                        section,
+
+                    category:
+                        category,
+
+                    large_image:
+                        imagePath
+
+                },
+                {
+                    onConflict:
+                        "section,category"
+                }
+            );
+
+
+    if (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Could not set large image: " +
+            error.message,
+            "error"
+        );
+
+        return false;
+
+    }
+
+
+    showMessage(
+        "Large image selected.",
+        "success"
+    );
+
+
+    return true;
+
+}
+
+
+/* =====================================================
+   UPLOAD PORTFOLIO PHOTO
+===================================================== */
+
+async function uploadPortfolioPhoto(
+    section,
+    category,
+    files
+) {
+
+    if (
+        !files ||
+        !files.length
+    ) {
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Uploading " +
+        files.length +
+        " portfolio photo(s)..."
+    );
+
+
+    let uploaded =
+        0;
+
+
+    for (
+        const file of files
+    ) {
+
+        try {
+
+            const extension =
+                file.name.includes(".")
+                    ? file.name.substring(
+                        file.name.lastIndexOf(".")
+                    )
+                    : "";
+
+
+            const baseName =
+                file.name
+                    .replace(
+                        /\.[^/.]+$/,
+                        ""
+                    )
+                    .replace(
+                        /[^a-zA-Z0-9_-]/g,
+                        "-"
+                    );
+
+
+            const uniqueName =
+                Date.now() +
+                "-" +
+                Math.random()
+                    .toString(36)
+                    .substring(
+                        2,
+                        8
+                    ) +
+                "-" +
+                baseName +
+                extension;
+
+
+            const path =
+                section +
+                "/" +
+                category +
+                "/" +
+                uniqueName;
+
+
+            const {
+                error
+            } =
+                await supabaseClient
+                    .storage
+                    .from(
+                        PORTFOLIO_BUCKET
+                    )
+                    .upload(
+                        path,
+                        file,
+                        {
+                            cacheControl:
+                                "3600",
+
+                            upsert:
+                                false,
+
+                            contentType:
+                                file.type ||
+                                "application/octet-stream"
+                        }
+                    );
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            uploaded++;
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Portfolio upload error:",
+                error
+            );
+
+        }
+
+    }
+
+
+    showMessage(
+        uploaded +
+        " portfolio photo(s) uploaded.",
+        "success"
+    );
+
+
+    await renderPortfolioSection(
+        section,
+        category
+    );
+
+}
+
+
+/* =====================================================
+   REPLACE PORTFOLIO PHOTO
+===================================================== */
+
+async function replacePortfolioPhoto(
+    filePath,
+    section,
+    category
+) {
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "file";
+
+    input.accept =
+        "image/jpeg,image/png,image/webp,image/heic,image/heif";
+
+
+    input.click();
+
+
+    input.addEventListener(
+        "change",
+        async function () {
+
+            const file =
+                input.files[0];
+
+
+            if (!file) {
+
+                return;
+
+            }
+
+
+            showMessage(
+                "Replacing photo..."
+            );
+
+
+            try {
+
+                const {
+                    error
+                } =
+                    await supabaseClient
+                        .storage
+                        .from(
+                            PORTFOLIO_BUCKET
+                        )
+                        .upload(
+                            filePath,
+                            file,
+                            {
+                                cacheControl:
+                                    "3600",
+
+                                upsert:
+                                    true,
+
+                                contentType:
+                                    file.type ||
+                                    "application/octet-stream"
+                            }
+                        );
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                showMessage(
+                    "Photo replaced successfully.",
+                    "success"
+                );
+
+
+                await renderPortfolioSection(
+                    section,
+                    category
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    error
+                );
+
+                showMessage(
+                    "Replace error: " +
+                    error.message,
+                    "error"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   DELETE PORTFOLIO PHOTO
+===================================================== */
+
+async function deletePortfolioPhoto(
+    filePath,
+    section,
+    category
+) {
+
+    const confirmed =
+        confirm(
+            "Delete this portfolio photo?\n\nThis cannot be undone."
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Deleting photo..."
+    );
+
+
+    try {
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    PORTFOLIO_BUCKET
+                )
+                .remove([
+                    filePath
+                ]);
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        /*
+           If this was the large image,
+           clear the database setting.
+        */
+
+        const largeImage =
+            await getLargeImage(
+                section,
+                category
+            );
+
+
+        if (
+            largeImage ===
+            filePath
+        ) {
+
+            await supabaseClient
+                .from(
+                    "portfolio_settings"
+                )
+                .delete()
+                .eq(
+                    "section",
+                    section
+                )
+                .eq(
+                    "category",
+                    category
+                );
+
+        }
+
+
+        showMessage(
+            "Photo deleted successfully.",
+            "success"
+        );
+
+
+        await renderPortfolioSection(
+            section,
+            category
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Delete error: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE PORTFOLIO CARD
+===================================================== */
+
+function createPortfolioCard(
+    file,
+    section,
+    category,
+    largeImage
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "portfolio-image-card";
+
+
+    if (
+        largeImage ===
+        file.path
+    ) {
+
+        card.classList.add(
+            "large"
+        );
+
+    }
+
+
+    const image =
+        document.createElement(
+            "img"
+        );
+
+
+    image.src =
+        getPortfolioPublicUrl(
+            file.path
+        );
+
+
+    image.alt =
+        CATEGORY_LABELS[
+            category
+        ] +
+        " photography by Lisa Michelle Visuals";
+
+
+    image.loading =
+        "lazy";
+
+
+    image.addEventListener(
+        "click",
+        function () {
+
+            openPortfolioLightbox(
+                image
+            );
+
+        }
+    );
+
+
+    card.appendChild(
+        image
+    );
+
+
+    if (
+        largeImage ===
+        file.path
+    ) {
+
+        const badge =
+            document.createElement(
+                "div"
+            );
+
+        badge.className =
+            "large-badge";
+
+        badge.textContent =
+            "★ LARGE";
+
+        card.appendChild(
+            badge
+        );
+
+    }
+
+
+    const actions =
+        document.createElement(
+            "div"
+        );
+
+
+    actions.className =
+        "portfolio-image-actions";
+
+
+    const replaceButton =
+        document.createElement(
+            "button"
+        );
+
+
+    replaceButton.className =
+        "replace-button";
+
+    replaceButton.textContent =
+        "REPLACE";
+
+
+    replaceButton.addEventListener(
+        "click",
+        function () {
+
+            replacePortfolioPhoto(
+                file.path,
+                section,
+                category
+            );
+
+        }
+    );
+
+
+    const largeButton =
+        document.createElement(
+            "button"
+        );
+
+
+    largeButton.className =
+        "large-button";
+
+
+    if (
+        largeImage ===
+        file.path
+    ) {
+
+        largeButton.classList.add(
+            "is-large"
+        );
+
+        largeButton.textContent =
+            "★ LARGE";
+
+    }
+
+    else {
+
+        largeButton.textContent =
+            "SET AS LARGE";
+
+    }
+
+
+    largeButton.addEventListener(
+        "click",
+        async function () {
+
+            const success =
+                await setLargeImage(
+                    section,
+                    category,
+                    file.path
+                );
+
+
+            if (success) {
+
+                await renderPortfolioSection(
+                    section,
+                    category
+                );
+
+            }
+
+        }
+    );
+
+
+    const deleteButton =
+        document.createElement(
+            "button"
+        );
+
+
+    deleteButton.className =
+        "danger";
+
+    deleteButton.textContent =
+        "DELETE";
+
+
+    deleteButton.addEventListener(
+        "click",
+        function () {
+
+            deletePortfolioPhoto(
+                file.path,
+                section,
+                category
+            );
+
+        }
+    );
+
+
+    actions.appendChild(
+        replaceButton
+    );
+
+    actions.appendChild(
+        largeButton
+    );
+
+    actions.appendChild(
+        deleteButton
+    );
+
+
+    /*
+       DELETE spans full row.
+    */
+
+    deleteButton.style.gridColumn =
+        "span 2";
+
+
+    card.appendChild(
+        actions
+    );
+
+
+    return card;
+
+}
+
+
+/* =====================================================
+   RENDER PORTFOLIO SECTION
+===================================================== */
+
+async function renderPortfolioSection(
+    section,
+    category
+) {
+
+    const grid =
+        document.getElementById(
+            section === "featured"
+                ? "featured-grid"
+                : "more-work-grid"
+        );
+
+
+    if (!grid) {
+
+        return;
+
+    }
+
+
+    grid.innerHTML =
+        "<p>Loading photos...</p>";
+
+
+    try {
+
+        const [
+            files,
+            largeImage
+        ] =
+            await Promise.all([
+
+                listPortfolioFiles(
+                    section,
+                    category
+                ),
+
+                getLargeImage(
+                    section,
+                    category
+                )
+
+            ]);
+
+
+        grid.innerHTML =
+            "";
+
+
+        if (
+            files.length === 0
+        ) {
+
+            grid.innerHTML =
+                "<p style='color:#666;'>No photos in this category yet.</p>";
+
+            return;
+
+        }
+
+
+        files.forEach(
+            function (file) {
+
+                grid.appendChild(
+                    createPortfolioCard(
+                        file,
+                        section,
+                        category,
+                        largeImage
+                    )
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        grid.innerHTML =
+            "<p class='error'>Could not load portfolio photos.</p>";
+
+    }
+
+}
+
+
+/* =====================================================
+   UPLOAD CONTROL
+===================================================== */
+
+function createUploadControl(
+    section,
+    category
+) {
+
+    const container =
+        document.getElementById(
+            section === "featured"
+                ? "featured-upload"
+                : "more-work-upload"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    const label =
+        document.createElement(
+            "span"
+        );
+
+
+    label.className =
+        "portfolio-upload-label";
+
+
+    label.textContent =
+        "Add photos to " +
+        CATEGORY_LABELS[
+            category
+        ];
+
+
+    const button =
+        document.createElement(
+            "button"
+        );
+
+
+    button.className =
+        "upload-button";
+
+
+    button.textContent =
+        "UPLOAD PHOTOS";
+
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "file";
+
+
+    input.accept =
+        "image/jpeg,image/png,image/webp,image/heic,image/heif";
+
+
+    input.multiple =
+        true;
+
+
+    input.className =
+        "hidden";
+
+
+    button.addEventListener(
+        "click",
+        function () {
+
+            input.click();
+
+        }
+    );
+
+
+    input.addEventListener(
+        "change",
+        function () {
+
+            uploadPortfolioPhoto(
+                section,
+                category,
+                Array.from(
+                    input.files
+                )
+            );
+
+            input.value =
+                "";
+
+        }
+    );
+
+
+    container.appendChild(
+        label
+    );
+
+    container.appendChild(
+        button
+    );
+
+    container.appendChild(
+        input
+    );
+
+}
+
+
+/* =====================================================
+   TABS
+===================================================== */
+
+function createPortfolioTabs(
+    section
+) {
+
+    const container =
+        document.getElementById(
+            section === "featured"
+                ? "featured-tabs"
+                : "more-work-tabs"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    PORTFOLIO_CATEGORIES.forEach(
+        function (category) {
+
+            const button =
+                document.createElement(
+                    "button"
+                );
+
+
+            button.className =
+                "portfolio-tab";
+
+
+            button.textContent =
+                CATEGORY_LABELS[
+                    category
+                ];
+
+
+            if (
+                (
+                    section ===
+                    "featured" &&
+                    category ===
+                    featuredCategory
+                ) ||
+                (
+                    section ===
+                    "more-work" &&
+                    category ===
+                    moreWorkCategory
+                )
+            ) {
+
+                button.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            button.addEventListener(
+                "click",
+                async function () {
+
+                    if (
+                        section ===
+                        "featured"
+                    ) {
+
+                        featuredCategory =
+                            category;
+
+                    }
+
+                    else {
+
+                        moreWorkCategory =
+                            category;
+
+                    }
+
+
+                    createPortfolioTabs(
+                        section
+                    );
+
+
+                    createUploadControl(
+                        section,
+                        category
+                    );
+
+
+                    await renderPortfolioSection(
+                        section,
+                        category
+                    );
+
+                }
+            );
+
+
+            container.appendChild(
+                button
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   INITIALIZE PORTFOLIO
+===================================================== */
+
+async function initializePortfolio() {
+
+    createPortfolioTabs(
+        "featured"
+    );
+
+    createPortfolioTabs(
+        "more-work"
+    );
+
+
+    createUploadControl(
+        "featured",
+        featuredCategory
+    );
+
+
+    createUploadControl(
+        "more-work",
+        moreWorkCategory
+    );
+
+
+    await renderPortfolioSection(
+        "featured",
+        featuredCategory
+    );
+
+
+    await renderPortfolioSection(
+        "more-work",
+        moreWorkCategory
+    );
+
+}
+
+
+/* =====================================================
+   PORTFOLIO LIGHTBOX
+===================================================== */
+
+function openPortfolioLightbox(
+    image
+) {
+
+    const lightbox =
+        document.getElementById(
+            "lightbox"
+        );
+
+
+    const lightboxImage =
+        document.getElementById(
+            "lightbox-image"
+        );
+
+
+    lightboxImage.src =
+        image.src;
+
+
+    lightboxImage.alt =
+        image.alt;
+
+
+    lightbox.style.display =
+        "flex";
+
+}
+
+
+document
+    .getElementById(
+        "lightbox-close"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            document
+                .getElementById(
+                    "lightbox"
+                )
+                .style.display =
+                "none";
+
+        }
+    );
+
+
+document
+    .getElementById(
+        "lightbox"
+    )
+    .addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                this
+            ) {
+
+                this.style.display =
+                    "none";
+
+            }
+
+        }
+    );
 
 
 /* =====================================================
@@ -1864,15 +2859,19 @@ async function checkUser() {
             .auth
             .getUser();
 
+
     if (!user) {
 
         window.location.href =
             "admin.html";
 
         return null;
+
     }
 
+
     return user;
+
 }
 
 
@@ -1880,7 +2879,9 @@ async function checkUser() {
    CREATE SLUG
 ===================================================== */
 
-function createSlug(name) {
+function createSlug(
+    name
+) {
 
     return name
         .toLowerCase()
@@ -1892,6 +2893,7 @@ function createSlug(name) {
         .replace(
             /^-+|-+$/g,
             "");
+
 }
 
 
@@ -1899,33 +2901,42 @@ function createSlug(name) {
    CREATE CLIENT
 ===================================================== */
 
-async function addClient(event) {
+async function addClient(
+    event
+) {
 
     event.preventDefault();
+
 
     const nameInput =
         document.getElementById(
             "client-name"
         );
 
+
     const emailInput =
         document.getElementById(
             "client-email"
         );
+
 
     const passwordInput =
         document.getElementById(
             "client-password"
         );
 
+
     const name =
         nameInput.value.trim();
+
 
     const email =
         emailInput.value.trim();
 
+
     const password =
         passwordInput.value;
+
 
     if (
         !name ||
@@ -1939,7 +2950,9 @@ async function addClient(event) {
         );
 
         return;
+
     }
+
 
     if (
         password.length < 6
@@ -1951,11 +2964,14 @@ async function addClient(event) {
         );
 
         return;
+
     }
+
 
     showMessage(
         "Creating client account and gallery..."
     );
+
 
     try {
 
@@ -1969,6 +2985,7 @@ async function addClient(event) {
                     "super-handler",
                     {
                         body: {
+
                             action:
                                 "create_client",
 
@@ -1980,19 +2997,18 @@ async function addClient(event) {
 
                             password:
                                 password
+
                         }
                     }
                 );
 
+
         if (error) {
 
-            console.error(
-                "FUNCTION ERROR:",
-                error
-            );
-
             throw error;
+
         }
+
 
         if (
             !data ||
@@ -2003,39 +3019,50 @@ async function addClient(event) {
                 data?.error ||
                 "Could not create client."
             );
+
         }
 
-        nameInput.value = "";
 
-        emailInput.value = "";
+        nameInput.value =
+            "";
 
-        passwordInput.value = "";
+        emailInput.value =
+            "";
+
+        passwordInput.value =
+            "";
+
 
         showMessage(
             "Client, login account and gallery created successfully.",
             "success"
         );
 
+
         await loadClients();
 
-    } catch (error) {
+    }
+
+    catch (error) {
 
         console.error(
-            "Create client error:",
             error
         );
+
 
         showMessage(
             "Error creating client: " +
             error.message,
             "error"
         );
+
     }
+
 }
 
 
 /* =====================================================
-   UPLOAD PHOTOS
+   UPLOAD CLIENT PHOTOS
 ===================================================== */
 
 async function uploadPhotos(
@@ -2048,11 +3075,15 @@ async function uploadPhotos(
             fileInput.files
         );
 
+
     if (
         files.length === 0
     ) {
+
         return;
+
     }
+
 
     showMessage(
         "Uploading " +
@@ -2060,7 +3091,10 @@ async function uploadPhotos(
         " photo(s)..."
     );
 
-    let uploaded = 0;
+
+    let uploaded =
+        0;
+
 
     for (
         const file of files
@@ -2075,6 +3109,7 @@ async function uploadPhotos(
                     )
                     : "";
 
+
             const baseName =
                 file.name
                     .replace(
@@ -2085,6 +3120,7 @@ async function uploadPhotos(
                         /[^a-zA-Z0-9_-]/g,
                         "-"
                     );
+
 
             const uniqueName =
                 Date.now() +
@@ -2098,6 +3134,7 @@ async function uploadPhotos(
                 "-" +
                 baseName +
                 extension;
+
 
             const {
                 error:
@@ -2120,11 +3157,15 @@ async function uploadPhotos(
                         }
                     );
 
+
             if (
                 uploadError
             ) {
+
                 throw uploadError;
+
             }
+
 
             const {
                 error:
@@ -2136,6 +3177,7 @@ async function uploadPhotos(
                     )
                     .insert([
                         {
+
                             gallery_id:
                                 galleryId,
 
@@ -2144,8 +3186,10 @@ async function uploadPhotos(
 
                             file_path:
                                 uniqueName
+
                         }
                     ]);
+
 
             if (
                 photoError
@@ -2161,22 +3205,17 @@ async function uploadPhotos(
                     ]);
 
                 throw photoError;
+
             }
+
 
             uploaded++;
 
-            showMessage(
-                "Uploaded " +
-                uploaded +
-                " of " +
-                files.length +
-                " photo(s)..."
-            );
+        }
 
-        } catch (error) {
+        catch (error) {
 
             console.error(
-                "Upload error:",
                 error
             );
 
@@ -2186,25 +3225,32 @@ async function uploadPhotos(
                 "error"
             );
 
-            fileInput.value =
-                "";
+            break;
 
-            await loadClients();
-
-            return;
         }
+
     }
+
 
     fileInput.value =
         "";
 
-    showMessage(
-        uploaded +
-        " photo(s) uploaded successfully.",
-        "success"
-    );
+
+    if (
+        uploaded > 0
+    ) {
+
+        showMessage(
+            uploaded +
+            " photo(s) uploaded successfully.",
+            "success"
+        );
+
+    }
+
 
     await loadClients();
+
 }
 
 
@@ -2220,22 +3266,27 @@ async function createGallery(
         "Creating gallery..."
     );
 
+
     const slug =
         createSlug(
             client.name
         );
 
+
     const accessToken =
         crypto.randomUUID();
 
+
     const {
-        data,
         error
     } =
         await supabaseClient
-            .from("galleries")
+            .from(
+                "galleries"
+            )
             .insert([
                 {
+
                     client_id:
                         client.id,
 
@@ -2247,10 +3298,10 @@ async function createGallery(
 
                     access_token:
                         accessToken
+
                 }
-            ])
-            .select()
-            .single();
+            ]);
+
 
     if (error) {
 
@@ -2261,14 +3312,18 @@ async function createGallery(
         );
 
         return;
+
     }
+
 
     showMessage(
         "Gallery created successfully.",
         "success"
     );
 
+
     await loadClients();
+
 }
 
 
@@ -2276,31 +3331,41 @@ async function createGallery(
    COPY GALLERY LINK
 ===================================================== */
 
-async function copyGalleryLink(gallery) {
+async function copyGalleryLink(
+    gallery
+) {
 
     const link =
         window.location.origin +
         "/Lisa-Photography/client-login.html?gallery=" +
-        encodeURIComponent(gallery.id);
+        encodeURIComponent(
+            gallery.id
+        );
+
 
     try {
 
-        await navigator.clipboard.writeText(link);
+        await navigator.clipboard.writeText(
+            link
+        );
+
 
         showMessage(
             "Client login link copied successfully.",
             "success"
         );
 
-    } catch (error) {
+    }
 
-        console.error(error);
+    catch (error) {
 
         showMessage(
             "Could not copy the client login link.",
             "error"
         );
+
     }
+
 }
 
 
@@ -2326,107 +3391,45 @@ async function getSignedUrl(
                 3600
             );
 
+
     if (
         error ||
         !data
     ) {
 
-        console.error(
-            "Signed URL error:",
-            error
-        );
-
         return null;
+
     }
 
+
     return data.signedUrl;
+
 }
 
 
 /* =====================================================
-   LIGHTBOX
-===================================================== */
-
-function openLightbox(
-    url
-) {
-
-    const lightbox =
-        document.getElementById(
-            "lightbox"
-        );
-
-    const image =
-        document.getElementById(
-            "lightbox-image"
-        );
-
-    image.src =
-        url;
-
-    lightbox.style.display =
-        "flex";
-}
-
-
-document
-    .getElementById(
-        "lightbox-close"
-    )
-    .addEventListener(
-        "click",
-        () => {
-
-            document
-                .getElementById(
-                    "lightbox"
-                )
-                .style.display =
-                "none";
-
-        }
-    );
-
-
-document
-    .getElementById(
-        "lightbox"
-    )
-    .addEventListener(
-        "click",
-        function(event) {
-
-            if (
-                event.target === this
-            ) {
-
-                this.style.display =
-                    "none";
-            }
-        }
-    );
-
-
-/* =====================================================
-   DELETE PHOTO
+   DELETE CLIENT PHOTO
 ===================================================== */
 
 async function deletePhoto(
     photo
 ) {
 
-    const confirmed =
-        confirm(
+    if (
+        !confirm(
             `Delete "${photo.file_name}"?\n\nThis cannot be undone.`
-        );
+        )
+    ) {
 
-    if (!confirmed) {
         return;
+
     }
+
 
     showMessage(
         "Deleting photo..."
     );
+
 
     try {
 
@@ -2440,18 +3443,24 @@ async function deletePhoto(
                     "super-handler",
                     {
                         body: {
+
                             action:
                                 "delete_photo",
 
                             photo_id:
                                 photo.id
+
                         }
                     }
                 );
 
+
         if (error) {
+
             throw error;
+
         }
+
 
         if (
             !data ||
@@ -2462,58 +3471,68 @@ async function deletePhoto(
                 data?.error ||
                 "Could not delete photo."
             );
+
         }
+
 
         showMessage(
             "Photo deleted successfully.",
             "success"
         );
 
+
         await loadClients();
 
-    } catch (error) {
+    }
 
-        console.error(
-            "Delete photo error:",
-            error
-        );
+    catch (error) {
 
         showMessage(
             "Error deleting photo: " +
             error.message,
             "error"
         );
+
     }
+
 }
 
 
 /* =====================================================
-   REPLACE PHOTO
+   REPLACE CLIENT PHOTO
 ===================================================== */
 
 async function replacePhoto(
     photo
 ) {
 
-    const confirmed =
-        confirm(
-            `Replace "${photo.file_name}"?\n\nThe old photo will be permanently replaced.`
-        );
+    if (
+        !confirm(
+            `Replace "${photo.file_name}"?`
+        )
+    ) {
 
-    if (!confirmed) {
         return;
+
     }
 
+
     const input =
-        document.createElement("input");
+        document.createElement(
+            "input"
+        );
+
 
     input.type =
         "file";
 
+
     input.accept =
         "image/jpeg,image/png,image/webp,image/heic,image/heif";
 
+
     input.click();
+
 
     input.addEventListener(
         "change",
@@ -2522,81 +3541,89 @@ async function replacePhoto(
             const file =
                 input.files[0];
 
+
             if (!file) {
+
                 return;
+
             }
+
 
             showMessage(
                 "Uploading replacement..."
             );
 
+
             try {
 
                 const {
-                    error: uploadError
+                    error
                 } =
                     await supabaseClient
                         .storage
-                        .from("client-galleries")
+                        .from(
+                            "client-galleries"
+                        )
                         .upload(
                             photo.file_path,
                             file,
                             {
-                                cacheControl: "3600",
+                                cacheControl:
+                                    "3600",
 
-                                upsert: true,
+                                upsert:
+                                    true,
 
                                 contentType:
-                                    file.type ||
-                                    "application/octet-stream"
+                                    file.type
                             }
                         );
 
-                if (uploadError) {
-                    throw uploadError;
+
+                if (error) {
+
+                    throw error;
+
                 }
 
-                const {
-                    error: updateError
-                } =
-                    await supabaseClient
-                        .from("gallery_photos")
-                        .update({
-                            file_name:
-                                file.name
-                        })
-                        .eq(
-                            "id",
-                            photo.id
-                        );
 
-                if (updateError) {
-                    throw updateError;
-                }
+                await supabaseClient
+                    .from(
+                        "gallery_photos"
+                    )
+                    .update({
+                        file_name:
+                            file.name
+                    })
+                    .eq(
+                        "id",
+                        photo.id
+                    );
+
 
                 showMessage(
                     "Photo replaced successfully.",
                     "success"
                 );
 
+
                 await loadClients();
 
-            } catch (error) {
+            }
 
-                console.error(
-                    "Replace photo error:",
-                    error
-                );
+            catch (error) {
 
                 showMessage(
                     "Error replacing photo: " +
                     error.message,
                     "error"
                 );
+
             }
 
         }
     );
+
 }
 
 
@@ -2608,28 +3635,26 @@ async function deleteClient(
     client
 ) {
 
-    const confirmed =
-        confirm(
+    if (
+        !confirm(
             `DELETE CLIENT: ${client.name}\n\n` +
-            `This will permanently delete:\n` +
-            `• Client account\n` +
-            `• Login account\n` +
-            `• Gallery\n` +
-            `• All photos\n\n` +
-            `This action cannot be undone.`
-        );
+            `This will permanently delete the client, gallery and photos.`
+        )
+    ) {
 
-    if (!confirmed) {
         return;
+
     }
 
-    const secondConfirm =
+
+    const confirmation =
         prompt(
             `Type DELETE to permanently delete ${client.name}:`
         );
 
+
     if (
-        secondConfirm !==
+        confirmation !==
         "DELETE"
     ) {
 
@@ -2638,11 +3663,14 @@ async function deleteClient(
         );
 
         return;
+
     }
 
+
     showMessage(
-        "Deleting client and all related files..."
+        "Deleting client..."
     );
+
 
     try {
 
@@ -2656,18 +3684,24 @@ async function deleteClient(
                     "super-handler",
                     {
                         body: {
+
                             action:
                                 "delete_client",
 
                             client_id:
                                 client.id
+
                         }
                     }
                 );
 
+
         if (error) {
+
             throw error;
+
         }
+
 
         if (
             !data ||
@@ -2678,28 +3712,30 @@ async function deleteClient(
                 data?.error ||
                 "Could not delete client."
             );
+
         }
 
+
         showMessage(
-            "Client, gallery, photos and login account deleted successfully.",
+            "Client deleted successfully.",
             "success"
         );
 
+
         await loadClients();
 
-    } catch (error) {
+    }
 
-        console.error(
-            "Delete client error:",
-            error
-        );
+    catch (error) {
 
         showMessage(
             "Error deleting client: " +
             error.message,
             "error"
         );
+
     }
+
 }
 
 
@@ -2714,15 +3750,19 @@ async function loadClients() {
             "clients-list"
         );
 
+
     list.textContent =
         "Loading clients...";
+
 
     const {
         data: clients,
         error: clientError
     } =
         await supabaseClient
-            .from("clients")
+            .from(
+                "clients"
+            )
             .select("*")
             .order(
                 "created_at",
@@ -2732,9 +3772,8 @@ async function loadClients() {
                 }
             );
 
-    if (
-        clientError
-    ) {
+
+    if (clientError) {
 
         list.innerHTML =
             `<p class="error">
@@ -2743,19 +3782,22 @@ async function loadClients() {
             </p>`;
 
         return;
+
     }
+
 
     const {
         data: galleries,
         error: galleryError
     } =
         await supabaseClient
-            .from("galleries")
+            .from(
+                "galleries"
+            )
             .select("*");
 
-    if (
-        galleryError
-    ) {
+
+    if (galleryError) {
 
         list.innerHTML =
             `<p class="error">
@@ -2764,19 +3806,22 @@ async function loadClients() {
             </p>`;
 
         return;
+
     }
+
 
     const {
         data: photos,
         error: photoError
     } =
         await supabaseClient
-            .from("gallery_photos")
+            .from(
+                "gallery_photos"
+            )
             .select("*");
 
-    if (
-        photoError
-    ) {
+
+    if (photoError) {
 
         list.innerHTML =
             `<p class="error">
@@ -2785,12 +3830,9 @@ async function loadClients() {
             </p>`;
 
         return;
+
     }
 
-
-    /* ================================================
-       UPDATE STATISTICS
-    ================================================= */
 
     document.getElementById(
         "stat-clients"
@@ -2819,6 +3861,7 @@ async function loadClients() {
             "No clients yet.";
 
         return;
+
     }
 
 
@@ -2835,6 +3878,7 @@ async function loadClients() {
                 "div"
             );
 
+
         div.className =
             "client";
 
@@ -2844,14 +3888,12 @@ async function loadClients() {
                 "div"
             );
 
-        clientInfo.className =
-            "client-info";
-
 
         const name =
             document.createElement(
                 "div"
             );
+
 
         name.className =
             "client-name";
@@ -2865,12 +3907,12 @@ async function loadClients() {
                 "div"
             );
 
+
         email.className =
             "client-email";
 
         email.textContent =
-            client.email ||
-            "";
+            client.email || "";
 
 
         clientInfo.appendChild(
@@ -2887,10 +3929,10 @@ async function loadClients() {
                 gallery =>
                     String(
                         gallery.client_id
-                    ).trim() ===
+                    ) ===
                     String(
                         client.id
-                    ).trim()
+                    )
             );
 
 
@@ -2907,11 +3949,12 @@ async function loadClients() {
                     photo =>
                         String(
                             photo.gallery_id
-                        ).trim() ===
+                        ) ===
                         String(
                             clientGallery.id
-                        ).trim()
+                        )
                 );
+
         }
 
 
@@ -2920,8 +3963,10 @@ async function loadClients() {
                 "div"
             );
 
+
         photoInfo.className =
             "gallery-count";
+
 
         photoInfo.textContent =
             clientPhotos.length === 1
@@ -2939,6 +3984,7 @@ async function loadClients() {
                 "div"
             );
 
+
         actions.className =
             "actions";
 
@@ -2952,11 +3998,14 @@ async function loadClients() {
                     "a"
                 );
 
+
             openButton.className =
                 "button-link";
 
+
             openButton.textContent =
                 "OPEN GALLERY";
+
 
             openButton.href =
                 "gallery.html?gallery=" +
@@ -2967,6 +4016,7 @@ async function loadClients() {
                 encodeURIComponent(
                     clientGallery.access_token
                 );
+
 
             openButton.target =
                 "_blank";
@@ -2982,11 +4032,14 @@ async function loadClients() {
                     "button"
                 );
 
+
             copyButton.className =
                 "copy-button";
 
+
             copyButton.textContent =
                 "COPY LINK";
+
 
             copyButton.addEventListener(
                 "click",
@@ -3007,8 +4060,10 @@ async function loadClients() {
                     "button"
                 );
 
+
             uploadButton.className =
                 "upload-button";
+
 
             uploadButton.textContent =
                 "UPLOAD PHOTOS";
@@ -3019,14 +4074,18 @@ async function loadClients() {
                     "input"
                 );
 
+
             fileInput.type =
                 "file";
+
 
             fileInput.accept =
                 "image/jpeg,image/png,image/webp,image/heic,image/heif";
 
+
             fileInput.multiple =
                 true;
+
 
             fileInput.className =
                 "hidden";
@@ -3057,16 +4116,19 @@ async function loadClients() {
                 fileInput
             );
 
+        }
 
-        } else {
+        else {
 
             const createButton =
                 document.createElement(
                     "button"
                 );
 
+
             createButton.textContent =
                 "CREATE GALLERY";
+
 
             createButton.addEventListener(
                 "click",
@@ -3076,9 +4138,11 @@ async function loadClients() {
                     )
             );
 
+
             actions.appendChild(
                 createButton
             );
+
         }
 
 
@@ -3087,11 +4151,14 @@ async function loadClients() {
                 "button"
             );
 
+
         deleteClientButton.className =
             "danger";
 
+
         deleteClientButton.textContent =
             "DELETE CLIENT";
+
 
         deleteClientButton.addEventListener(
             "click",
@@ -3120,10 +4187,6 @@ async function loadClients() {
         );
 
 
-        /* ============================================
-           PHOTOS
-        ============================================ */
-
         if (
             clientGallery &&
             clientPhotos.length > 0
@@ -3134,33 +4197,37 @@ async function loadClients() {
                     "div"
                 );
 
+
             photosSection.className =
                 "photos-section";
 
 
-            const photosTitle =
+            const title =
                 document.createElement(
                     "div"
                 );
 
-            photosTitle.className =
+
+            title.className =
                 "photos-title";
 
-            photosTitle.textContent =
+
+            title.textContent =
                 "Gallery Photos";
 
 
             photosSection.appendChild(
-                photosTitle
+                title
             );
 
 
-            const photosGrid =
+            const grid =
                 document.createElement(
                     "div"
                 );
 
-            photosGrid.className =
+
+            grid.className =
                 "photos-grid";
 
 
@@ -3168,12 +4235,13 @@ async function loadClients() {
                 const photo of clientPhotos
             ) {
 
-                const photoCard =
+                const card =
                     document.createElement(
                         "div"
                     );
 
-                photoCard.className =
+
+                card.className =
                     "photo-card";
 
 
@@ -3181,13 +4249,6 @@ async function loadClients() {
                     document.createElement(
                         "img"
                     );
-
-                image.alt =
-                    photo.file_name ||
-                    "Client photo";
-
-                image.src =
-                    "";
 
 
                 const signedUrl =
@@ -3203,35 +4264,34 @@ async function loadClients() {
                     image.src =
                         signedUrl;
 
+
+                    image.alt =
+                        photo.file_name;
+
+
                     image.addEventListener(
                         "click",
                         () =>
-                            openLightbox(
-                                signedUrl
+                            openPortfolioLightbox(
+                                image
                             )
                     );
 
-                } else {
-
-                    image.alt =
-                        "Could not load image";
-
-                    image.style.opacity =
-                        ".3";
                 }
 
 
-                photoCard.appendChild(
+                card.appendChild(
                     image
                 );
 
 
-                const photoActions =
+                const actions =
                     document.createElement(
                         "div"
                     );
 
-                photoActions.className =
+
+                actions.className =
                     "photo-actions";
 
 
@@ -3240,8 +4300,10 @@ async function loadClients() {
                         "button"
                     );
 
+
                 replaceButton.className =
                     "replace-button";
+
 
                 replaceButton.textContent =
                     "REPLACE";
@@ -3261,8 +4323,10 @@ async function loadClients() {
                         "button"
                     );
 
+
                 deleteButton.className =
                     "danger";
+
 
                 deleteButton.textContent =
                     "DELETE";
@@ -3277,41 +4341,45 @@ async function loadClients() {
                 );
 
 
-                photoActions.appendChild(
+                actions.appendChild(
                     replaceButton
                 );
 
-                photoActions.appendChild(
+                actions.appendChild(
                     deleteButton
                 );
 
 
-                photoCard.appendChild(
-                    photoActions
+                card.appendChild(
+                    actions
                 );
 
 
-                photosGrid.appendChild(
-                    photoCard
+                grid.appendChild(
+                    card
                 );
+
             }
 
 
             photosSection.appendChild(
-                photosGrid
+                grid
             );
 
 
             list.appendChild(
                 photosSection
             );
+
         }
+
     }
+
 }
 
 
 /* =====================================================
-   ADD CLIENT FORM
+   FORM
 ===================================================== */
 
 document
@@ -3334,14 +4402,43 @@ document
     )
     .addEventListener(
         "click",
-        async function() {
+        async function () {
 
             await supabaseClient
                 .auth
                 .signOut();
 
+
             window.location.href =
                 "admin.html";
+
+        }
+    );
+
+
+/* =====================================================
+   PASSWORD TOGGLE
+===================================================== */
+
+document
+    .getElementById(
+        "password-toggle"
+    )
+    .addEventListener(
+        "click",
+        function () {
+
+            const input =
+                document.getElementById(
+                    "client-password"
+                );
+
+
+            input.type =
+                input.type === "password"
+                    ? "text"
+                    : "password";
+
         }
     );
 
@@ -3350,84 +4447,28 @@ document
    START
 ===================================================== */
 
-(async function() {
+(async function () {
 
     const user =
         await checkUser();
 
-    if (user) {
 
-        await loadClients();
+    if (!user) {
+
+        return;
+
     }
+
+
+    await loadClients();
+
+
+    await initializePortfolio();
 
 })();
-
-
-/* =====================================================
-   PASSWORD TOGGLE
-===================================================== */
-
-const passwordInput =
-    document.getElementById(
-        "client-password"
-    );
-
-
-const passwordToggle =
-    document.getElementById(
-        "password-toggle"
-    );
-
-
-const passwordEye =
-    document.getElementById(
-        "password-eye"
-    );
-
-
-passwordToggle.addEventListener(
-    "click",
-    function () {
-
-        const isHidden =
-            passwordInput.type === "password";
-
-
-        passwordInput.type =
-            isHidden
-                ? "text"
-                : "password";
-
-
-        passwordToggle.setAttribute(
-            "aria-label",
-            isHidden
-                ? "Hide password"
-                : "Show password"
-        );
-
-
-        if (isHidden) {
-
-            passwordEye.innerHTML = `
-                <path d="M3 3l18 18"/>
-                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
-                <path d="M9.9 4.2A10.8 10.8 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-3.2 4.4"/>
-                <path d="M6.6 6.6C3.7 8.6 2 12 2 12s3 7 10 7c1.7 0 3.2-.4 4.5-1"/>
-            `;
-
-        } else {
-
-            passwordEye.innerHTML = `
-                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
-                <circle cx="12" cy="12" r="3"/>
-            `;
-        }
-
-    }
-);
 
 </script>
 
 </body>
 </html>
+```
