@@ -102,16 +102,27 @@ document.addEventListener("DOMContentLoaded", function () {
             await response.json();
 
 
-        return files
-            .filter(function (file) {
+       return files
+    .filter(function (file) {
 
-                return (
-                    file &&
-                    file.name &&
-                    file.metadata
-                );
+        if (!file || !file.name) {
+            return false;
+        }
 
-            })
+        const extension =
+            file.name
+                .split(".")
+                .pop()
+                .toLowerCase();
+
+        return [
+            "webp",
+            "jpg",
+            "jpeg",
+            "png"
+        ].includes(extension);
+
+    })
             .map(function (file) {
 
                 return {
