@@ -1,67 +1,42 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    const galleryItems = document.querySelectorAll(".gallery-item");
+    /* =========================================================
+       SUPABASE CONFIGURATION
+    ========================================================= */
 
-    let currentFilter = "all";
+    const SUPABASE_URL =
+        "https://ilrdmzogaqfdrcyzjahk.supabase.co";
 
+    const SUPABASE_PUBLISHABLE_KEY =
+        "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
 
-    function getVisibleItems() {
-
-        return Array.from(galleryItems).filter(function (item) {
-
-            return !item.classList.contains("hidden");
-
-        });
-
-    }
+    const BUCKET_NAME = "portfolio";
 
 
-    /* =========================
-       PORTFOLIO FILTERS
-    ========================= */
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
 
-    filterButtons.forEach(function (button) {
+    const gallery =
+        document.getElementById("portfolio-gallery");
 
-        button.addEventListener("click", function () {
+    const loadingMessage =
+        document.getElementById("gallery-loading");
 
-            currentFilter = button.dataset.filter;
+    const errorMessage =
+        document.getElementById("gallery-error");
 
-            filterButtons.forEach(function (btn) {
-                btn.classList.remove("active");
-            });
-
-            button.classList.add("active");
-
-
-            galleryItems.forEach(function (item) {
-
-                const categories =
-                    item.dataset.category.split(" ");
-
-                if (
-                    currentFilter === "all" ||
-                    categories.includes(currentFilter)
-                ) {
-
-                    item.classList.remove("hidden");
-
-                } else {
-
-                    item.classList.add("hidden");
-
-                }
-
-            });
-
-        });
-
-    });
+    const emptyMessage =
+        document.getElementById("gallery-empty");
 
 
-    /* =========================
-       LIGHTBOX
-    ========================= */
+    const filterButtons =
+        document.querySelectorAll(".filter-btn");
+
+
+    /* =========================================================
+       LIGHTBOX ELEMENTS
+    ========================================================= */
 
     const lightbox =
         document.getElementById("lightbox");
@@ -77,260 +52,1200 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const nextButton =
         document.getElementById("next");
+
     const lightboxCounter =
-    document.getElementById("lightbox-counter");
+        document.getElementById("lightbox-counter");
 
 
     let currentImage = 0;
 
+    let currentFilter = "all";
 
-    function showImage(index) {
 
-        const visibleItems = getVisibleItems();
+    /* =========================================================
+       STORAGE URL
+    ========================================================= */
 
-        if (!visibleItems.length) {
-            return;
+    function getPublicImageUrl(filePath) {
+
+        return (
+            SUPABASE_URL +
+            "/storage/v1/object/public/" +
+            BUCKET_NAME +
+            "/" +
+            filePath
+        );
+
+    }
+
+
+    /* =========================================================
+       DETERMINE CATEGORY
+       
+       Expected structure:
+       
+       portfolio/
+           portraits/
+           couples/
+           sports/
+           landscapes/
+           real-estate/
+           lifestyle/
+    ========================================================= */
+
+    function getCategoryFromPath(filePath) {
+
+        const parts =
+            filePath.split("/");
+
+        /*
+           Example:
+
+           portraits/photo01.webp
+
+           parts[0] = portraits
+        */
+
+        if (parts.length > 1) {
+
+            const folder =
+                parts[0].toLowerCase();
+
+            const allowedCategories = [
+                "portraits",
+                "couples",
+                "sports",
+                "landscapes",
+                "real-estate",
+                "lifestyle"
+            ];
+
+            if (
+                allowedCategories.includes(folder)
+            ) {
+                return folder;
+            }
+
         }
 
 
-        if (index < 0) {
-            index = 0;
+        /*
+           If no folder exists,
+           try to determine category
+           from filename.
+        */
+
+        const filename =
+            parts[parts.length - 1]
+                .toLowerCase();
+
+
+        const categories = [
+            "portraits",
+            "couples",
+            "sports",
+            "landscapes",
+            "real-estate",
+            "lifestyle"
+        ];
+
+
+        for (
+            const category of categories
+        ) {
+
+            if (
+                filename.includes(category)
+            ) {
+                return category;
+            }
+
         }
 
 
-     if (index >= visibleItems.length) {
-    index = visibleItems.length - 1;
-}
+        return "lifestyle";
+
+    }
 
 
-        currentImage = index;
+    /* =========================================================
+       CREATE GALLERY ITEM
+    ========================================================= */
+
+    function createGalleryItem(file) {
+
+        const filePath =
+            file.name;
+
+        const imageUrl =
+            getPublicImageUrl(filePath);
+
+        const category =
+            getCategoryFromPath(filePath);
+
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "gallery-item";
+
+        item.dataset.category =
+            category;
 
 
         const image =
-            visibleItems[currentImage].querySelector("img");
+            document.createElement("img");
 
-lightboxImage.style.opacity = "0";
-lightboxImage.style.transform = "scale(0.98)";
-       lightboxImage.src = image.src;
-        lightboxImage.alt = image.alt;
-        setTimeout(function () {
+        image.src =
+            imageUrl;
 
-    lightboxImage.style.opacity = "1";
-    lightboxImage.style.transform = "scale(1)";
-
-}, 50);
+        image.alt =
+            createAltText(category);
 
 
+        image.loading =
+            "lazy";
 
-if (lightboxCounter) {
+        image.decoding =
+            "async";
 
-    lightboxCounter.textContent =
-        (currentImage + 1) +
-        " / " +
-        visibleItems.length;
+        image.draggable =
+            false;
 
-}
 
-lightbox.style.display = "flex";
+        /*
+           Prevent right click
+        */
+
+        image.addEventListener(
+            "contextmenu",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+
+
+        item.appendChild(image);
+
+        gallery.appendChild(item);
 
     }
 
 
-    galleryItems.forEach(function (item) {
+    /* =========================================================
+       ALT TEXT
+    ========================================================= */
 
-        const image =
-            item.querySelector("img");
+    function createAltText(category) {
+
+        const names = {
+
+            "portraits":
+                "Portrait photography by Lisa Michelle Visuals",
+
+            "couples":
+                "Couples photography by Lisa Michelle Visuals",
+
+            "sports":
+                "Sports photography by Lisa Michelle Visuals",
+
+            "landscapes":
+                "Landscape photography by Lisa Michelle Visuals",
+
+            "real-estate":
+                "Real estate photography by Lisa Michelle Visuals",
+
+            "lifestyle":
+                "Lifestyle photography by Lisa Michelle Visuals"
+
+        };
 
 
-        image.addEventListener("click", function () {
+        return (
+            names[category] ||
+            "Photography by Lisa Michelle Visuals"
+        );
 
-            const visibleItems = getVisibleItems();
-
-            const index =
-                visibleItems.indexOf(item);
+    }
 
 
-            if (index !== -1) {
+    /* =========================================================
+       LOAD FILES FROM SUPABASE
+    ========================================================= */
 
-                showImage(index);
+    async function loadPortfolio() {
+
+        try {
+
+            loadingMessage.style.display =
+                "block";
+
+            errorMessage.style.display =
+                "none";
+
+            emptyMessage.style.display =
+                "none";
+
+
+            /*
+               Get folders first
+            */
+
+            const foldersResponse =
+                await fetch(
+
+                    SUPABASE_URL +
+                    "/storage/v1/object/list/" +
+                    BUCKET_NAME,
+
+                    {
+
+                        method: "POST",
+
+                        headers: {
+
+                            "Authorization":
+                                "Bearer " +
+                                SUPABASE_PUBLISHABLE_KEY,
+
+                            "apikey":
+                                SUPABASE_PUBLISHABLE_KEY,
+
+                            "Content-Type":
+                                "application/json"
+
+                        },
+
+                        body: JSON.stringify({
+
+                            prefix: "",
+
+                            limit: 100,
+
+                            offset: 0,
+
+                            sortBy: {
+                                column: "name",
+                                order: "asc"
+                            }
+
+                        })
+
+                    }
+
+                );
+
+
+            if (
+                !foldersResponse.ok
+            ) {
+
+                throw new Error(
+                    "Unable to access Supabase Storage."
+                );
 
             }
 
-        });
 
-    });
-
-
-    /* =========================
-       NEXT
-    ========================= */
-
-    if (nextButton) {
-
-        nextButton.addEventListener("click", function () {
-
-            showImage(currentImage + 1);
-
-        });
-
-    }
+            const rootFiles =
+                await foldersResponse.json();
 
 
-    /* =========================
-       PREVIOUS
-    ========================= */
+            /*
+               Supabase may return folders
+               as objects without metadata.
+               
+               We need to load files from
+               each category folder.
+            */
 
-    if (previousButton) {
+            const categories = [
 
-        previousButton.addEventListener("click", function () {
+                "portraits",
+                "couples",
+                "sports",
+                "landscapes",
+                "real-estate",
+                "lifestyle"
 
-            showImage(currentImage - 1);
-
-        });
-
-    }
-
-
-    /* =========================
-       CLOSE
-    ========================= */
-
-    if (closeButton) {
-
-        closeButton.addEventListener("click", function () {
-
-            lightbox.style.display = "none";
-
-        });
-
-    }
+            ];
 
 
-    if (lightbox) {
+            let allFiles = [];
 
-        lightbox.addEventListener("click", function (event) {
 
-            if (event.target === lightbox) {
+            /*
+               Load each category folder
+            */
 
-                lightbox.style.display = "none";
+            for (
+                const category of categories
+            ) {
+
+                const response =
+                    await fetch(
+
+                        SUPABASE_URL +
+                        "/storage/v1/object/list/" +
+                        BUCKET_NAME,
+
+                        {
+
+                            method: "POST",
+
+                            headers: {
+
+                                "Authorization":
+                                    "Bearer " +
+                                    SUPABASE_PUBLISHABLE_KEY,
+
+                                "apikey":
+                                    SUPABASE_PUBLISHABLE_KEY,
+
+                                "Content-Type":
+                                    "application/json"
+
+                            },
+
+                            body: JSON.stringify({
+
+                                prefix:
+                                    category + "/",
+
+                                limit: 100,
+
+                                offset: 0,
+
+                                sortBy: {
+                                    column: "name",
+                                    order: "asc"
+                                }
+
+                            })
+
+                        }
+
+                    );
+
+
+                if (!response.ok) {
+
+                    console.warn(
+                        "Could not load folder:",
+                        category
+                    );
+
+                    continue;
+
+                }
+
+
+                const files =
+                    await response.json();
+
+
+                /*
+                   Only actual files
+                   should be added.
+                */
+
+                files.forEach(function (file) {
+
+                    if (
+                        file.name &&
+                        !file.id &&
+                        !file.metadata
+                    ) {
+                        return;
+                    }
+
+
+                    /*
+                       Supabase returns the name
+                       relative to the prefix.
+
+                       Therefore rebuild full path.
+                    */
+
+                    if (
+                        file.name &&
+                        !file.name.includes("/")
+                    ) {
+
+                        allFiles.push({
+
+                            ...file,
+
+                            name:
+                                category +
+                                "/" +
+                                file.name
+
+                        });
+
+                    }
+
+                });
 
             }
 
-        });
 
-    }
+            /*
+               If no category folders exist,
+               try files in the root.
+            */
 
+            if (
+                allFiles.length === 0
+            ) {
 
-    /* =========================
-       KEYBOARD
-    ========================= */
+                rootFiles.forEach(function (file) {
 
-    document.addEventListener("keydown", function (event) {
+                    if (
+                        file.name &&
+                        file.metadata
+                    ) {
 
-        if (!lightbox ||
-            lightbox.style.display !== "flex") {
+                        allFiles.push(file);
 
-            return;
+                    }
 
-        }
+                });
 
-
-        if (event.key === "Escape") {
-
-            lightbox.style.display = "none";
-
-        }
-
-
-        if (event.key === "ArrowRight") {
-
-            showImage(currentImage + 1);
-
-        }
+            }
 
 
-        if (event.key === "ArrowLeft") {
-
-            showImage(currentImage - 1);
-
-        }
-
-    });
-/* =========================
-       MOBILE SWIPE
-    ========================= */
-
-    let touchStartX = 0;
-    let touchEndX = 0;
-
-    if (lightbox) {
-
-        lightbox.addEventListener("touchstart", function (event) {
-
-            touchStartX = event.changedTouches[0].screenX;
-
-        }, { passive: true });
+            loadingMessage.style.display =
+                "none";
 
 
-   lightbox.addEventListener("touchend", function (event) {
+            /*
+               No images
+            */
 
-    touchEndX = event.changedTouches[0].screenX;
+            if (
+                allFiles.length === 0
+            ) {
 
-    const swipeDistance =
-        touchEndX - touchStartX;
+                emptyMessage.style.display =
+                    "block";
 
-    const minimumSwipe = 60;
+                return;
 
-
-    // Swipe left → Next
-    if (swipeDistance <= -minimumSwipe) {
-
-        showImage(currentImage + 1);
-
-    }
+            }
 
 
-    // Swipe right → Previous
-    else if (swipeDistance >= minimumSwipe) {
+            /*
+               Create gallery
+            */
 
-        showImage(currentImage - 1);
+            allFiles.forEach(function (file) {
 
-    }
-
-}, { passive: true });
-
-    }
- 
-    /* =========================
-       MOBILE MENU
-    ========================= */
-
-    const menuToggle =
-        document.querySelector(".menu-toggle");
-
-    const navLinks =
-        document.querySelector(".nav-links");
-
-
-    if (menuToggle && navLinks) {
-
-        menuToggle.addEventListener("click", function () {
-
-            navLinks.classList.toggle("active");
-
-        });
-
-
-        navLinks.querySelectorAll("a").forEach(function (link) {
-
-            link.addEventListener("click", function () {
-
-                navLinks.classList.remove("active");
+                createGalleryItem(file);
 
             });
 
-        });
+
+            /*
+               Initialize gallery
+               after images are created
+            */
+
+            initializeGallery();
+
+
+        } catch (error) {
+
+            console.error(
+                "Portfolio loading error:",
+                error
+            );
+
+
+            loadingMessage.style.display =
+                "none";
+
+            errorMessage.style.display =
+                "block";
+
+        }
 
     }
+
+
+    /* =========================================================
+       GET VISIBLE IMAGES
+    ========================================================= */
+
+    function getVisibleGalleryImages() {
+
+        const images =
+            document.querySelectorAll(
+                "#portfolio-gallery img"
+            );
+
+
+        return Array.from(images).filter(
+            function (image) {
+
+                const item =
+                    image.closest(
+                        ".gallery-item"
+                    );
+
+
+                return (
+                    item &&
+                    !item.classList.contains(
+                        "hidden"
+                    )
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       SHOW LIGHTBOX IMAGE
+    ========================================================= */
+
+    function showGalleryImage(index) {
+
+        const visibleImages =
+            getVisibleGalleryImages();
+
+
+        if (
+            !visibleImages.length ||
+            !lightbox ||
+            !lightboxImage
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+           Loop protection
+        */
+
+        if (
+            index < 0
+        ) {
+
+            index = 0;
+
+        }
+
+
+        if (
+            index >= visibleImages.length
+        ) {
+
+            index =
+                visibleImages.length - 1;
+
+        }
+
+
+        currentImage =
+            index;
+
+
+        lightboxImage.src =
+            visibleImages[
+                currentImage
+            ].src;
+
+
+        lightboxImage.alt =
+            visibleImages[
+                currentImage
+            ].alt;
+
+
+        lightbox.style.display =
+            "flex";
+
+
+        lightbox.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+
+        updateLightbox();
+
+    }
+
+
+    /* =========================================================
+       UPDATE LIGHTBOX
+    ========================================================= */
+
+    function updateLightbox() {
+
+        const visibleImages =
+            getVisibleGalleryImages();
+
+
+        if (
+            !visibleImages.length
+        ) {
+
+            return;
+
+        }
+
+
+        /*
+           Counter
+        */
+
+        if (
+            lightboxCounter
+        ) {
+
+            lightboxCounter.textContent =
+                (currentImage + 1) +
+                " / " +
+                visibleImages.length;
+
+        }
+
+
+        /*
+           Previous
+        */
+
+        if (
+            previousButton
+        ) {
+
+            previousButton.style.visibility =
+                currentImage === 0
+                    ? "hidden"
+                    : "visible";
+
+        }
+
+
+        /*
+           Next
+        */
+
+        if (
+            nextButton
+        ) {
+
+            nextButton.style.visibility =
+                currentImage ===
+                visibleImages.length - 1
+                    ? "hidden"
+                    : "visible";
+
+        }
+
+    }
+
+
+    /* =========================================================
+       INITIALIZE GALLERY
+    ========================================================= */
+
+    function initializeGallery() {
+
+        const galleryImages =
+            document.querySelectorAll(
+                "#portfolio-gallery img"
+            );
+
+
+        galleryImages.forEach(
+            function (image) {
+
+                image.addEventListener(
+                    "click",
+                    function () {
+
+                        const visibleImages =
+                            getVisibleGalleryImages();
+
+
+                        const index =
+                            visibleImages.indexOf(
+                                image
+                            );
+
+
+                        if (
+                            index !== -1
+                        ) {
+
+                            showGalleryImage(
+                                index
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       CLOSE LIGHTBOX
+    ========================================================= */
+
+    if (
+        closeButton
+    ) {
+
+        closeButton.addEventListener(
+            "click",
+            closeLightbox
+        );
+
+    }
+
+
+    function closeLightbox() {
+
+        if (
+            !lightbox
+        ) {
+
+            return;
+
+        }
+
+
+        lightbox.style.display =
+            "none";
+
+
+        lightbox.setAttribute(
+            "aria-hidden",
+            "true"
+        );
+
+
+        lightboxImage.src =
+            "";
+
+    }
+
+
+    /* =========================================================
+       NEXT IMAGE
+    ========================================================= */
+
+    if (
+        nextButton
+    ) {
+
+        nextButton.addEventListener(
+            "click",
+            function () {
+
+                const visibleImages =
+                    getVisibleGalleryImages();
+
+
+                if (
+                    currentImage <
+                    visibleImages.length - 1
+                ) {
+
+                    currentImage++;
+
+                    showGalleryImage(
+                        currentImage
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       PREVIOUS IMAGE
+    ========================================================= */
+
+    if (
+        previousButton
+    ) {
+
+        previousButton.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    currentImage > 0
+                ) {
+
+                    currentImage--;
+
+                    showGalleryImage(
+                        currentImage
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       CLICK OUTSIDE IMAGE
+    ========================================================= */
+
+    if (
+        lightbox
+    ) {
+
+        lightbox.addEventListener(
+            "click",
+            function (event) {
+
+                if (
+                    event.target === lightbox
+                ) {
+
+                    closeLightbox();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       KEYBOARD NAVIGATION
+    ========================================================= */
+
+    document.addEventListener(
+        "keydown",
+        function (event) {
+
+            if (
+                !lightbox ||
+                lightbox.style.display !==
+                    "flex"
+            ) {
+
+                return;
+
+            }
+
+
+            if (
+                event.key === "Escape"
+            ) {
+
+                closeLightbox();
+
+            }
+
+
+            else if (
+                event.key === "ArrowRight"
+            ) {
+
+                if (
+                    nextButton
+                ) {
+
+                    nextButton.click();
+
+                }
+
+            }
+
+
+            else if (
+                event.key === "ArrowLeft"
+            ) {
+
+                if (
+                    previousButton
+                ) {
+
+                    previousButton.click();
+
+                }
+
+            }
+
+        }
+    );
+
+
+    /* =========================================================
+       MOBILE SWIPE
+    ========================================================= */
+
+    let touchStartX = 0;
+
+    let touchEndX = 0;
+
+
+    if (
+        lightboxImage
+    ) {
+
+        lightboxImage.addEventListener(
+            "touchstart",
+            function (event) {
+
+                touchStartX =
+                    event.changedTouches[0]
+                        .screenX;
+
+            }
+        );
+
+
+        lightboxImage.addEventListener(
+            "touchend",
+            function (event) {
+
+                touchEndX =
+                    event.changedTouches[0]
+                        .screenX;
+
+
+                const swipeDistance =
+                    touchEndX -
+                    touchStartX;
+
+
+                /*
+                   Swipe left = Next
+                */
+
+                if (
+                    swipeDistance < -50
+                ) {
+
+                    if (
+                        nextButton
+                    ) {
+
+                        nextButton.click();
+
+                    }
+
+                }
+
+
+                /*
+                   Swipe right = Previous
+                */
+
+                else if (
+                    swipeDistance > 50
+                ) {
+
+                    if (
+                        previousButton
+                    ) {
+
+                        previousButton.click();
+
+                    }
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /* =========================================================
+       PORTFOLIO FILTERS
+    ========================================================= */
+
+    filterButtons.forEach(
+        function (button) {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    currentFilter =
+                        button.dataset.filter;
+
+
+                    /*
+                       Active button
+                    */
+
+                    filterButtons.forEach(
+                        function (btn) {
+
+                            btn.classList.remove(
+                                "active"
+                            );
+
+                        }
+                    );
+
+
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    /*
+                       Filter gallery
+                    */
+
+                    const items =
+                        document.querySelectorAll(
+                            "#portfolio-gallery .gallery-item"
+                        );
+
+
+                    items.forEach(
+                        function (item) {
+
+                            const categories =
+                                item.dataset.category
+                                    .split(" ");
+
+
+                            if (
+                                currentFilter ===
+                                    "all" ||
+                                categories.includes(
+                                    currentFilter
+                                )
+                            ) {
+
+                                item.classList.remove(
+                                    "hidden"
+                                );
+
+                            }
+
+                            else {
+
+                                item.classList.add(
+                                    "hidden"
+                                );
+
+                            }
+
+                        }
+                    );
+
+
+                    /*
+                       Close lightbox when
+                       changing category
+                    */
+
+                    closeLightbox();
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =========================================================
+       MOBILE MENU
+    ========================================================= */
+
+    const menuToggle =
+        document.querySelector(
+            ".menu-toggle"
+        );
+
+    const navLinks =
+        document.querySelector(
+            ".nav-links"
+        );
+
+
+    if (
+        menuToggle &&
+        navLinks
+    ) {
+
+        menuToggle.addEventListener(
+            "click",
+            function () {
+
+                const isActive =
+                    navLinks.classList.toggle(
+                        "active"
+                    );
+
+
+                menuToggle.setAttribute(
+                    "aria-expanded",
+                    isActive
+                        ? "true"
+                        : "false"
+                );
+
+            }
+        );
+
+
+        navLinks
+            .querySelectorAll("a")
+            .forEach(
+                function (link) {
+
+                    link.addEventListener(
+                        "click",
+                        function () {
+
+                            navLinks.classList.remove(
+                                "active"
+                            );
+
+
+                            menuToggle.setAttribute(
+                                "aria-expanded",
+                                "false"
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+
+    /* =========================================================
+       START
+    ========================================================= */
+
+    loadPortfolio();
 
 });
