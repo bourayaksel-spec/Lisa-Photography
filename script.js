@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", function () {
        MORE WORK contains the complete portfolio.
     */
 
-    const HOME_IMAGE_LIMIT = 9;
+    const HOME_IMAGE_LIMIT = 20;
 
 
 
