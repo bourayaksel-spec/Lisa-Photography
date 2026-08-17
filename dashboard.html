@@ -3,470 +3,724 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>
-        Lisa Michelle Visuals — Dashboard
-    </title>
+<title>Lisa Michelle Visuals — Dashboard</title>
 
+<style>
 
-    <style>
+/* =====================================================
+   RESET
+===================================================== */
 
-        * {
-            box-sizing: border-box;
-        }
+* {
+    box-sizing: border-box;
+}
 
+html {
+    scroll-behavior: smooth;
+}
 
-        body {
-            margin: 0;
-            background: #111;
-            color: #fff;
-            font-family: Arial, sans-serif;
-        }
+body {
+    margin: 0;
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(255,255,255,.045),
+            transparent 35%
+        ),
+        #0b0b0b;
+    color: #fff;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Arial,
+        sans-serif;
+    min-height: 100vh;
+}
 
 
-        header {
-            padding: 25px 5%;
-            border-bottom: 1px solid #333;
+/* =====================================================
+   HEADER
+===================================================== */
 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
 
-            gap: 20px;
-        }
+    padding: 20px 5%;
 
+    background: rgba(11,11,11,.88);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
 
-        header h1 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 400;
-        }
+    border-bottom: 1px solid rgba(255,255,255,.08);
 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-        main {
-            width: 90%;
-            max-width: 1100px;
-            margin: 50px auto;
-        }
+    gap: 20px;
+}
 
+header h1 {
+    margin: 0;
 
-        h2 {
-            font-size: 32px;
-            font-weight: 400;
-        }
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: .08em;
 
+    text-transform: uppercase;
+}
 
-        h3 {
-            font-weight: 400;
-        }
+header h1::after {
+    content: " • GALLERY MANAGEMENT";
 
+    color: #777;
+    font-size: 10px;
+    letter-spacing: .16em;
+    margin-left: 10px;
+}
 
-        .card {
-            background: #1b1b1b;
-            border: 1px solid #333;
-            padding: 30px;
-            margin-bottom: 30px;
-        }
 
+/* =====================================================
+   MAIN
+===================================================== */
 
-        .add-client-form {
-            display: grid;
+main {
+    width: 90%;
+    max-width: 1200px;
 
-            grid-template-columns:
-                1fr
-                1fr
-                1fr
-                auto;
+    margin: 0 auto;
+    padding: 55px 0 80px;
+}
 
-            gap: 10px;
+main > h2 {
+    margin: 0 0 10px;
 
-            margin-top: 20px;
-        }
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 400;
 
-        .add-client-form input {
-            width: 100%;
-            padding: 14px;
+    letter-spacing: -.03em;
+}
 
-            border: 1px solid #444;
+main > h2::after {
+    content: "";
+    display: block;
 
-            background: #111;
-            color: white;
-        }
+    width: 55px;
+    height: 2px;
 
+    background: #fff;
 
-        button,
-        .button-link {
+    margin-top: 20px;
+    margin-bottom: 35px;
+}
 
-            padding: 12px 18px;
+h3 {
+    margin: 0;
 
-            background: white;
-            color: black;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-            border: none;
+    font-size: 25px;
+    font-weight: 400;
+}
 
-            cursor: pointer;
 
-            font-weight: bold;
+/* =====================================================
+   CARDS
+===================================================== */
 
-            text-decoration: none;
+.card {
+    position: relative;
 
-            display: inline-block;
-        }
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.015)
+        );
 
+    border: 1px solid rgba(255,255,255,.09);
 
-        button:hover,
-        .button-link:hover {
-            opacity: .85;
-        }
+    border-radius: 18px;
 
+    padding: 30px;
 
-        .secondary {
+    margin-bottom: 25px;
 
-            background: transparent;
-            color: white;
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.25);
 
-            border: 1px solid #555;
-        }
+    overflow: hidden;
+}
 
+.card::before {
+    content: "";
 
-        .danger {
+    position: absolute;
 
-            background: #7a2020;
-            color: white;
-        }
+    top: 0;
+    left: 0;
 
+    width: 100%;
+    height: 1px;
 
-        .replace-button {
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,.25),
+            transparent
+        );
+}
 
-            background: #444;
-            color: white;
-        }
+.card:hover {
+    border-color: rgba(255,255,255,.14);
+}
 
 
-        .upload-button {
+/* =====================================================
+   ADD CLIENT FORM
+===================================================== */
 
-            background: #ddd;
-            color: black;
-        }
+.add-client-form {
+    display: grid;
 
+    grid-template-columns:
+        1fr
+        1fr
+        1fr
+        auto;
 
-        .copy-button {
+    gap: 12px;
 
-            background: transparent;
-            color: white;
+    margin-top: 25px;
+}
 
-            border: 1px solid #555;
-        }
+.add-client-form input {
+    width: 100%;
 
+    padding: 15px 16px;
 
-        .client {
+    border: 1px solid rgba(255,255,255,.1);
 
-            padding: 25px 0;
+    border-radius: 10px;
 
-            border-bottom: 1px solid #333;
+    background: rgba(0,0,0,.45);
 
-            display: flex;
+    color: white;
 
-            justify-content: space-between;
+    font-size: 14px;
 
-            align-items: flex-start;
+    outline: none;
 
-            gap: 25px;
-        }
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        box-shadow .2s ease;
+}
 
+.add-client-form input::placeholder {
+    color: #666;
+}
 
-        .client:last-child {
-            border-bottom: none;
-        }
+.add-client-form input:focus {
+    border-color: rgba(255,255,255,.4);
 
+    background: rgba(255,255,255,.035);
 
-        .client-info {
-            flex: 1;
-            min-width: 0;
-        }
+    box-shadow:
+        0 0 0 3px rgba(255,255,255,.04);
+}
 
 
-        .client-name {
+/* =====================================================
+   BUTTONS
+===================================================== */
 
-            font-size: 20px;
-            margin-bottom: 5px;
-        }
+button,
+.button-link {
+    min-height: 44px;
 
+    padding: 12px 18px;
 
-        .client-email {
+    background: #f5f5f5;
+    color: #090909;
 
-            color: #888;
-            font-size: 14px;
-        }
+    border: 1px solid transparent;
+    border-radius: 9px;
 
+    cursor: pointer;
 
-        .gallery-count {
+    font-size: 11px;
+    font-weight: 700;
 
-            color: #aaa;
-            font-size: 14px;
+    letter-spacing: .07em;
 
-            margin-top: 8px;
-        }
+    text-decoration: none;
 
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-        .actions {
+    transition:
+        transform .2s ease,
+        background .2s ease,
+        border-color .2s ease,
+        color .2s ease,
+        box-shadow .2s ease,
+        opacity .2s ease;
+}
 
-            display: flex;
+button:hover,
+.button-link:hover {
+    transform: translateY(-2px);
 
-            gap: 8px;
+    box-shadow:
+        0 8px 25px rgba(0,0,0,.3);
 
-            flex-wrap: wrap;
+    opacity: 1;
+}
 
-            justify-content: flex-end;
-        }
+button:active,
+.button-link:active {
+    transform: translateY(0);
+}
 
 
-        .actions button,
-        .actions a {
-            white-space: nowrap;
-        }
+/* =====================================================
+   BUTTON VARIANTS
+===================================================== */
 
+.secondary {
+    background: transparent;
+    color: #ddd;
 
-        .hidden {
-            display: none;
-        }
+    border: 1px solid rgba(255,255,255,.16);
+}
 
+.secondary:hover {
+    background: rgba(255,255,255,.07);
+    border-color: rgba(255,255,255,.3);
+}
 
-        #message {
+.danger {
+    background: #401919;
+    color: #ffb5b5;
 
-            margin-top: 20px;
+    border-color: rgba(255,90,90,.16);
+}
 
-            color: #aaa;
+.danger:hover {
+    background: #5a2020;
+}
 
-            line-height: 1.6;
-        }
+.replace-button {
+    background: #252525;
+    color: #ddd;
 
+    border: 1px solid #3d3d3d;
+}
 
-        .error {
-            color: #ff7777 !important;
-        }
+.replace-button:hover {
+    background: #333;
+}
 
+.upload-button {
+    background: #dedede;
+    color: #111;
+}
 
-        .success {
-            color: #7cff7c !important;
-        }
+.upload-button:hover {
+    background: #fff;
+}
 
+.copy-button {
+    background: transparent;
+    color: #ddd;
 
-        /* PHOTOS */
+    border: 1px solid rgba(255,255,255,.16);
+}
 
+.copy-button:hover {
+    background: rgba(255,255,255,.07);
+}
 
-        .photos-section {
 
-            margin-top: 25px;
+/* =====================================================
+   CLIENT
+===================================================== */
 
-            padding-top: 20px;
+.client {
+    padding: 27px 0;
 
-            border-top: 1px solid #333;
-        }
+    border-bottom: 1px solid rgba(255,255,255,.08);
 
+    display: flex;
 
-        .photos-title {
+    justify-content: space-between;
+    align-items: flex-start;
 
-            color: #aaa;
+    gap: 25px;
 
-            font-size: 14px;
+    transition:
+        padding .2s ease;
+}
 
-            margin-bottom: 15px;
-        }
+.client:last-child {
+    border-bottom: none;
+}
 
+.client:hover {
+    padding-left: 8px;
+}
 
-        .photos-grid {
+.client-info {
+    flex: 1;
+    min-width: 0;
+}
 
-            display: grid;
+.client-name {
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-            grid-template-columns:
-                repeat(4, 1fr);
+    font-size: 23px;
 
-            gap: 12px;
-        }
+    margin-bottom: 6px;
 
+    letter-spacing: -.01em;
+}
 
-        .photo-card {
+.client-email {
+    color: #777;
 
-            position: relative;
+    font-size: 13px;
 
-            background: #111;
+    word-break: break-word;
+}
 
-            border: 1px solid #333;
+.gallery-count {
+    display: inline-flex;
 
-            overflow: hidden;
-        }
+    margin-top: 12px;
 
+    padding: 6px 10px;
 
-        .photo-card img {
+    border-radius: 20px;
 
-            width: 100%;
+    background: rgba(255,255,255,.055);
 
-            aspect-ratio: 1 / 1;
+    border: 1px solid rgba(255,255,255,.07);
 
-            object-fit: cover;
+    color: #aaa;
 
-            display: block;
+    font-size: 11px;
 
-            cursor: pointer;
-        }
+    letter-spacing: .04em;
+}
 
 
-        .photo-actions {
+/* =====================================================
+   ACTIONS
+===================================================== */
 
-            display: flex;
+.actions {
+    display: flex;
 
-            gap: 5px;
+    gap: 8px;
 
-            padding: 7px;
-        }
+    flex-wrap: wrap;
 
+    justify-content: flex-end;
 
-        .photo-actions button {
+    max-width: 600px;
+}
 
-            flex: 1;
+.actions button,
+.actions a {
+    white-space: nowrap;
+}
 
-            padding: 8px 5px;
 
-            font-size: 11px;
-        }
+/* =====================================================
+   MESSAGE
+===================================================== */
 
+#message {
+    position: fixed;
 
-        /* LIGHTBOX */
+    left: 50%;
+    bottom: 25px;
 
+    transform: translateX(-50%);
 
-        .lightbox {
+    z-index: 5000;
 
-            display: none;
+    margin: 0;
 
-            position: fixed;
+    padding: 12px 20px;
 
-            inset: 0;
+    max-width: calc(100% - 30px);
 
-            background:
-                rgba(0, 0, 0, .95);
+    border-radius: 10px;
 
-            z-index: 9999;
+    background: rgba(20,20,20,.94);
 
-            align-items: center;
+    border: 1px solid rgba(255,255,255,.12);
 
-            justify-content: center;
+    color: #aaa;
 
-            padding: 20px;
-        }
+    line-height: 1.5;
 
+    font-size: 13px;
 
-        .lightbox img {
+    box-shadow:
+        0 15px 40px rgba(0,0,0,.4);
 
-            max-width: 95vw;
+    backdrop-filter: blur(15px);
+}
 
-            max-height: 90vh;
+.error {
+    color: #ff8d8d !important;
+    border-color: rgba(255,90,90,.25) !important;
+}
 
-            object-fit: contain;
-        }
+.success {
+    color: #9cffaa !important;
+    border-color: rgba(100,255,130,.2) !important;
+}
 
 
-        .lightbox-close {
+/* =====================================================
+   PHOTOS
+===================================================== */
 
-            position: absolute;
+.photos-section {
+    margin-top: 25px;
 
-            top: 20px;
+    padding: 25px 0 0;
 
-            right: 30px;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
 
-            font-size: 40px;
+.photos-title {
+    color: #888;
 
-            cursor: pointer;
-        }
+    font-size: 11px;
 
+    letter-spacing: .14em;
 
-        @media (max-width: 850px) {
+    text-transform: uppercase;
 
-            .add-client-form {
+    margin-bottom: 16px;
+}
 
-                grid-template-columns:
-                    1fr
-                    1fr;
-            }
+.photos-grid {
+    display: grid;
 
+    grid-template-columns:
+        repeat(4, 1fr);
 
-            .photos-grid {
+    gap: 12px;
+}
 
-                grid-template-columns:
-                    repeat(3, 1fr);
-            }
+.photo-card {
+    position: relative;
 
-        }
+    background: #101010;
 
+    border: 1px solid rgba(255,255,255,.08);
 
-        @media (max-width: 600px) {
+    border-radius: 10px;
 
-            header {
+    overflow: hidden;
 
-                flex-direction: column;
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        box-shadow .25s ease;
+}
 
-                align-items: flex-start;
-            }
+.photo-card:hover {
+    transform: translateY(-4px);
 
+    border-color: rgba(255,255,255,.2);
 
-            .add-client-form {
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.35);
+}
 
-                grid-template-columns:
-                    1fr;
-            }
+.photo-card img {
+    width: 100%;
 
+    aspect-ratio: 1 / 1;
 
-            .client {
+    object-fit: cover;
 
-                flex-direction: column;
-            }
+    display: block;
 
+    cursor: zoom-in;
 
-            .actions {
+    transition:
+        transform .45s ease,
+        opacity .25s ease;
+}
 
-                width: 100%;
+.photo-card:hover img {
+    transform: scale(1.035);
+}
 
-                justify-content: flex-start;
-            }
 
+/* =====================================================
+   PHOTO ACTIONS
+===================================================== */
 
-            .actions button,
-            .actions a {
+.photo-actions {
+    display: flex;
 
-                flex: 1;
+    gap: 6px;
 
-                text-align: center;
-            }
+    padding: 8px;
 
+    background:
+        linear-gradient(
+            180deg,
+            rgba(20,20,20,.95),
+            rgba(10,10,10,1)
+        );
+}
 
-            .photos-grid {
+.photo-actions button {
+    flex: 1;
 
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
+    min-height: 34px;
 
-        }
+    padding: 7px 5px;
+
+    font-size: 9px;
+
+    border-radius: 7px;
+}
+
+
+/* =====================================================
+   LIGHTBOX
+===================================================== */
+
+.lightbox {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(0,0,0,.96);
+
+    z-index: 9999;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 25px;
+
+    animation: fadeIn .2s ease;
+}
+
+.lightbox img {
+    max-width: 95vw;
+    max-height: 90vh;
+
+    object-fit: contain;
+
+    border-radius: 4px;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.8);
+}
+
+.lightbox-close {
+    position: absolute;
+
+    top: 18px;
+    right: 28px;
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,.08);
+
+    color: white;
+
+    font-size: 32px;
+
+    cursor: pointer;
+
+    transition:
+        background .2s ease,
+        transform .2s ease;
+}
+
+.lightbox-close:hover {
+    background: rgba(255,255,255,.16);
+
+    transform: rotate(90deg);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+/* =====================================================
+   PASSWORD
+===================================================== */
+
 .password-wrapper {
     position: relative;
+
     width: 100%;
 }
 
 .password-wrapper input {
     width: 100%;
+
     padding-right: 52px;
 }
 
 .password-toggle {
     position: absolute !important;
 
-    right: 6px;
+    right: 5px;
     top: 50%;
 
     transform: translateY(-50%);
@@ -474,17 +728,22 @@
     width: 40px !important;
     height: 40px;
 
+    min-height: 40px;
+
     padding: 0 !important;
 
     margin: 0;
 
     background: transparent !important;
-    color: #888;
+
+    color: #777;
 
     border: none !important;
+
     border-radius: 8px;
 
     display: flex !important;
+
     align-items: center;
     justify-content: center;
 
@@ -492,9 +751,7 @@
 
     z-index: 10;
 
-    transition:
-        color 0.2s ease,
-        background 0.2s ease;
+    box-shadow: none !important;
 }
 
 .password-toggle svg {
@@ -506,8 +763,12 @@
 
 .password-toggle:hover {
     color: #fff;
+
     background: #252525 !important;
+
     opacity: 1;
+
+    transform: translateY(-50%);
 }
 
 .password-toggle:focus {
@@ -516,9 +777,206 @@
 
 .password-toggle:focus-visible {
     outline: 2px solid #777;
+
     outline-offset: 2px;
 }
-    </style>
+
+
+/* =====================================================
+   HIDDEN
+===================================================== */
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 950px) {
+
+    .add-client-form {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+    .add-client-form > button {
+        width: 100%;
+    }
+
+    .photos-grid {
+        grid-template-columns:
+            repeat(3, 1fr);
+    }
+
+    .actions {
+        max-width: 450px;
+    }
+
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 650px) {
+
+    header {
+        position: relative;
+
+        padding: 18px 5%;
+
+        align-items: center;
+    }
+
+    header h1 {
+        font-size: 15px;
+    }
+
+    header h1::after {
+        display: none;
+    }
+
+    header .secondary {
+        min-height: 38px;
+
+        padding: 8px 13px;
+
+        font-size: 9px;
+    }
+
+    main {
+        width: 92%;
+
+        padding:
+            35px 0
+            55px;
+    }
+
+    main > h2 {
+        font-size: 35px;
+
+        line-height: 1.05;
+    }
+
+    .card {
+        padding: 20px;
+
+        border-radius: 14px;
+    }
+
+    .add-client-form {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+    .client {
+        flex-direction: column;
+
+        gap: 18px;
+
+        padding: 22px 0;
+    }
+
+    .client:hover {
+        padding-left: 0;
+    }
+
+    .actions {
+        width: 100%;
+
+        justify-content: flex-start;
+
+        max-width: none;
+    }
+
+    .actions button,
+    .actions a {
+        flex: 1;
+
+        min-width: calc(50% - 5px);
+
+        text-align: center;
+    }
+
+    .photos-grid {
+        grid-template-columns:
+            repeat(2, 1fr);
+
+        gap: 9px;
+    }
+
+    .photos-section {
+        margin-top: 20px;
+
+        padding-top: 20px;
+    }
+
+    .lightbox {
+        padding: 10px;
+    }
+
+    .lightbox-close {
+        top: 12px;
+        right: 12px;
+
+        width: 40px;
+        height: 40px;
+    }
+
+}
+
+
+/* =====================================================
+   VERY SMALL PHONES
+===================================================== */
+
+@media (max-width: 400px) {
+
+    main > h2 {
+        font-size: 30px;
+    }
+
+    .actions button,
+    .actions a {
+        min-width: 100%;
+    }
+
+    .photos-grid {
+        gap: 7px;
+    }
+
+    .photo-actions {
+        flex-direction: column;
+    }
+
+}
+
+
+/* =====================================================
+   REDUCED MOTION
+===================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        transition-duration: .01ms !important;
+
+        animation-duration: .01ms !important;
+    }
+
+}
+
+</style>
 
 </head>
 
@@ -531,7 +989,6 @@
     <h1>
         Lisa Michelle Visuals
     </h1>
-
 
     <button
         id="logout"
@@ -558,7 +1015,6 @@
             Add Client
         </h3>
 
-
         <form
             id="add-client-form"
             class="add-client-form"
@@ -571,7 +1027,6 @@
                 required
             >
 
-
             <input
                 type="email"
                 id="client-email"
@@ -579,41 +1034,47 @@
                 required
             >
 
+            <div class="password-wrapper">
 
-     
+                <input
+                    type="password"
+                    id="client-password"
+                    placeholder="Temporary password"
+                    minlength="6"
+                    required
+                >
 
-<div class="password-wrapper">
+                <button
+                    type="button"
+                    id="password-toggle"
+                    class="password-toggle"
+                    aria-label="Show password"
+                >
 
-    <input
-        type="password"
-        id="client-password"
-        placeholder="Temporary password"
-        minlength="6"
-        required
-    >
+                    <svg
+                        id="password-eye"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    >
 
- <button
-    type="button"
-    id="password-toggle"
-    class="password-toggle"
-    aria-label="Show password"
->
-    <svg
-        id="password-eye"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-    >
-        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
-        <circle cx="12" cy="12" r="3"/>
-    </svg>
-</button>
+                        <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
 
-</div>
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="3"
+                        />
+
+                    </svg>
+
+                </button>
+
+            </div>
 
             <button type="submit">
                 CREATE CLIENT
@@ -631,7 +1092,6 @@
         <h3>
             Clients
         </h3>
-
 
         <div id="clients-list">
             Loading clients...
@@ -659,7 +1119,6 @@
         &times;
     </span>
 
-
     <img
         id="lightbox-image"
         src=""
@@ -673,7 +1132,6 @@
 
 
 <script>
-
 
 const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
@@ -692,8 +1150,7 @@ const supabaseClient =
 
 /* =====================================================
    MESSAGE
-   ===================================================== */
-
+===================================================== */
 
 function showMessage(
     text,
@@ -705,10 +1162,8 @@ function showMessage(
             "message"
         );
 
-
     message.className =
         type;
-
 
     message.textContent =
         text;
@@ -717,8 +1172,7 @@ function showMessage(
 
 /* =====================================================
    CHECK LOGIN
-   ===================================================== */
-
+===================================================== */
 
 async function checkUser() {
 
@@ -731,7 +1185,6 @@ async function checkUser() {
             .auth
             .getUser();
 
-
     if (!user) {
 
         window.location.href =
@@ -740,15 +1193,13 @@ async function checkUser() {
         return null;
     }
 
-
     return user;
 }
 
 
 /* =====================================================
    CREATE SLUG
-   ===================================================== */
-
+===================================================== */
 
 function createSlug(name) {
 
@@ -767,43 +1218,35 @@ function createSlug(name) {
 
 /* =====================================================
    CREATE CLIENT
-   ===================================================== */
-
+===================================================== */
 
 async function addClient(event) {
 
     event.preventDefault();
-
 
     const nameInput =
         document.getElementById(
             "client-name"
         );
 
-
     const emailInput =
         document.getElementById(
             "client-email"
         );
-
 
     const passwordInput =
         document.getElementById(
             "client-password"
         );
 
-
     const name =
         nameInput.value.trim();
-
 
     const email =
         emailInput.value.trim();
 
-
     const password =
         passwordInput.value;
-
 
     if (
         !name ||
@@ -819,7 +1262,6 @@ async function addClient(event) {
         return;
     }
 
-
     if (
         password.length < 6
     ) {
@@ -832,11 +1274,9 @@ async function addClient(event) {
         return;
     }
 
-
     showMessage(
         "Creating client account and gallery..."
     );
-
 
     try {
 
@@ -865,7 +1305,6 @@ async function addClient(event) {
                     }
                 );
 
-
         if (error) {
 
             console.error(
@@ -875,7 +1314,6 @@ async function addClient(event) {
 
             throw error;
         }
-
 
         if (
             !data ||
@@ -888,22 +1326,18 @@ async function addClient(event) {
             );
         }
 
-
         nameInput.value = "";
 
         emailInput.value = "";
 
         passwordInput.value = "";
 
-
         showMessage(
             "Client, login account and gallery created successfully.",
             "success"
         );
 
-
         await loadClients();
-
 
     } catch (error) {
 
@@ -911,7 +1345,6 @@ async function addClient(event) {
             "Create client error:",
             error
         );
-
 
         showMessage(
             "Error creating client: " +
@@ -924,8 +1357,7 @@ async function addClient(event) {
 
 /* =====================================================
    UPLOAD PHOTOS
-   ===================================================== */
-
+===================================================== */
 
 async function uploadPhotos(
     galleryId,
@@ -937,13 +1369,11 @@ async function uploadPhotos(
             fileInput.files
         );
 
-
     if (
         files.length === 0
     ) {
         return;
     }
-
 
     showMessage(
         "Uploading " +
@@ -951,9 +1381,7 @@ async function uploadPhotos(
         " photo(s)..."
     );
 
-
     let uploaded = 0;
-
 
     for (
         const file of files
@@ -968,7 +1396,6 @@ async function uploadPhotos(
                     )
                     : "";
 
-
             const baseName =
                 file.name
                     .replace(
@@ -979,7 +1406,6 @@ async function uploadPhotos(
                         /[^a-zA-Z0-9_-]/g,
                         "-"
                     );
-
 
             const uniqueName =
                 Date.now() +
@@ -993,7 +1419,6 @@ async function uploadPhotos(
                 "-" +
                 baseName +
                 extension;
-
 
             const {
                 error:
@@ -1016,13 +1441,11 @@ async function uploadPhotos(
                         }
                     );
 
-
             if (
                 uploadError
             ) {
                 throw uploadError;
             }
-
 
             const {
                 error:
@@ -1045,7 +1468,6 @@ async function uploadPhotos(
                         }
                     ]);
 
-
             if (
                 photoError
             ) {
@@ -1062,9 +1484,7 @@ async function uploadPhotos(
                 throw photoError;
             }
 
-
             uploaded++;
-
 
             showMessage(
                 "Uploaded " +
@@ -1074,7 +1494,6 @@ async function uploadPhotos(
                 " photo(s)..."
             );
 
-
         } catch (error) {
 
             console.error(
@@ -1082,17 +1501,14 @@ async function uploadPhotos(
                 error
             );
 
-
             showMessage(
                 "Upload error: " +
                 error.message,
                 "error"
             );
 
-
             fileInput.value =
                 "";
-
 
             await loadClients();
 
@@ -1100,10 +1516,8 @@ async function uploadPhotos(
         }
     }
 
-
     fileInput.value =
         "";
-
 
     showMessage(
         uploaded +
@@ -1111,15 +1525,13 @@ async function uploadPhotos(
         "success"
     );
 
-
     await loadClients();
 }
 
 
 /* =====================================================
    CREATE GALLERY
-   ===================================================== */
-
+===================================================== */
 
 async function createGallery(
     client
@@ -1129,16 +1541,13 @@ async function createGallery(
         "Creating gallery..."
     );
 
-
     const slug =
         createSlug(
             client.name
         );
 
-
     const accessToken =
         crypto.randomUUID();
-
 
     const {
         data,
@@ -1164,7 +1573,6 @@ async function createGallery(
             .select()
             .single();
 
-
     if (error) {
 
         showMessage(
@@ -1176,12 +1584,10 @@ async function createGallery(
         return;
     }
 
-
     showMessage(
         "Gallery created successfully.",
         "success"
     );
-
 
     await loadClients();
 }
@@ -1189,8 +1595,7 @@ async function createGallery(
 
 /* =====================================================
    COPY GALLERY LINK
-   ===================================================== */
-
+===================================================== */
 
 async function copyGalleryLink(gallery) {
 
@@ -1219,10 +1624,10 @@ async function copyGalleryLink(gallery) {
     }
 }
 
+
 /* =====================================================
    CREATE SIGNED URL
-   ===================================================== */
-
+===================================================== */
 
 async function getSignedUrl(
     filePath
@@ -1242,7 +1647,6 @@ async function getSignedUrl(
                 3600
             );
 
-
     if (
         error ||
         !data
@@ -1256,15 +1660,13 @@ async function getSignedUrl(
         return null;
     }
 
-
     return data.signedUrl;
 }
 
 
 /* =====================================================
    LIGHTBOX
-   ===================================================== */
-
+===================================================== */
 
 function openLightbox(
     url
@@ -1275,16 +1677,13 @@ function openLightbox(
             "lightbox"
         );
 
-
     const image =
         document.getElementById(
             "lightbox-image"
         );
 
-
     image.src =
         url;
-
 
     lightbox.style.display =
         "flex";
@@ -1331,8 +1730,7 @@ document
 
 /* =====================================================
    DELETE PHOTO
-   ===================================================== */
-
+===================================================== */
 
 async function deletePhoto(
     photo
@@ -1340,19 +1738,16 @@ async function deletePhoto(
 
     const confirmed =
         confirm(
-            `Delete "${photo.file_name}"?\n\nThis cannot be undone.`
+            Delete "${photo.file_name}"?\n\nThis cannot be undone.
         );
-
 
     if (!confirmed) {
         return;
     }
 
-
     showMessage(
         "Deleting photo..."
     );
-
 
     try {
 
@@ -1375,11 +1770,9 @@ async function deletePhoto(
                     }
                 );
 
-
         if (error) {
             throw error;
         }
-
 
         if (
             !data ||
@@ -1392,15 +1785,12 @@ async function deletePhoto(
             );
         }
 
-
         showMessage(
             "Photo deleted successfully.",
             "success"
         );
 
-
         await loadClients();
-
 
     } catch (error) {
 
@@ -1408,7 +1798,6 @@ async function deletePhoto(
             "Delete photo error:",
             error
         );
-
 
         showMessage(
             "Error deleting photo: " +
@@ -1421,15 +1810,14 @@ async function deletePhoto(
 
 /* =====================================================
    REPLACE PHOTO
-   ===================================================== */
-
+===================================================== */
 
 async function replacePhoto(photo) {
 
     const confirmed =
         confirm(
-            `Replace "${photo.file_name}"?\n\n` +
-            `The old photo will be permanently replaced.`
+            Replace "${photo.file_name}"?\n\n +
+            The old photo will be permanently replaced.
         );
 
     if (!confirmed) {
@@ -1463,14 +1851,6 @@ async function replacePhoto(photo) {
 
             try {
 
-                /*
-                 * IMPORTANT:
-                 * Use the SAME storage path.
-                 *
-                 * This replaces the existing Storage
-                 * object instead of creating a new path.
-                 */
-
                 const {
                     error: uploadError
                 } =
@@ -1492,13 +1872,6 @@ async function replacePhoto(photo) {
                     throw uploadError;
                 }
 
-
-                /*
-                 * Only update the file name.
-                 *
-                 * file_path stays exactly the same.
-                 */
-
                 const {
                     error: updateError
                 } =
@@ -1516,19 +1889,12 @@ async function replacePhoto(photo) {
                     throw updateError;
                 }
 
-
                 showMessage(
                     "Photo replaced successfully.",
                     "success"
                 );
 
-
-                /*
-                 * Reload clients and photos.
-                 */
-
                 await loadClients();
-
 
             } catch (error) {
 
@@ -1548,10 +1914,10 @@ async function replacePhoto(photo) {
     );
 }
 
+
 /* =====================================================
    DELETE CLIENT
-   ===================================================== */
-
+===================================================== */
 
 async function deleteClient(
     client
@@ -1559,26 +1925,23 @@ async function deleteClient(
 
     const confirmed =
         confirm(
-            `DELETE CLIENT: ${client.name}\n\n` +
-            `This will permanently delete:\n` +
-            `• Client account\n` +
-            `• Login account\n` +
-            `• Gallery\n` +
-            `• All photos\n\n` +
-            `This action cannot be undone.`
+            DELETE CLIENT: ${client.name}\n\n +
+            This will permanently delete:\n +
+            • Client account\n +
+            • Login account\n +
+            • Gallery\n +
+            • All photos\n\n +
+            This action cannot be undone.
         );
-
 
     if (!confirmed) {
         return;
     }
 
-
     const secondConfirm =
         prompt(
-            `Type DELETE to permanently delete ${client.name}:`
+            Type DELETE to permanently delete ${client.name}:
         );
-
 
     if (
         secondConfirm !==
@@ -1592,11 +1955,9 @@ async function deleteClient(
         return;
     }
 
-
     showMessage(
         "Deleting client and all related files..."
     );
-
 
     try {
 
@@ -1619,11 +1980,9 @@ async function deleteClient(
                     }
                 );
 
-
         if (error) {
             throw error;
         }
-
 
         if (
             !data ||
@@ -1636,15 +1995,12 @@ async function deleteClient(
             );
         }
 
-
         showMessage(
             "Client, gallery, photos and login account deleted successfully.",
             "success"
         );
 
-
         await loadClients();
-
 
     } catch (error) {
 
@@ -1652,7 +2008,6 @@ async function deleteClient(
             "Delete client error:",
             error
         );
-
 
         showMessage(
             "Error deleting client: " +
@@ -1665,8 +2020,7 @@ async function deleteClient(
 
 /* =====================================================
    LOAD CLIENTS
-   ===================================================== */
-
+===================================================== */
 
 async function loadClients() {
 
@@ -1675,15 +2029,8 @@ async function loadClients() {
             "clients-list"
         );
 
-
     list.textContent =
         "Loading clients...";
-
-
-    /*
-        Clients
-    */
-
 
     const {
         data: clients,
@@ -1700,7 +2047,6 @@ async function loadClients() {
                 }
             );
 
-
     if (
         clientError
     ) {
@@ -1714,7 +2060,6 @@ async function loadClients() {
         return;
     }
 
-
     if (
         !clients ||
         clients.length === 0
@@ -1726,12 +2071,6 @@ async function loadClients() {
         return;
     }
 
-
-    /*
-        Galleries
-    */
-
-
     const {
         data: galleries,
         error: galleryError
@@ -1739,7 +2078,6 @@ async function loadClients() {
         await supabaseClient
             .from("galleries")
             .select("*");
-
 
     if (
         galleryError
@@ -1754,12 +2092,6 @@ async function loadClients() {
         return;
     }
 
-
-    /*
-        Photos
-    */
-
-
     const {
         data: photos,
         error: photoError
@@ -1767,7 +2099,6 @@ async function loadClients() {
         await supabaseClient
             .from("gallery_photos")
             .select("*");
-
 
     if (
         photoError
@@ -1782,15 +2113,8 @@ async function loadClients() {
         return;
     }
 
-
     list.innerHTML =
         "";
-
-
-    /*
-        CLIENT LOOP
-    */
-
 
     for (
         const client of clients
@@ -1801,64 +2125,47 @@ async function loadClients() {
                 "div"
             );
 
-
         div.className =
             "client";
-
 
         const clientInfo =
             document.createElement(
                 "div"
             );
 
-
         clientInfo.className =
             "client-info";
-
 
         const name =
             document.createElement(
                 "div"
             );
 
-
         name.className =
             "client-name";
 
-
         name.textContent =
             client.name;
-
 
         const email =
             document.createElement(
                 "div"
             );
 
-
         email.className =
             "client-email";
-
 
         email.textContent =
             client.email ||
             "";
 
-
         clientInfo.appendChild(
             name
         );
 
-
         clientInfo.appendChild(
             email
         );
-
-
-        /*
-            Find gallery
-        */
-
 
         const clientGallery =
             galleries.find(
@@ -1871,10 +2178,8 @@ async function loadClients() {
                     ).trim()
             );
 
-
         let clientPhotos =
             [];
-
 
         if (
             clientGallery
@@ -1892,65 +2197,45 @@ async function loadClients() {
                 );
         }
 
-
         const photoInfo =
             document.createElement(
                 "div"
             );
 
-
         photoInfo.className =
             "gallery-count";
-
 
         photoInfo.textContent =
             clientPhotos.length === 1
                 ? "1 photo"
-                : `${clientPhotos.length} photos`;
-
+                : ${clientPhotos.length} photos;
 
         clientInfo.appendChild(
             photoInfo
         );
-
-
-        /*
-            ACTIONS
-        */
-
 
         const actions =
             document.createElement(
                 "div"
             );
 
-
         actions.className =
             "actions";
-
 
         if (
             clientGallery
         ) {
-
-            /*
-                OPEN GALLERY
-            */
-
 
             const openButton =
                 document.createElement(
                     "a"
                 );
 
-
             openButton.className =
                 "button-link";
 
-
             openButton.textContent =
                 "OPEN GALLERY";
-
 
             openButton.href =
                 "gallery.html?gallery=" +
@@ -1962,19 +2247,12 @@ async function loadClients() {
                     clientGallery.access_token
                 );
 
-
             openButton.target =
                 "_blank";
-
 
             actions.appendChild(
                 openButton
             );
-
-
-            /*
-                COPY LINK
-            */
 
 
             const copyButton =
@@ -1982,14 +2260,11 @@ async function loadClients() {
                     "button"
                 );
 
-
             copyButton.className =
                 "copy-button";
 
-
             copyButton.textContent =
                 "COPY LINK";
-
 
             copyButton.addEventListener(
                 "click",
@@ -1999,15 +2274,9 @@ async function loadClients() {
                     )
             );
 
-
             actions.appendChild(
                 copyButton
             );
-
-
-            /*
-                UPLOAD
-            */
 
 
             const uploadButton =
@@ -2015,43 +2284,34 @@ async function loadClients() {
                     "button"
                 );
 
-
             uploadButton.className =
                 "upload-button";
 
-
             uploadButton.textContent =
                 "UPLOAD PHOTOS";
-
 
             const fileInput =
                 document.createElement(
                     "input"
                 );
 
-
             fileInput.type =
                 "file";
-
 
             fileInput.accept =
                 "image/jpeg,image/png,image/webp,image/heic,image/heif";
 
-
             fileInput.multiple =
                 true;
 
-
             fileInput.className =
                 "hidden";
-
 
             uploadButton.addEventListener(
                 "click",
                 () =>
                     fileInput.click()
             );
-
 
             fileInput.addEventListener(
                 "change",
@@ -2062,11 +2322,9 @@ async function loadClients() {
                     )
             );
 
-
             actions.appendChild(
                 uploadButton
             );
-
 
             actions.appendChild(
                 fileInput
@@ -2074,20 +2332,13 @@ async function loadClients() {
 
         } else {
 
-            /*
-                CREATE GALLERY
-            */
-
-
             const createButton =
                 document.createElement(
                     "button"
                 );
 
-
             createButton.textContent =
                 "CREATE GALLERY";
-
 
             createButton.addEventListener(
                 "click",
@@ -2097,16 +2348,10 @@ async function loadClients() {
                     )
             );
 
-
             actions.appendChild(
                 createButton
             );
         }
-
-
-        /*
-            DELETE CLIENT
-        */
 
 
         const deleteClientButton =
@@ -2114,14 +2359,11 @@ async function loadClients() {
                 "button"
             );
 
-
         deleteClientButton.className =
             "danger";
 
-
         deleteClientButton.textContent =
             "DELETE CLIENT";
-
 
         deleteClientButton.addEventListener(
             "click",
@@ -2131,30 +2373,21 @@ async function loadClients() {
                 )
         );
 
-
         actions.appendChild(
             deleteClientButton
         );
-
 
         div.appendChild(
             clientInfo
         );
 
-
         div.appendChild(
             actions
         );
 
-
         list.appendChild(
             div
         );
-
-
-        /*
-            PHOTOS SECTION
-        */
 
 
         if (
@@ -2167,39 +2400,31 @@ async function loadClients() {
                     "div"
                 );
 
-
             photosSection.className =
                 "photos-section";
-
 
             const photosTitle =
                 document.createElement(
                     "div"
                 );
 
-
             photosTitle.className =
                 "photos-title";
-
 
             photosTitle.textContent =
                 "Gallery Photos";
 
-
             photosSection.appendChild(
                 photosTitle
             );
-
 
             const photosGrid =
                 document.createElement(
                     "div"
                 );
 
-
             photosGrid.className =
                 "photos-grid";
-
 
             for (
                 const photo of clientPhotos
@@ -2210,31 +2435,25 @@ async function loadClients() {
                         "div"
                     );
 
-
                 photoCard.className =
                     "photo-card";
-
 
                 const image =
                     document.createElement(
                         "img"
                     );
 
-
                 image.alt =
                     photo.file_name ||
                     "Client photo";
 
-
                 image.src =
                     "";
-
 
                 const signedUrl =
                     await getSignedUrl(
                         photo.file_path
                     );
-
 
                 if (
                     signedUrl
@@ -2242,7 +2461,6 @@ async function loadClients() {
 
                     image.src =
                         signedUrl;
-
 
                     image.addEventListener(
                         "click",
@@ -2261,15 +2479,9 @@ async function loadClients() {
                         ".3";
                 }
 
-
                 photoCard.appendChild(
                     image
                 );
-
-
-                /*
-                    PHOTO ACTIONS
-                */
 
 
                 const photoActions =
@@ -2277,14 +2489,8 @@ async function loadClients() {
                         "div"
                     );
 
-
                 photoActions.className =
                     "photo-actions";
-
-
-                /*
-                    REPLACE
-                */
 
 
                 const replaceButton =
@@ -2292,14 +2498,11 @@ async function loadClients() {
                         "button"
                     );
 
-
                 replaceButton.className =
                     "replace-button";
 
-
                 replaceButton.textContent =
                     "REPLACE";
-
 
                 replaceButton.addEventListener(
                     "click",
@@ -2310,24 +2513,16 @@ async function loadClients() {
                 );
 
 
-                /*
-                    DELETE
-                */
-
-
                 const deleteButton =
                     document.createElement(
                         "button"
                     );
 
-
                 deleteButton.className =
                     "danger";
 
-
                 deleteButton.textContent =
                     "DELETE";
-
 
                 deleteButton.addEventListener(
                     "click",
@@ -2337,32 +2532,26 @@ async function loadClients() {
                         )
                 );
 
-
                 photoActions.appendChild(
                     replaceButton
                 );
-
 
                 photoActions.appendChild(
                     deleteButton
                 );
 
-
                 photoCard.appendChild(
                     photoActions
                 );
-
 
                 photosGrid.appendChild(
                     photoCard
                 );
             }
 
-
             photosSection.appendChild(
                 photosGrid
             );
-
 
             list.appendChild(
                 photosSection
@@ -2374,8 +2563,7 @@ async function loadClients() {
 
 /* =====================================================
    ADD CLIENT FORM
-   ===================================================== */
-
+===================================================== */
 
 document
     .getElementById(
@@ -2389,8 +2577,7 @@ document
 
 /* =====================================================
    LOGOUT
-   ===================================================== */
-
+===================================================== */
 
 document
     .getElementById(
@@ -2404,7 +2591,6 @@ document
                 .auth
                 .signOut();
 
-
             window.location.href =
                 "admin.html";
         }
@@ -2413,14 +2599,12 @@ document
 
 /* =====================================================
    START
-   ===================================================== */
-
+===================================================== */
 
 (async function() {
 
     const user =
         await checkUser();
-
 
     if (user) {
 
@@ -2429,64 +2613,66 @@ document
 
 })();
 
+
+/* =====================================================
+   PASSWORD TOGGLE
+===================================================== */
+
 const passwordInput =
-    document.getElementById("client-password");
-
-const passwordToggle =
-    document.getElementById("password-toggle");
-
-const passwordEye =
-    document.getElementById("password-eye");
-
-passwordToggle.addEventListener("click", function () {
-
-    const isHidden =
-        passwordInput.type === "password";
-
-    passwordInput.type =
-        isHidden ? "text" : "password";
-
-    passwordToggle.setAttribute(
-        "aria-label",
-        isHidden
-            ? "Hide password"
-            : "Show password"
+    document.getElementById(
+        "client-password"
     );
 
-    if (isHidden) {
+const passwordToggle =
+    document.getElementById(
+        "password-toggle"
+    );
 
-        passwordEye.innerHTML = `
-            <path
-                d="M3 3l18 18"
-            />
-            <path
-                d="M10.6 10.6a2 2 0 0 0 2.8 2.8"
-            />
-            <path
-                d="M9.9 4.2A10.8 10.8 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-3.2 4.4"
-            />
-            <path
-                d="M6.6 6.6C3.7 8.6 2 12 2 12s3 7 10 7c1.7 0 3.2-.4 4.5-1"
-            />
-        `;
+const passwordEye =
+    document.getElementById(
+        "password-eye"
+    );
 
-    } else {
+passwordToggle.addEventListener(
+    "click",
+    function () {
 
-        passwordEye.innerHTML = `
-            <path
-                d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"
-            />
-            <circle
-                cx="12"
-                cy="12"
-                r="3"
-            />
-        `;
+        const isHidden =
+            passwordInput.type === "password";
+
+        passwordInput.type =
+            isHidden
+                ? "text"
+                : "password";
+
+        passwordToggle.setAttribute(
+            "aria-label",
+            isHidden
+                ? "Hide password"
+                : "Show password"
+        );
+
+        if (isHidden) {
+
+            passwordEye.innerHTML = `
+                <path d="M3 3l18 18"/>
+                <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/>
+                <path d="M9.9 4.2A10.8 10.8 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-3.2 4.4"/>
+                <path d="M6.6 6.6C3.7 8.6 2 12 2 12s3 7 10 7c1.7 0 3.2-.4 4.5-1"/>
+            `;
+
+        } else {
+
+            passwordEye.innerHTML = `
+                <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/>
+                <circle cx="12" cy="12" r="3"/>
+            `;
+        }
+
     }
+);
 
-});
 </script>
 
 </body>
-
 </html>
