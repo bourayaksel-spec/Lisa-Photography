@@ -516,13 +516,26 @@
             >
 
 
-            <input
-                type="password"
-                id="client-password"
-                placeholder="Temporary password"
-                minlength="6"
-                required
-            >
+            <div class="password-wrapper">
+
+    <input
+        type="password"
+        id="client-password"
+        placeholder="Temporary password"
+        minlength="6"
+        required
+    >
+
+    <button
+        type="button"
+        id="toggle-password"
+        class="password-toggle"
+        aria-label="Show password"
+    >
+        👁️
+    </button>
+
+</div>
 
 
             <button type="submit">
