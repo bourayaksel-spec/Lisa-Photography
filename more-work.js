@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
-       SUPABASE
+       SUPABASE CONFIG
     ========================================================= */
 
     const SUPABASE_URL =
@@ -71,9 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     let currentImage = 0;
-
-    let currentFilter = "all";
-
     let touchStartX = 0;
 
 
@@ -81,14 +78,14 @@ document.addEventListener("DOMContentLoaded", function () {
        PUBLIC IMAGE URL
     ========================================================= */
 
-    function getPublicImageUrl(filePath) {
+    function getPublicImageUrl(path) {
 
         return (
             SUPABASE_URL +
             "/storage/v1/object/public/" +
             BUCKET_NAME +
             "/" +
-            filePath
+            path
         );
 
     }
@@ -131,28 +128,29 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       LOAD FILES FROM ONE FOLDER
+       LOAD ONE FOLDER
     ========================================================= */
 
     async function loadFolder(category) {
 
-        const response = await fetch(
-
+        const url =
             SUPABASE_URL +
             "/storage/v1/object/list/" +
-            BUCKET_NAME,
+            BUCKET_NAME;
 
-            {
+
+        const response =
+            await fetch(url, {
 
                 method: "POST",
 
                 headers: {
 
-                    "Authorization":
-                        "Bearer " +
+                    "apikey":
                         SUPABASE_PUBLISHABLE_KEY,
 
-                    "apikey":
+                    "Authorization":
+                        "Bearer " +
                         SUPABASE_PUBLISHABLE_KEY,
 
                     "Content-Type":
@@ -169,25 +167,28 @@ document.addEventListener("DOMContentLoaded", function () {
                     offset: 0,
 
                     sortBy: {
-
                         column: "name",
-
                         order: "asc"
-
                     }
 
                 })
 
-            }
-
-        );
+            });
 
 
         if (!response.ok) {
 
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Supabase error:",
+                category,
+                errorText
+            );
+
             throw new Error(
-                "Unable to load folder: " +
-                category
+                "Could not load " + category
             );
 
         }
@@ -197,13 +198,31 @@ document.addEventListener("DOMContentLoaded", function () {
             await response.json();
 
 
+        console.log(
+            "Supabase folder:",
+            category,
+            files
+        );
+
+
         return files
             .filter(function (file) {
 
                 return (
                     file &&
-                    file.name &&
-                    file.metadata
+                    file.name
+                );
+
+            })
+            .filter(function (file) {
+
+                /*
+                   Ignore subfolders.
+                   We only want actual image files.
+                */
+
+                return (
+                    !file.name.endsWith("/")
                 );
 
             })
@@ -257,18 +276,34 @@ document.addEventListener("DOMContentLoaded", function () {
         image.loading =
             "lazy";
 
-
         image.decoding =
             "async";
-
 
         image.draggable =
             false;
 
 
         /*
-           Protect image from
-           right-click
+           If image fails
+        */
+
+        image.addEventListener(
+            "error",
+            function () {
+
+                console.error(
+                    "Image failed:",
+                    image.src
+                );
+
+                item.remove();
+
+            }
+        );
+
+
+        /*
+           Protect image
         */
 
         image.addEventListener(
@@ -292,10 +327,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 const visibleImages =
                     getVisibleGalleryImages();
 
-
                 const index =
                     visibleImages.indexOf(image);
-
 
                 if (index !== -1) {
 
@@ -339,7 +372,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /*
-               Load every category
+               Load all categories
             */
 
             for (
@@ -349,10 +382,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 try {
 
                     const files =
-                        await loadFolder(
-                            category
-                        );
-
+                        await loadFolder(category);
 
                     allFiles =
                         allFiles.concat(files);
@@ -362,7 +392,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 catch (error) {
 
                     console.warn(
-                        "Could not load:",
+                        "Skipping folder:",
                         category,
                         error
                     );
@@ -371,10 +401,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-
-            /*
-               Hide loading
-            */
 
             loadingMessage.style.display =
                 "none";
@@ -397,7 +423,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /*
-               Create images
+               Create gallery
             */
 
             allFiles.forEach(
@@ -409,6 +435,11 @@ document.addEventListener("DOMContentLoaded", function () {
             );
 
 
+            console.log(
+                "TOTAL PORTFOLIO IMAGES:",
+                allFiles.length
+            );
+
         }
 
         catch (error) {
@@ -417,7 +448,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Portfolio error:",
                 error
             );
-
 
             loadingMessage.style.display =
                 "none";
@@ -481,9 +511,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (index < 0) {
-
             index = 0;
-
         }
 
 
@@ -508,14 +536,12 @@ document.addEventListener("DOMContentLoaded", function () {
         lightboxImage.src =
             image.src;
 
-
         lightboxImage.alt =
             image.alt;
 
 
         lightbox.style.display =
             "flex";
-
 
         lightbox.setAttribute(
             "aria-hidden",
@@ -550,7 +576,9 @@ document.addEventListener("DOMContentLoaded", function () {
         if (lightboxCounter) {
 
             lightboxCounter.textContent =
-                `${currentImage + 1} / ${visibleImages.length}`;
+                (currentImage + 1) +
+                " / " +
+                visibleImages.length;
 
         }
 
@@ -617,13 +645,13 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function () {
 
-                const visibleImages =
+                const images =
                     getVisibleGalleryImages();
 
 
                 if (
                     currentImage <
-                    visibleImages.length - 1
+                    images.length - 1
                 ) {
 
                     showGalleryImage(
@@ -668,20 +696,24 @@ document.addEventListener("DOMContentLoaded", function () {
        CLICK OUTSIDE
     ========================================================= */
 
-    lightbox.addEventListener(
-        "click",
-        function (event) {
+    if (lightbox) {
 
-            if (
-                event.target === lightbox
-            ) {
+        lightbox.addEventListener(
+            "click",
+            function (event) {
 
-                closeLightbox();
+                if (
+                    event.target === lightbox
+                ) {
+
+                    closeLightbox();
+
+                }
 
             }
+        );
 
-        }
-    );
+    }
 
 
     /* =========================================================
@@ -693,6 +725,7 @@ document.addEventListener("DOMContentLoaded", function () {
         function (event) {
 
             if (
+                !lightbox ||
                 lightbox.style.display !==
                 "flex"
             ) {
@@ -711,27 +744,23 @@ document.addEventListener("DOMContentLoaded", function () {
             }
 
 
-            if (
+            else if (
                 event.key === "ArrowRight"
             ) {
 
                 if (nextButton) {
-
                     nextButton.click();
-
                 }
 
             }
 
 
-            if (
+            else if (
                 event.key === "ArrowLeft"
             ) {
 
                 if (previousButton) {
-
                     previousButton.click();
-
                 }
 
             }
@@ -744,45 +773,55 @@ document.addEventListener("DOMContentLoaded", function () {
        MOBILE SWIPE
     ========================================================= */
 
-    lightboxImage.addEventListener(
-        "touchstart",
-        function (event) {
+    if (lightboxImage) {
 
-            touchStartX =
-                event.changedTouches[0].screenX;
+        lightboxImage.addEventListener(
+            "touchstart",
+            function (event) {
 
-        }
-    );
-
-
-    lightboxImage.addEventListener(
-        "touchend",
-        function (event) {
-
-            const touchEndX =
-                event.changedTouches[0].screenX;
-
-
-            const distance =
-                touchEndX -
-                touchStartX;
-
-
-            if (distance < -50) {
-
-                nextButton.click();
+                touchStartX =
+                    event.changedTouches[0].screenX;
 
             }
+        );
 
 
-            else if (distance > 50) {
+        lightboxImage.addEventListener(
+            "touchend",
+            function (event) {
 
-                previousButton.click();
+                const touchEndX =
+                    event.changedTouches[0].screenX;
+
+
+                const distance =
+                    touchEndX -
+                    touchStartX;
+
+
+                if (
+                    distance < -50 &&
+                    nextButton
+                ) {
+
+                    nextButton.click();
+
+                }
+
+
+                else if (
+                    distance > 50 &&
+                    previousButton
+                ) {
+
+                    previousButton.click();
+
+                }
 
             }
+        );
 
-        }
-    );
+    }
 
 
     /* =========================================================
@@ -796,7 +835,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 "click",
                 function () {
 
-                    currentFilter =
+                    const filter =
                         button.dataset.filter;
 
 
@@ -833,10 +872,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                             if (
-                                currentFilter ===
-                                "all" ||
-                                category ===
-                                currentFilter
+                                filter === "all" ||
+                                category === filter
                             ) {
 
                                 item.classList.remove(
@@ -862,15 +899,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     closeLightbox();
 
 
-                    /*
-                       Show empty message
-                       when filter has no images
-                    */
+                    if (emptyMessage) {
 
-                    emptyMessage.style.display =
-                        visibleCount === 0
-                            ? "block"
-                            : "none";
+                        emptyMessage.style.display =
+                            visibleCount === 0
+                                ? "block"
+                                : "none";
+
+                    }
 
                 }
             );
