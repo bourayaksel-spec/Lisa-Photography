@@ -4,7 +4,6 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Lisa Michelle Visuals — Dashboard</title>
@@ -25,14 +24,23 @@ html {
 
 body {
     margin: 0;
+    min-height: 100vh;
+
     background:
         radial-gradient(
-            circle at top right,
-            rgba(255,255,255,.045),
-            transparent 35%
+            circle at 85% 5%,
+            rgba(255,255,255,.07),
+            transparent 28%
         ),
-        #0b0b0b;
+        radial-gradient(
+            circle at 10% 30%,
+            rgba(255,255,255,.025),
+            transparent 30%
+        ),
+        #090909;
+
     color: #fff;
+
     font-family:
         Inter,
         -apple-system,
@@ -40,7 +48,6 @@ body {
         "Segoe UI",
         Arial,
         sans-serif;
-    min-height: 100vh;
 }
 
 
@@ -53,38 +60,73 @@ header {
     top: 0;
     z-index: 1000;
 
-    padding: 20px 5%;
-
-    background: rgba(11,11,11,.88);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
-
-    border-bottom: 1px solid rgba(255,255,255,.08);
+    min-height: 76px;
+    padding: 16px 5%;
 
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
 
     gap: 20px;
+
+    background: rgba(9,9,9,.82);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    border-bottom: 1px solid rgba(255,255,255,.08);
 }
 
-header h1 {
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.brand-mark {
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 50%;
+
+    font-family: Georgia, serif;
+    font-size: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.1),
+            rgba(255,255,255,.025)
+        );
+}
+
+.brand-text h1 {
     margin: 0;
 
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: .08em;
+    font-family: Georgia, "Times New Roman", serif;
 
-    text-transform: uppercase;
+    font-size: 18px;
+    font-weight: 400;
+
+    letter-spacing: .04em;
 }
 
-header h1::after {
-    content: " • GALLERY MANAGEMENT";
+.brand-text span {
+    display: block;
+
+    margin-top: 3px;
 
     color: #777;
-    font-size: 10px;
-    letter-spacing: .16em;
-    margin-left: 10px;
+
+    font-size: 9px;
+    letter-spacing: .2em;
+
+    text-transform: uppercase;
 }
 
 
@@ -94,40 +136,31 @@ header h1::after {
 
 main {
     width: 90%;
-    max-width: 1200px;
+    max-width: 1280px;
 
     margin: 0 auto;
-    padding: 55px 0 80px;
+
+    padding: 55px 0 90px;
 }
 
-main > h2 {
-    margin: 0 0 10px;
-
-    font-family:
-        Georgia,
-        "Times New Roman",
-        serif;
-
-    font-size: clamp(34px, 5vw, 52px);
-    font-weight: 400;
-
-    letter-spacing: -.03em;
-}
-
-main > h2::after {
-    content: "";
-    display: block;
-
-    width: 55px;
-    height: 2px;
-
-    background: #fff;
-
-    margin-top: 20px;
+.hero {
     margin-bottom: 35px;
 }
 
-h3 {
+.eyebrow {
+    margin: 0 0 12px;
+
+    color: #777;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: .22em;
+
+    text-transform: uppercase;
+}
+
+main > .hero h2 {
     margin: 0;
 
     font-family:
@@ -135,8 +168,114 @@ h3 {
         "Times New Roman",
         serif;
 
-    font-size: 25px;
+    font-size: clamp(38px, 6vw, 64px);
+
     font-weight: 400;
+
+    letter-spacing: -.04em;
+
+    line-height: 1;
+}
+
+.hero-line {
+    width: 65px;
+    height: 2px;
+
+    margin-top: 22px;
+
+    background: #fff;
+}
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 15px;
+
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    position: relative;
+
+    padding: 24px;
+
+    min-height: 125px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255,255,255,.09);
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.055),
+            rgba(255,255,255,.015)
+        );
+
+    box-shadow:
+        0 20px 60px rgba(0,0,0,.2);
+
+    transition:
+        transform .25s ease,
+        border-color .25s ease;
+}
+
+.stat-card::after {
+    content: "";
+
+    position: absolute;
+
+    right: -30px;
+    bottom: -45px;
+
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(255,255,255,.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+
+    border-color: rgba(255,255,255,.18);
+}
+
+.stat-label {
+    color: #777;
+
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: .16em;
+
+    text-transform: uppercase;
+}
+
+.stat-number {
+    margin-top: 14px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 40px;
+
+    font-weight: 400;
+
+    line-height: 1;
 }
 
 
@@ -147,25 +286,28 @@ h3 {
 .card {
     position: relative;
 
-    background:
-        linear-gradient(
-            145deg,
-            rgba(255,255,255,.045),
-            rgba(255,255,255,.015)
-        );
+    padding: 30px;
+
+    margin-bottom: 25px;
+
+    overflow: hidden;
 
     border: 1px solid rgba(255,255,255,.09);
 
     border-radius: 18px;
 
-    padding: 30px;
-
-    margin-bottom: 25px;
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.012)
+        );
 
     box-shadow:
-        0 20px 60px rgba(0,0,0,.25);
+        0 20px 70px rgba(0,0,0,.24);
 
-    overflow: hidden;
+    transition:
+        border-color .25s ease;
 }
 
 .card::before {
@@ -174,9 +316,9 @@ h3 {
     position: absolute;
 
     top: 0;
-    left: 0;
+    left: 8%;
 
-    width: 100%;
+    width: 84%;
     height: 1px;
 
     background:
@@ -190,6 +332,37 @@ h3 {
 
 .card:hover {
     border-color: rgba(255,255,255,.14);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 5px;
+}
+
+h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 26px;
+    font-weight: 400;
+}
+
+.section-label {
+    color: #666;
+
+    font-size: 9px;
+    letter-spacing: .18em;
+
+    text-transform: uppercase;
 }
 
 
@@ -216,17 +389,17 @@ h3 {
 
     padding: 15px 16px;
 
+    color: #fff;
+
+    background: rgba(0,0,0,.42);
+
     border: 1px solid rgba(255,255,255,.1);
 
     border-radius: 10px;
 
-    background: rgba(0,0,0,.45);
-
-    color: white;
+    outline: none;
 
     font-size: 14px;
-
-    outline: none;
 
     transition:
         border-color .2s ease,
@@ -235,16 +408,73 @@ h3 {
 }
 
 .add-client-form input::placeholder {
-    color: #666;
+    color: #5f5f5f;
 }
 
 .add-client-form input:focus {
-    border-color: rgba(255,255,255,.4);
-
     background: rgba(255,255,255,.035);
 
+    border-color: rgba(255,255,255,.35);
+
     box-shadow:
-        0 0 0 3px rgba(255,255,255,.04);
+        0 0 0 3px rgba(255,255,255,.035);
+}
+
+
+/* =====================================================
+   PASSWORD
+===================================================== */
+
+.password-wrapper {
+    position: relative;
+
+    width: 100%;
+}
+
+.password-wrapper input {
+    padding-right: 52px;
+}
+
+.password-toggle {
+    position: absolute !important;
+
+    right: 5px;
+    top: 50%;
+
+    width: 40px !important;
+    height: 40px !important;
+
+    min-height: 40px !important;
+
+    padding: 0 !important;
+    margin: 0;
+
+    transform: translateY(-50%);
+
+    color: #777;
+
+    background: transparent !important;
+
+    border: none !important;
+
+    border-radius: 8px;
+
+    box-shadow: none !important;
+
+    z-index: 10;
+}
+
+.password-toggle:hover {
+    color: #fff;
+
+    background: #252525 !important;
+
+    transform: translateY(-50%);
+}
+
+.password-toggle svg {
+    width: 20px;
+    height: 20px;
 }
 
 
@@ -258,24 +488,27 @@ button,
 
     padding: 12px 18px;
 
-    background: #f5f5f5;
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
     color: #090909;
 
+    background: #f3f3f3;
+
     border: 1px solid transparent;
+
     border-radius: 9px;
 
     cursor: pointer;
 
-    font-size: 11px;
-    font-weight: 700;
-
-    letter-spacing: .07em;
-
     text-decoration: none;
 
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: .1em;
 
     transition:
         transform .2s ease,
@@ -291,9 +524,7 @@ button:hover,
     transform: translateY(-2px);
 
     box-shadow:
-        0 8px 25px rgba(0,0,0,.3);
-
-    opacity: 1;
+        0 10px 30px rgba(0,0,0,.3);
 }
 
 button:active,
@@ -307,22 +538,27 @@ button:active,
 ===================================================== */
 
 .secondary {
-    background: transparent;
     color: #ddd;
 
-    border: 1px solid rgba(255,255,255,.16);
+    background: transparent;
+
+    border-color: rgba(255,255,255,.16);
 }
 
 .secondary:hover {
+    color: #fff;
+
     background: rgba(255,255,255,.07);
+
     border-color: rgba(255,255,255,.3);
 }
 
 .danger {
-    background: #401919;
-    color: #ffb5b5;
+    color: #ffb7b7;
 
-    border-color: rgba(255,90,90,.16);
+    background: rgba(75,20,20,.75);
+
+    border-color: rgba(255,90,90,.18);
 }
 
 .danger:hover {
@@ -330,10 +566,11 @@ button:active,
 }
 
 .replace-button {
-    background: #252525;
     color: #ddd;
 
-    border: 1px solid #3d3d3d;
+    background: #242424;
+
+    border-color: #3b3b3b;
 }
 
 .replace-button:hover {
@@ -341,8 +578,9 @@ button:active,
 }
 
 .upload-button {
-    background: #dedede;
     color: #111;
+
+    background: #dedede;
 }
 
 .upload-button:hover {
@@ -350,10 +588,11 @@ button:active,
 }
 
 .copy-button {
-    background: transparent;
     color: #ddd;
 
-    border: 1px solid rgba(255,255,255,.16);
+    background: transparent;
+
+    border-color: rgba(255,255,255,.16);
 }
 
 .copy-button:hover {
@@ -366,19 +605,19 @@ button:active,
 ===================================================== */
 
 .client {
-    padding: 27px 0;
-
-    border-bottom: 1px solid rgba(255,255,255,.08);
-
     display: flex;
 
-    justify-content: space-between;
     align-items: flex-start;
+    justify-content: space-between;
 
     gap: 25px;
 
+    padding: 28px 0;
+
+    border-bottom: 1px solid rgba(255,255,255,.075);
+
     transition:
-        padding .2s ease;
+        padding .25s ease;
 }
 
 .client:last-child {
@@ -386,23 +625,24 @@ button:active,
 }
 
 .client:hover {
-    padding-left: 8px;
+    padding-left: 7px;
 }
 
 .client-info {
     flex: 1;
+
     min-width: 0;
 }
 
 .client-name {
+    margin-bottom: 6px;
+
     font-family:
         Georgia,
         "Times New Roman",
         serif;
 
-    font-size: 23px;
-
-    margin-bottom: 6px;
+    font-size: 24px;
 
     letter-spacing: -.01em;
 }
@@ -422,17 +662,17 @@ button:active,
 
     padding: 6px 10px;
 
-    border-radius: 20px;
+    color: #aaa;
 
-    background: rgba(255,255,255,.055);
+    background: rgba(255,255,255,.045);
 
     border: 1px solid rgba(255,255,255,.07);
 
-    color: #aaa;
+    border-radius: 20px;
 
-    font-size: 11px;
+    font-size: 10px;
 
-    letter-spacing: .04em;
+    letter-spacing: .06em;
 }
 
 
@@ -443,67 +683,18 @@ button:active,
 .actions {
     display: flex;
 
-    gap: 8px;
-
     flex-wrap: wrap;
 
     justify-content: flex-end;
 
-    max-width: 600px;
+    gap: 8px;
+
+    max-width: 620px;
 }
 
 .actions button,
 .actions a {
     white-space: nowrap;
-}
-
-
-/* =====================================================
-   MESSAGE
-===================================================== */
-
-#message {
-    position: fixed;
-
-    left: 50%;
-    bottom: 25px;
-
-    transform: translateX(-50%);
-
-    z-index: 5000;
-
-    margin: 0;
-
-    padding: 12px 20px;
-
-    max-width: calc(100% - 30px);
-
-    border-radius: 10px;
-
-    background: rgba(20,20,20,.94);
-
-    border: 1px solid rgba(255,255,255,.12);
-
-    color: #aaa;
-
-    line-height: 1.5;
-
-    font-size: 13px;
-
-    box-shadow:
-        0 15px 40px rgba(0,0,0,.4);
-
-    backdrop-filter: blur(15px);
-}
-
-.error {
-    color: #ff8d8d !important;
-    border-color: rgba(255,90,90,.25) !important;
-}
-
-.success {
-    color: #9cffaa !important;
-    border-color: rgba(100,255,130,.2) !important;
 }
 
 
@@ -520,15 +711,16 @@ button:active,
 }
 
 .photos-title {
-    color: #888;
+    margin-bottom: 16px;
 
-    font-size: 11px;
+    color: #777;
 
-    letter-spacing: .14em;
+    font-size: 10px;
+    font-weight: 600;
+
+    letter-spacing: .16em;
 
     text-transform: uppercase;
-
-    margin-bottom: 16px;
 }
 
 .photos-grid {
@@ -541,15 +733,13 @@ button:active,
 }
 
 .photo-card {
-    position: relative;
+    overflow: hidden;
 
     background: #101010;
 
     border: 1px solid rgba(255,255,255,.08);
 
-    border-radius: 10px;
-
-    overflow: hidden;
+    border-radius: 11px;
 
     transition:
         transform .25s ease,
@@ -563,17 +753,17 @@ button:active,
     border-color: rgba(255,255,255,.2);
 
     box-shadow:
-        0 15px 35px rgba(0,0,0,.35);
+        0 18px 40px rgba(0,0,0,.4);
 }
 
 .photo-card img {
+    display: block;
+
     width: 100%;
 
     aspect-ratio: 1 / 1;
 
     object-fit: cover;
-
-    display: block;
 
     cursor: zoom-in;
 
@@ -583,13 +773,8 @@ button:active,
 }
 
 .photo-card:hover img {
-    transform: scale(1.035);
+    transform: scale(1.04);
 }
-
-
-/* =====================================================
-   PHOTO ACTIONS
-===================================================== */
 
 .photo-actions {
     display: flex;
@@ -601,8 +786,8 @@ button:active,
     background:
         linear-gradient(
             180deg,
-            rgba(20,20,20,.95),
-            rgba(10,10,10,1)
+            rgba(22,22,22,.98),
+            rgba(9,9,9,1)
         );
 }
 
@@ -620,6 +805,58 @@ button:active,
 
 
 /* =====================================================
+   MESSAGE
+===================================================== */
+
+#message {
+    position: fixed;
+
+    left: 50%;
+    bottom: 25px;
+
+    z-index: 5000;
+
+    width: max-content;
+
+    max-width: calc(100% - 30px);
+
+    margin: 0;
+    padding: 13px 20px;
+
+    transform: translateX(-50%);
+
+    color: #aaa;
+
+    background: rgba(18,18,18,.95);
+
+    border: 1px solid rgba(255,255,255,.12);
+
+    border-radius: 11px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    box-shadow:
+        0 15px 45px rgba(0,0,0,.45);
+
+    backdrop-filter: blur(16px);
+}
+
+.error {
+    color: #ff8d8d !important;
+
+    border-color: rgba(255,90,90,.25) !important;
+}
+
+.success {
+    color: #9cffaa !important;
+
+    border-color: rgba(100,255,130,.2) !important;
+}
+
+
+/* =====================================================
    LIGHTBOX
 ===================================================== */
 
@@ -630,16 +867,14 @@ button:active,
 
     inset: 0;
 
-    background:
-        rgba(0,0,0,.96);
-
     z-index: 9999;
 
     align-items: center;
-
     justify-content: center;
 
     padding: 25px;
+
+    background: rgba(0,0,0,.97);
 
     animation: fadeIn .2s ease;
 }
@@ -666,14 +901,15 @@ button:active,
     height: 45px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
-    border-radius: 50%;
+    color: #fff;
 
     background: rgba(255,255,255,.08);
 
-    color: white;
+    border-radius: 50%;
 
     font-size: 32px;
 
@@ -702,88 +938,7 @@ button:active,
 
 
 /* =====================================================
-   PASSWORD
-===================================================== */
-
-.password-wrapper {
-    position: relative;
-
-    width: 100%;
-}
-
-.password-wrapper input {
-    width: 100%;
-
-    padding-right: 52px;
-}
-
-.password-toggle {
-    position: absolute !important;
-
-    right: 5px;
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    width: 40px !important;
-    height: 40px;
-
-    min-height: 40px;
-
-    padding: 0 !important;
-
-    margin: 0;
-
-    background: transparent !important;
-
-    color: #777;
-
-    border: none !important;
-
-    border-radius: 8px;
-
-    display: flex !important;
-
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    z-index: 10;
-
-    box-shadow: none !important;
-}
-
-.password-toggle svg {
-    width: 20px;
-    height: 20px;
-
-    pointer-events: none;
-}
-
-.password-toggle:hover {
-    color: #fff;
-
-    background: #252525 !important;
-
-    opacity: 1;
-
-    transform: translateY(-50%);
-}
-
-.password-toggle:focus {
-    outline: none;
-}
-
-.password-toggle:focus-visible {
-    outline: 2px solid #777;
-
-    outline-offset: 2px;
-}
-
-
-/* =====================================================
-   HIDDEN
+   UTILITY
 ===================================================== */
 
 .hidden {
@@ -828,16 +983,23 @@ button:active,
     header {
         position: relative;
 
-        padding: 18px 5%;
+        min-height: 68px;
 
-        align-items: center;
+        padding: 14px 5%;
     }
 
-    header h1 {
+    .brand-mark {
+        width: 36px;
+        height: 36px;
+
+        font-size: 16px;
+    }
+
+    .brand-text h1 {
         font-size: 15px;
     }
 
-    header h1::after {
+    .brand-text span {
         display: none;
     }
 
@@ -853,20 +1015,49 @@ button:active,
         width: 92%;
 
         padding:
-            35px 0
-            55px;
+            38px 0
+            60px;
     }
 
-    main > h2 {
-        font-size: 35px;
+    main > .hero h2 {
+        font-size: 38px;
 
-        line-height: 1.05;
+        line-height: 1.04;
+    }
+
+    .stats {
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 10px;
+    }
+
+    .stat-card {
+        min-height: 105px;
+
+        padding: 18px;
+    }
+
+    .stat-card:last-child {
+        grid-column: span 2;
+    }
+
+    .stat-number {
+        font-size: 32px;
     }
 
     .card {
         padding: 20px;
 
-        border-radius: 14px;
+        border-radius: 15px;
+    }
+
+    .card-header {
+        align-items: flex-start;
+    }
+
+    h3 {
+        font-size: 24px;
     }
 
     .add-client-form {
@@ -880,7 +1071,7 @@ button:active,
 
         gap: 18px;
 
-        padding: 22px 0;
+        padding: 23px 0;
     }
 
     .client:hover {
@@ -890,9 +1081,9 @@ button:active,
     .actions {
         width: 100%;
 
-        justify-content: flex-start;
-
         max-width: none;
+
+        justify-content: flex-start;
     }
 
     .actions button,
@@ -938,8 +1129,8 @@ button:active,
 
 @media (max-width: 400px) {
 
-    main > h2 {
-        font-size: 30px;
+    main > .hero h2 {
+        font-size: 32px;
     }
 
     .actions button,
@@ -984,11 +1175,32 @@ button:active,
 <body>
 
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header>
 
-    <h1>
-        Lisa Michelle Visuals
-    </h1>
+    <div class="brand">
+
+        <div class="brand-mark">
+            L
+        </div>
+
+        <div class="brand-text">
+
+            <h1>
+                Lisa Michelle Visuals
+            </h1>
+
+            <span>
+                Gallery Management
+            </span>
+
+        </div>
+
+    </div>
+
 
     <button
         id="logout"
@@ -1000,20 +1212,104 @@ button:active,
 </header>
 
 
+<!-- =====================================================
+     MAIN
+===================================================== -->
+
 <main>
 
-    <h2>
-        Client Gallery Manager
-    </h2>
+
+    <section class="hero">
+
+        <p class="eyebrow">
+            Private Studio Dashboard
+        </p>
+
+        <h2>
+            Client Gallery
+            <br>
+            Manager
+        </h2>
+
+        <div class="hero-line"></div>
+
+    </section>
 
 
-    <!-- ADD CLIENT -->
+    <!-- =================================================
+         STATS
+    ================================================= -->
+
+    <section class="stats">
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Total Clients
+            </div>
+
+            <div
+                class="stat-number"
+                id="stat-clients"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Galleries
+            </div>
+
+            <div
+                class="stat-number"
+                id="stat-galleries"
+            >
+                —
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Photos
+            </div>
+
+            <div
+                class="stat-number"
+                id="stat-photos"
+            >
+                —
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =================================================
+         ADD CLIENT
+    ================================================= -->
 
     <section class="card">
 
-        <h3>
-            Add Client
-        </h3>
+        <div class="card-header">
+
+            <h3>
+                Add Client
+            </h3>
+
+            <span class="section-label">
+                New Gallery
+            </span>
+
+        </div>
+
 
         <form
             id="add-client-form"
@@ -1027,12 +1323,14 @@ button:active,
                 required
             >
 
+
             <input
                 type="email"
                 id="client-email"
                 placeholder="Client email"
                 required
             >
+
 
             <div class="password-wrapper">
 
@@ -1043,6 +1341,7 @@ button:active,
                     minlength="6"
                     required
                 >
+
 
                 <button
                     type="button"
@@ -1076,6 +1375,7 @@ button:active,
 
             </div>
 
+
             <button type="submit">
                 CREATE CLIENT
             </button>
@@ -1085,13 +1385,24 @@ button:active,
     </section>
 
 
-    <!-- CLIENTS -->
+    <!-- =================================================
+         CLIENTS
+    ================================================= -->
 
     <section class="card">
 
-        <h3>
-            Clients
-        </h3>
+        <div class="card-header">
+
+            <h3>
+                Clients
+            </h3>
+
+            <span class="section-label">
+                Gallery Library
+            </span>
+
+        </div>
+
 
         <div id="clients-list">
             Loading clients...
@@ -1105,7 +1416,9 @@ button:active,
 </main>
 
 
-<!-- LIGHTBOX -->
+<!-- =====================================================
+     LIGHTBOX
+===================================================== -->
 
 <div
     id="lightbox"
@@ -1118,6 +1431,7 @@ button:active,
     >
         &times;
     </span>
+
 
     <img
         id="lightbox-image"
@@ -1132,6 +1446,10 @@ button:active,
 
 
 <script>
+
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
@@ -1626,7 +1944,7 @@ async function copyGalleryLink(gallery) {
 
 
 /* =====================================================
-   CREATE SIGNED URL
+   SIGNED URL
 ===================================================== */
 
 async function getSignedUrl(
@@ -1812,12 +2130,13 @@ async function deletePhoto(
    REPLACE PHOTO
 ===================================================== */
 
-async function replacePhoto(photo) {
+async function replacePhoto(
+    photo
+) {
 
     const confirmed =
         confirm(
-            `Replace "${photo.file_name}"?\n\n` +
-            `The old photo will be permanently replaced.`
+            `Replace "${photo.file_name}"?\n\nThe old photo will be permanently replaced.`
         );
 
     if (!confirmed) {
@@ -1827,7 +2146,8 @@ async function replacePhoto(photo) {
     const input =
         document.createElement("input");
 
-    input.type = "file";
+    input.type =
+        "file";
 
     input.accept =
         "image/jpeg,image/png,image/webp,image/heic,image/heif";
@@ -1862,9 +2182,12 @@ async function replacePhoto(photo) {
                             file,
                             {
                                 cacheControl: "3600",
+
                                 upsert: true,
+
                                 contentType:
-                                    file.type || "application/octet-stream"
+                                    file.type ||
+                                    "application/octet-stream"
                             }
                         );
 
@@ -1878,7 +2201,8 @@ async function replacePhoto(photo) {
                     await supabaseClient
                         .from("gallery_photos")
                         .update({
-                            file_name: file.name
+                            file_name:
+                                file.name
                         })
                         .eq(
                             "id",
@@ -2060,17 +2384,6 @@ async function loadClients() {
         return;
     }
 
-    if (
-        !clients ||
-        clients.length === 0
-    ) {
-
-        list.textContent =
-            "No clients yet.";
-
-        return;
-    }
-
     const {
         data: galleries,
         error: galleryError
@@ -2113,8 +2426,44 @@ async function loadClients() {
         return;
     }
 
+
+    /* ================================================
+       UPDATE STATISTICS
+    ================================================= */
+
+    document.getElementById(
+        "stat-clients"
+    ).textContent =
+        clients?.length || 0;
+
+
+    document.getElementById(
+        "stat-galleries"
+    ).textContent =
+        galleries?.length || 0;
+
+
+    document.getElementById(
+        "stat-photos"
+    ).textContent =
+        photos?.length || 0;
+
+
+    if (
+        !clients ||
+        clients.length === 0
+    ) {
+
+        list.textContent =
+            "No clients yet.";
+
+        return;
+    }
+
+
     list.innerHTML =
         "";
+
 
     for (
         const client of clients
@@ -2128,6 +2477,7 @@ async function loadClients() {
         div.className =
             "client";
 
+
         const clientInfo =
             document.createElement(
                 "div"
@@ -2135,6 +2485,7 @@ async function loadClients() {
 
         clientInfo.className =
             "client-info";
+
 
         const name =
             document.createElement(
@@ -2146,6 +2497,7 @@ async function loadClients() {
 
         name.textContent =
             client.name;
+
 
         const email =
             document.createElement(
@@ -2159,6 +2511,7 @@ async function loadClients() {
             client.email ||
             "";
 
+
         clientInfo.appendChild(
             name
         );
@@ -2166,6 +2519,7 @@ async function loadClients() {
         clientInfo.appendChild(
             email
         );
+
 
         const clientGallery =
             galleries.find(
@@ -2178,8 +2532,10 @@ async function loadClients() {
                     ).trim()
             );
 
+
         let clientPhotos =
             [];
+
 
         if (
             clientGallery
@@ -2197,6 +2553,7 @@ async function loadClients() {
                 );
         }
 
+
         const photoInfo =
             document.createElement(
                 "div"
@@ -2210,9 +2567,11 @@ async function loadClients() {
                 ? "1 photo"
                 : `${clientPhotos.length} photos`;
 
+
         clientInfo.appendChild(
             photoInfo
         );
+
 
         const actions =
             document.createElement(
@@ -2221,6 +2580,7 @@ async function loadClients() {
 
         actions.className =
             "actions";
+
 
         if (
             clientGallery
@@ -2250,6 +2610,7 @@ async function loadClients() {
             openButton.target =
                 "_blank";
 
+
             actions.appendChild(
                 openButton
             );
@@ -2274,6 +2635,7 @@ async function loadClients() {
                     )
             );
 
+
             actions.appendChild(
                 copyButton
             );
@@ -2289,6 +2651,7 @@ async function loadClients() {
 
             uploadButton.textContent =
                 "UPLOAD PHOTOS";
+
 
             const fileInput =
                 document.createElement(
@@ -2307,11 +2670,13 @@ async function loadClients() {
             fileInput.className =
                 "hidden";
 
+
             uploadButton.addEventListener(
                 "click",
                 () =>
                     fileInput.click()
             );
+
 
             fileInput.addEventListener(
                 "change",
@@ -2322,6 +2687,7 @@ async function loadClients() {
                     )
             );
 
+
             actions.appendChild(
                 uploadButton
             );
@@ -2329,6 +2695,7 @@ async function loadClients() {
             actions.appendChild(
                 fileInput
             );
+
 
         } else {
 
@@ -2373,9 +2740,11 @@ async function loadClients() {
                 )
         );
 
+
         actions.appendChild(
             deleteClientButton
         );
+
 
         div.appendChild(
             clientInfo
@@ -2390,6 +2759,10 @@ async function loadClients() {
         );
 
 
+        /* ============================================
+           PHOTOS
+        ============================================ */
+
         if (
             clientGallery &&
             clientPhotos.length > 0
@@ -2403,6 +2776,7 @@ async function loadClients() {
             photosSection.className =
                 "photos-section";
 
+
             const photosTitle =
                 document.createElement(
                     "div"
@@ -2414,9 +2788,11 @@ async function loadClients() {
             photosTitle.textContent =
                 "Gallery Photos";
 
+
             photosSection.appendChild(
                 photosTitle
             );
+
 
             const photosGrid =
                 document.createElement(
@@ -2425,6 +2801,7 @@ async function loadClients() {
 
             photosGrid.className =
                 "photos-grid";
+
 
             for (
                 const photo of clientPhotos
@@ -2438,6 +2815,7 @@ async function loadClients() {
                 photoCard.className =
                     "photo-card";
 
+
                 const image =
                     document.createElement(
                         "img"
@@ -2450,10 +2828,12 @@ async function loadClients() {
                 image.src =
                     "";
 
+
                 const signedUrl =
                     await getSignedUrl(
                         photo.file_path
                     );
+
 
                 if (
                     signedUrl
@@ -2478,6 +2858,7 @@ async function loadClients() {
                     image.style.opacity =
                         ".3";
                 }
+
 
                 photoCard.appendChild(
                     image
@@ -2504,6 +2885,7 @@ async function loadClients() {
                 replaceButton.textContent =
                     "REPLACE";
 
+
                 replaceButton.addEventListener(
                     "click",
                     () =>
@@ -2524,6 +2906,7 @@ async function loadClients() {
                 deleteButton.textContent =
                     "DELETE";
 
+
                 deleteButton.addEventListener(
                     "click",
                     () =>
@@ -2531,6 +2914,7 @@ async function loadClients() {
                             photo
                         )
                 );
+
 
                 photoActions.appendChild(
                     replaceButton
@@ -2540,18 +2924,22 @@ async function loadClients() {
                     deleteButton
                 );
 
+
                 photoCard.appendChild(
                     photoActions
                 );
+
 
                 photosGrid.appendChild(
                     photoCard
                 );
             }
 
+
             photosSection.appendChild(
                 photosGrid
             );
+
 
             list.appendChild(
                 photosSection
@@ -2623,15 +3011,18 @@ const passwordInput =
         "client-password"
     );
 
+
 const passwordToggle =
     document.getElementById(
         "password-toggle"
     );
 
+
 const passwordEye =
     document.getElementById(
         "password-eye"
     );
+
 
 passwordToggle.addEventListener(
     "click",
@@ -2640,10 +3031,12 @@ passwordToggle.addEventListener(
         const isHidden =
             passwordInput.type === "password";
 
+
         passwordInput.type =
             isHidden
                 ? "text"
                 : "password";
+
 
         passwordToggle.setAttribute(
             "aria-label",
@@ -2651,6 +3044,7 @@ passwordToggle.addEventListener(
                 ? "Hide password"
                 : "Show password"
         );
+
 
         if (isHidden) {
 
