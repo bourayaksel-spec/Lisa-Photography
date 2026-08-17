@@ -8,156 +8,243 @@
 
     <title>More Work | Lisa Michelle Visuals</title>
 
+    <meta
+        name="description"
+        content="Explore more photography work by Lisa Michelle Visuals, including portraits, couples, sports, landscapes, real estate and lifestyle photography."
+    >
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <header class="site-header">
+<header class="site-header">
 
-        <div class="logo">
-            Lisa Michelle Visuals
+    <div class="logo">
+        Lisa Michelle Visuals
+    </div>
+
+    <nav class="main-nav">
+
+        <button
+            class="menu-toggle"
+            type="button"
+            aria-label="Open menu"
+            aria-expanded="false"
+        >
+            ☰
+        </button>
+
+        <div class="nav-links">
+
+            <a href="index.html">
+                HOME
+            </a>
+
+            <a href="index.html#portfolio">
+                PORTFOLIO
+            </a>
+
         </div>
 
-        <nav class="main-nav">
+    </nav>
 
-    <button class="menu-toggle" type="button" aria-label="Open menu">
-        ☰
-    </button>
+</header>
 
-    <div class="nav-links">
 
-        <a href="index.html">HOME</a>
+<main>
 
-        <a href="index.html#portfolio">PORTFOLIO</a>
+<section class="more-work-page">
+
+    <div class="portfolio-header">
+
+        <p class="section-label">
+            MORE WORK
+        </p>
+
+        <h1>
+            More stories in frames.
+        </h1>
+
+        <p>
+            Explore more of Lisa's photography.
+        </p>
 
     </div>
 
-</nav>
 
-    </header>
+    <!-- =========================
+         PORTFOLIO FILTERS
+    ========================== -->
 
+    <div class="portfolio-filters">
 
-    <main>
+        <button
+            class="filter-btn active"
+            data-filter="all"
+            type="button"
+        >
+            ALL
+        </button>
 
-        <section class="more-work-page">
+        <button
+            class="filter-btn"
+            data-filter="portraits"
+            type="button"
+        >
+            PORTRAITS
+        </button>
 
-            <div class="portfolio-header">
+        <button
+            class="filter-btn"
+            data-filter="couples"
+            type="button"
+        >
+            COUPLES
+        </button>
 
-                <p class="section-label">
-                    MORE WORK
-                </p>
+        <button
+            class="filter-btn"
+            data-filter="sports"
+            type="button"
+        >
+            SPORTS
+        </button>
 
-                <h1>
-                    More stories in frames.
-                </h1>
+        <button
+            class="filter-btn"
+            data-filter="landscapes"
+            type="button"
+        >
+            LANDSCAPES
+        </button>
 
-                <p>
-                    Explore more of Lisa's photography.
-                </p>
+        <button
+            class="filter-btn"
+            data-filter="real-estate"
+            type="button"
+        >
+            REAL ESTATE
+        </button>
 
-            </div>
+        <button
+            class="filter-btn"
+            data-filter="lifestyle"
+            type="button"
+        >
+            LIFESTYLE
+        </button>
 
-
-         <div class="portfolio-filters">
-
-    <button class="filter-btn active" data-filter="all">
-        ALL
-    </button>
-
-    <button class="filter-btn" data-filter="portraits">
-        PORTRAITS
-    </button>
-
-    <button class="filter-btn" data-filter="couples">
-        COUPLES
-    </button>
-
-    <button class="filter-btn" data-filter="sports">
-        SPORTS
-    </button>
-
-    <button class="filter-btn" data-filter="landscapes">
-        LANDSCAPES
-    </button>
-
-    <button class="filter-btn" data-filter="real-estate">
-        REAL ESTATE
-    </button>
-
-    <button class="filter-btn" data-filter="lifestyle">
-        LIFESTYLE
-    </button>
-
-</div>
-
-
-<div class="gallery">
-
-    <div class="gallery-item" data-category="portraits">
-        <img
-            src="images/12.webp"
-            alt="Portrait photography by Lisa Michelle Visuals">
     </div>
 
-    <div class="gallery-item" data-category="couples lifestyle">
-        <img
-            src="images/13.webp"
-            alt="Couples photography by Lisa Michelle Visuals">
+
+    <!-- =========================
+         SUPABASE GALLERY
+    ========================== -->
+
+    <div
+        class="gallery"
+        id="portfolio-gallery"
+    >
+
+        <!-- Images will be loaded from Supabase -->
+
     </div>
 
-    <div class="gallery-item" data-category="sports">
-        <img
-            src="images/14.webp"
-            alt="Sports photography by Lisa Michelle Visuals">
+
+    <!-- Loading message -->
+
+    <div
+        id="gallery-loading"
+        class="gallery-message"
+    >
+        Loading more work...
     </div>
 
-    <div class="gallery-item" data-category="landscapes">
-        <img
-            src="images/15.webp"
-            alt="Landscape photography by Lisa Michelle Visuals">
+
+    <!-- Error message -->
+
+    <div
+        id="gallery-error"
+        class="gallery-message"
+        style="display:none;"
+    >
+        Unable to load the portfolio right now.
+        Please try again later.
     </div>
 
-    <div class="gallery-item" data-category="real-estate">
-        <img
-            src="images/16.webp"
-            alt="Real estate photography by Lisa Michelle Visuals">
+
+    <!-- Empty message -->
+
+    <div
+        id="gallery-empty"
+        class="gallery-message"
+        style="display:none;"
+    >
+        No photographs are available yet.
     </div>
 
-    <div class="gallery-item" data-category="lifestyle">
-        <img
-            src="images/17.webp"
-            alt="Lifestyle photography by Lisa Michelle Visuals">
-    </div>
+</section>
 
-</div>
+</main>
 
-        </section>
 
-    </main>
-<div id="lightbox" class="lightbox">
+<!-- =========================
+     LIGHTBOX
+========================== -->
 
-    <span class="close">&times;</span>
+<div
+    id="lightbox"
+    class="lightbox"
+    aria-hidden="true"
+>
 
-    <button id="prev" class="lightbox-arrow left">
+    <span
+        class="close"
+        aria-label="Close"
+    >
+        &times;
+    </span>
+
+
+    <button
+        id="prev"
+        class="lightbox-arrow left"
+        type="button"
+        aria-label="Previous image"
+    >
         &#10094;
     </button>
 
-   <div class="lightbox-counter" id="lightbox-counter">
-    1 / 1
-</div>
 
-<img
-    id="lightbox-image"
-    src=""
-    alt="Lisa Michelle Visuals"
->
+    <div
+        class="lightbox-counter"
+        id="lightbox-counter"
+    >
+        1 / 1
+    </div>
 
-    <button id="next" class="lightbox-arrow right">
+
+    <img
+        id="lightbox-image"
+        src=""
+        alt="Lisa Michelle Visuals"
+    >
+
+
+    <button
+        id="next"
+        class="lightbox-arrow right"
+        type="button"
+        aria-label="Next image"
+    >
         &#10095;
     </button>
 
 </div>
+
+
 <script src="./more-work.js"></script>
+
 </body>
 </html>
