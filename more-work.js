@@ -1,7 +1,7 @@
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
-       SUPABASE
+       SUPABASE CONFIGURATION
     ========================================================= */
 
     const SUPABASE_URL =
@@ -12,10 +12,23 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     const BUCKET_NAME = "portfolio";
 
+    /*
+       IMPORTANT:
+       More Work is completely separated from Featured Portfolio.
 
-    /* =========================================================
-       CATEGORIES
-    ========================================================= */
+       Supabase structure:
+
+       portfolio/
+       └── more-work/
+           ├── portraits/
+           ├── couples/
+           ├── sports/
+           ├── landscapes/
+           ├── real-estate/
+           └── lifestyle/
+    */
+
+    const ROOT_FOLDER = "more-work";
 
     const categories = [
         "portraits",
@@ -48,7 +61,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     /* =========================================================
-       LIGHTBOX
+       LIGHTBOX ELEMENTS
     ========================================================= */
 
     const lightbox =
@@ -71,6 +84,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     let currentImage = 0;
+
+    let currentFilter = "all";
+
     let touchStartX = 0;
 
 
@@ -78,111 +94,118 @@ document.addEventListener("DOMContentLoaded", async function () {
        PUBLIC IMAGE URL
     ========================================================= */
 
-    function getPublicImageUrl(path) {
+    function getPublicImageUrl(filePath) {
 
         return (
             SUPABASE_URL +
             "/storage/v1/object/public/" +
             BUCKET_NAME +
             "/" +
-            path
+            filePath
         );
 
     }
 
 
     /* =========================================================
-       CHECK IMAGE FILE
+       ALT TEXT
     ========================================================= */
 
-    function isImageFile(filename) {
+    function createAltText(category) {
 
-        const extension =
-            filename
-                .split(".")
-                .pop()
-                .toLowerCase();
+        const names = {
 
-        return [
-            "jpg",
-            "jpeg",
-            "png",
-            "webp",
-            "gif",
-            "avif"
-        ].includes(extension);
+            portraits:
+                "Portrait photography by Lisa Michelle Visuals",
+
+            couples:
+                "Couples photography by Lisa Michelle Visuals",
+
+            sports:
+                "Sports photography by Lisa Michelle Visuals",
+
+            landscapes:
+                "Landscape photography by Lisa Michelle Visuals",
+
+            "real-estate":
+                "Real estate photography by Lisa Michelle Visuals",
+
+            lifestyle:
+                "Lifestyle photography by Lisa Michelle Visuals"
+
+        };
+
+        return (
+            names[category] ||
+            "Photography by Lisa Michelle Visuals"
+        );
 
     }
 
 
     /* =========================================================
-       LOAD ONE SUPABASE FOLDER
+       LOAD ONE MORE-WORK FOLDER
     ========================================================= */
 
     async function loadFolder(category) {
 
-        const response = await fetch(
+        const folderPath =
+            ROOT_FOLDER + "/" + category + "/";
 
-            SUPABASE_URL +
-            "/storage/v1/object/list/" +
-            BUCKET_NAME,
 
-            {
-                method: "POST",
+        const response =
+            await fetch(
 
-                headers: {
+                SUPABASE_URL +
+                "/storage/v1/object/list/" +
+                BUCKET_NAME,
 
-                    "apikey":
-                        SUPABASE_PUBLISHABLE_KEY,
+                {
 
-                    "Authorization":
-                        "Bearer " +
-                        SUPABASE_PUBLISHABLE_KEY,
+                    method: "POST",
 
-                    "Content-Type":
-                        "application/json"
+                    headers: {
 
-                },
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_PUBLISHABLE_KEY,
 
-                body: JSON.stringify({
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
 
-                    prefix:
-                        category + "/",
+                        "Content-Type":
+                            "application/json"
 
-                    limit: 1000,
+                    },
 
-                    offset: 0,
+                    body: JSON.stringify({
 
-                    sortBy: {
+                        prefix: folderPath,
 
-                        column: "name",
+                        limit: 1000,
 
-                        order: "asc"
+                        offset: 0,
 
-                    }
+                        sortBy: {
 
-                })
+                            column: "name",
 
-            }
+                            order: "asc"
 
-        );
+                        }
+
+                    })
+
+                }
+
+            );
 
 
         if (!response.ok) {
 
-            const errorText =
-                await response.text();
-
-            console.error(
-                "Supabase folder error:",
-                category,
-                response.status,
-                errorText
-            );
-
             throw new Error(
-                "Unable to load " +
-                category
+                "Folder failed: " +
+                folderPath
             );
 
         }
@@ -193,82 +216,60 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         return files
-
-            /* Remove folders / placeholders */
-
             .filter(function (file) {
+
+                if (
+                    !file ||
+                    !file.name
+                ) {
+
+                    return false;
+
+                }
+
+
+                /*
+                   Ignore Supabase empty-folder
+                   placeholder.
+                */
+
+                if (
+                    file.name ===
+                    ".emptyFolderPlaceholder"
+                ) {
+
+                    return false;
+
+                }
+
+
+                /*
+                   Only actual files.
+                */
 
                 return (
-                    file &&
-                    file.name &&
-                    !file.name.endsWith("/")
+                    file.metadata ||
+                    file.id
                 );
 
             })
-
-            /* Only real image files */
-
-            .filter(function (file) {
-
-                return isImageFile(
-                    file.name
-                );
-
-            })
-
-            /* Create full path */
-
             .map(function (file) {
 
                 return {
 
                     path:
-                        category +
-                        "/" +
+                        folderPath +
                         file.name,
 
                     category:
-                        category
+                        category,
+
+                    name:
+                        file.name
 
                 };
 
             });
-
-    }
-
-
-    /* =========================================================
-       ALT TEXT
-    ========================================================= */
-
-    function getAltText(category) {
-
-        const texts = {
-
-            portraits:
-                "Portrait photography by Lisa Michelle Visuals in East Alabama",
-
-            couples:
-                "Couples photography by Lisa Michelle Visuals in East Alabama",
-
-            sports:
-                "Sports photography by Lisa Michelle Visuals in East Alabama",
-
-            landscapes:
-                "Landscape photography by Lisa Michelle Visuals in East Alabama",
-
-            "real-estate":
-                "Real estate photography by Lisa Michelle Visuals in East Alabama",
-
-            lifestyle:
-                "Lifestyle photography by Lisa Michelle Visuals in East Alabama"
-
-        };
-
-        return (
-            texts[category] ||
-            "Photography by Lisa Michelle Visuals"
-        );
 
     }
 
@@ -282,8 +283,10 @@ document.addEventListener("DOMContentLoaded", async function () {
         const item =
             document.createElement("div");
 
+
         item.className =
             "gallery-item";
+
 
         item.dataset.category =
             file.category;
@@ -292,27 +295,34 @@ document.addEventListener("DOMContentLoaded", async function () {
         const image =
             document.createElement("img");
 
+
         image.src =
             getPublicImageUrl(
                 file.path
             );
 
+
         image.alt =
-            getAltText(
+            createAltText(
                 file.category
             );
+
 
         image.loading =
             "lazy";
 
+
         image.decoding =
             "async";
+
 
         image.draggable =
             false;
 
 
-        /* Prevent right click */
+        /*
+           Prevent right click.
+        */
 
         image.addEventListener(
             "contextmenu",
@@ -324,40 +334,35 @@ document.addEventListener("DOMContentLoaded", async function () {
         );
 
 
-        /* Open lightbox */
+        /*
+           Open Lightbox.
+        */
 
         image.addEventListener(
             "click",
             function () {
 
-                const visibleImages =
-                    getVisibleGalleryImages();
-
-                const index =
-                    visibleImages.indexOf(
-                        image
-                    );
-
-                if (index !== -1) {
-
-                    showGalleryImage(
-                        index
-                    );
-
-                }
+                openLightbox(image);
 
             }
         );
 
 
+        /*
+           If image fails,
+           remove only that image.
+        */
+
         image.addEventListener(
             "error",
             function () {
 
-                console.error(
-                    "Image failed:",
-                    image.src
+                console.warn(
+                    "Image could not load:",
+                    file.path
                 );
+
+                item.remove();
 
             }
         );
@@ -371,93 +376,239 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     /* =========================================================
-       LOAD COMPLETE PORTFOLIO
+       LOAD COMPLETE MORE WORK PORTFOLIO
     ========================================================= */
 
     async function loadPortfolio() {
 
-        loadingMessage.style.display =
-            "block";
+        if (!gallery) {
 
-        errorMessage.style.display =
-            "none";
-
-        emptyMessage.style.display =
-            "none";
-
-        gallery.innerHTML = "";
-
-
-        let allFiles = [];
-
-
-        /*
-           Load every category
-        */
-
-        for (
-            const category of categories
-        ) {
-
-            try {
-
-                const files =
-                    await loadFolder(
-                        category
-                    );
-
-                allFiles =
-                    allFiles.concat(
-                        files
-                    );
-
-            }
-
-            catch (error) {
-
-                console.warn(
-                    "Folder failed:",
-                    category
-                );
-
-            }
-
-        }
-
-
-        /*
-           Finished loading
-        */
-
-        loadingMessage.style.display =
-            "none";
-
-
-        /*
-           No images
-        */
-
-        if (
-            allFiles.length === 0
-        ) {
-
-            emptyMessage.style.display =
-                "block";
+            console.error(
+                "portfolio-gallery not found."
+            );
 
             return;
 
         }
 
 
-        /*
-           Create gallery
-        */
+        try {
 
-        allFiles.forEach(
-            function (file) {
+            if (loadingMessage) {
 
-                createGalleryItem(
-                    file
+                loadingMessage.style.display =
+                    "block";
+
+            }
+
+
+            if (errorMessage) {
+
+                errorMessage.style.display =
+                    "none";
+
+            }
+
+
+            if (emptyMessage) {
+
+                emptyMessage.style.display =
+                    "none";
+
+            }
+
+
+            gallery.innerHTML = "";
+
+
+            let allFiles = [];
+
+
+            /* -------------------------------------------------
+               Load every More Work category
+            ------------------------------------------------- */
+
+            for (
+                const category of categories
+            ) {
+
+                try {
+
+                    const files =
+                        await loadFolder(
+                            category
+                        );
+
+
+                    allFiles =
+                        allFiles.concat(
+                            files
+                        );
+
+                }
+
+                catch (error) {
+
+                    console.warn(
+                        "Could not load:",
+                        category,
+                        error
+                    );
+
+                }
+
+            }
+
+
+            /* -------------------------------------------------
+               Sort files
+            ------------------------------------------------- */
+
+            allFiles.sort(
+                function (a, b) {
+
+                    const first =
+                        a.category +
+                        "/" +
+                        a.name;
+
+                    const second =
+                        b.category +
+                        "/" +
+                        b.name;
+
+
+                    return first.localeCompare(
+                        second,
+                        undefined,
+                        {
+                            numeric: true,
+                            sensitivity: "base"
+                        }
+                    );
+
+                }
+            );
+
+
+            /* -------------------------------------------------
+               Hide loading
+            ------------------------------------------------- */
+
+            if (loadingMessage) {
+
+                loadingMessage.style.display =
+                    "none";
+
+            }
+
+
+            /* -------------------------------------------------
+               No images
+            ------------------------------------------------- */
+
+            if (
+                allFiles.length === 0
+            ) {
+
+                if (emptyMessage) {
+
+                    emptyMessage.textContent =
+                        "No photographs found.";
+
+                    emptyMessage.style.display =
+                        "block";
+
+                }
+
+                return;
+
+            }
+
+
+            /* -------------------------------------------------
+               Create gallery
+            ------------------------------------------------- */
+
+            allFiles.forEach(
+                function (file) {
+
+                    createGalleryItem(
+                        file
+                    );
+
+                }
+            );
+
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "More Work loading error:",
+                error
+            );
+
+
+            if (loadingMessage) {
+
+                loadingMessage.style.display =
+                    "none";
+
+            }
+
+
+            if (errorMessage) {
+
+                errorMessage.textContent =
+                    "Unable to load the gallery. Please try again later.";
+
+                errorMessage.style.display =
+                    "block";
+
+            }
+
+        }
+
+    }
+
+
+    /* =========================================================
+       GET VISIBLE GALLERY IMAGES
+    ========================================================= */
+
+    function getVisibleGalleryImages() {
+
+        if (!gallery) {
+
+            return [];
+
+        }
+
+
+        const images =
+            gallery.querySelectorAll(
+                "img"
+            );
+
+
+        return Array.from(
+            images
+        ).filter(
+            function (image) {
+
+                const item =
+                    image.closest(
+                        ".gallery-item"
+                    );
+
+
+                return (
+                    item &&
+                    !item.classList.contains(
+                        "hidden"
+                    )
                 );
 
             }
@@ -467,34 +618,39 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     /* =========================================================
-       GET VISIBLE IMAGES
+       OPEN LIGHTBOX
     ========================================================= */
 
-    function getVisibleGalleryImages() {
+    function openLightbox(image) {
 
-        return Array.from(
-            gallery.querySelectorAll("img")
-        ).filter(function (image) {
+        const visibleImages =
+            getVisibleGalleryImages();
 
-            const item =
-                image.closest(
-                    ".gallery-item"
-                );
 
-            return (
-                item &&
-                !item.classList.contains(
-                    "hidden"
-                )
+        const index =
+            visibleImages.indexOf(
+                image
             );
 
-        });
+
+        if (
+            index === -1
+        ) {
+
+            return;
+
+        }
+
+
+        showGalleryImage(
+            index
+        );
 
     }
 
 
     /* =========================================================
-       SHOW LIGHTBOX
+       SHOW LIGHTBOX IMAGE
     ========================================================= */
 
     function showGalleryImage(index) {
@@ -504,14 +660,22 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
         if (
-            !visibleImages.length
+            !visibleImages.length ||
+            !lightbox ||
+            !lightboxImage
         ) {
+
             return;
+
         }
 
 
-        if (index < 0) {
+        if (
+            index < 0
+        ) {
+
             index = 0;
+
         }
 
 
@@ -539,12 +703,14 @@ document.addEventListener("DOMContentLoaded", async function () {
         lightboxImage.src =
             image.src;
 
+
         lightboxImage.alt =
             image.alt;
 
 
         lightbox.style.display =
             "flex";
+
 
         lightbox.setAttribute(
             "aria-hidden",
@@ -570,11 +736,17 @@ document.addEventListener("DOMContentLoaded", async function () {
         if (
             !visibleImages.length
         ) {
+
             return;
+
         }
 
 
-        if (lightboxCounter) {
+        /* Counter */
+
+        if (
+            lightboxCounter
+        ) {
 
             lightboxCounter.textContent =
                 `${currentImage + 1} / ${visibleImages.length}`;
@@ -582,7 +754,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
 
-        if (previousButton) {
+        /* Previous button */
+
+        if (
+            previousButton
+        ) {
 
             previousButton.style.visibility =
                 currentImage === 0
@@ -592,7 +768,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
 
-        if (nextButton) {
+        /* Next button */
+
+        if (
+            nextButton
+        ) {
 
             nextButton.style.visibility =
                 currentImage ===
@@ -612,21 +792,35 @@ document.addEventListener("DOMContentLoaded", async function () {
     function closeLightbox() {
 
         if (!lightbox) {
+
             return;
+
         }
+
 
         lightbox.style.display =
             "none";
+
 
         lightbox.setAttribute(
             "aria-hidden",
             "true"
         );
 
-        lightboxImage.src = "";
+
+        if (lightboxImage) {
+
+            lightboxImage.src =
+                "";
+
+        }
 
     }
 
+
+    /* =========================================================
+       CLOSE BUTTON
+    ========================================================= */
 
     if (closeButton) {
 
@@ -639,7 +833,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     /* =========================================================
-       NEXT
+       NEXT IMAGE
     ========================================================= */
 
     if (nextButton) {
@@ -670,7 +864,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     /* =========================================================
-       PREVIOUS
+       PREVIOUS IMAGE
     ========================================================= */
 
     if (previousButton) {
@@ -706,7 +900,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             function (event) {
 
                 if (
-                    event.target === lightbox
+                    event.target ===
+                    lightbox
                 ) {
 
                     closeLightbox();
@@ -720,7 +915,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
     /* =========================================================
-       KEYBOARD
+       KEYBOARD NAVIGATION
     ========================================================= */
 
     document.addEventListener(
@@ -730,7 +925,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             if (
                 !lightbox ||
                 lightbox.style.display !==
-                "flex"
+                    "flex"
             ) {
 
                 return;
@@ -739,7 +934,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 
             if (
-                event.key === "Escape"
+                event.key ===
+                "Escape"
             ) {
 
                 closeLightbox();
@@ -747,22 +943,30 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
 
-            if (
-                event.key === "ArrowRight" &&
-                nextButton
+            else if (
+                event.key ===
+                "ArrowRight"
             ) {
 
-                nextButton.click();
+                if (nextButton) {
+
+                    nextButton.click();
+
+                }
 
             }
 
 
-            if (
-                event.key === "ArrowLeft" &&
-                previousButton
+            else if (
+                event.key ===
+                "ArrowLeft"
             ) {
 
-                previousButton.click();
+                if (previousButton) {
+
+                    previousButton.click();
+
+                }
 
             }
 
@@ -802,22 +1006,32 @@ document.addEventListener("DOMContentLoaded", async function () {
                     touchStartX;
 
 
+                /* Swipe left = Next */
+
                 if (
-                    distance < -50 &&
-                    nextButton
+                    distance < -50
                 ) {
 
-                    nextButton.click();
+                    if (nextButton) {
+
+                        nextButton.click();
+
+                    }
 
                 }
 
 
+                /* Swipe right = Previous */
+
                 else if (
-                    distance > 50 &&
-                    previousButton
+                    distance > 50
                 ) {
 
-                    previousButton.click();
+                    if (previousButton) {
+
+                        previousButton.click();
+
+                    }
 
                 }
 
@@ -838,9 +1052,11 @@ document.addEventListener("DOMContentLoaded", async function () {
                 "click",
                 function () {
 
-                    const filter =
+                    currentFilter =
                         button.dataset.filter;
 
+
+                    /* Active button */
 
                     filterButtons.forEach(
                         function (btn) {
@@ -858,54 +1074,76 @@ document.addEventListener("DOMContentLoaded", async function () {
                     );
 
 
-                    const items =
-                        gallery.querySelectorAll(
-                            ".gallery-item"
+                    /* Filter images */
+
+                    if (gallery) {
+
+                        const items =
+                            gallery.querySelectorAll(
+                                ".gallery-item"
+                            );
+
+
+                        let visibleCount = 0;
+
+
+                        items.forEach(
+                            function (item) {
+
+                                const category =
+                                    item.dataset.category;
+
+
+                                if (
+                                    currentFilter ===
+                                        "all" ||
+                                    category ===
+                                        currentFilter
+                                ) {
+
+                                    item.classList.remove(
+                                        "hidden"
+                                    );
+
+                                    visibleCount++;
+
+                                }
+
+                                else {
+
+                                    item.classList.add(
+                                        "hidden"
+                                    );
+
+                                }
+
+                            }
                         );
 
 
-                    let visibleCount = 0;
+                        /*
+                           Show message if
+                           category has no images.
+                        */
 
+                        if (emptyMessage) {
 
-                    items.forEach(
-                        function (item) {
-
-                            const category =
-                                item.dataset.category;
-
-
-                            if (
-                                filter === "all" ||
-                                category === filter
-                            ) {
-
-                                item.classList.remove(
-                                    "hidden"
-                                );
-
-                                visibleCount++;
-
-                            }
-
-                            else {
-
-                                item.classList.add(
-                                    "hidden"
-                                );
-
-                            }
+                            emptyMessage.style.display =
+                                visibleCount === 0
+                                    ? "block"
+                                    : "none";
 
                         }
-                    );
 
+                    }
+
+
+                    /*
+                       Close lightbox when
+                       changing category.
+                    */
 
                     closeLightbox();
-
-
-                    emptyMessage.style.display =
-                        visibleCount === 0
-                            ? "block"
-                            : "none";
 
                 }
             );
@@ -922,6 +1160,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.querySelector(
             ".menu-toggle"
         );
+
 
     const navLinks =
         document.querySelector(
@@ -987,6 +1226,6 @@ document.addEventListener("DOMContentLoaded", async function () {
        START
     ========================================================= */
 
-    await loadPortfolio();
+    loadPortfolio();
 
 });
