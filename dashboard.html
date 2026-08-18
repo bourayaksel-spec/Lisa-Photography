@@ -3795,31 +3795,75 @@ document
    CHECK LOGIN
 ===================================================== */
 
+```javascript
 async function checkUser() {
 
     const {
         data: {
             user
         }
-    } =
-        await supabaseClient
-            .auth
-            .getUser();
+    } = await supabaseClient.auth.getUser();
 
 
+    // No logged-in user
     if (!user) {
 
-        window.location.href =
-            "admin.html";
+        window.location.href = "admin.html";
 
         return null;
 
     }
 
 
+    // Check whether this user is an admin
+    const {
+        data: admin,
+        error
+    } = await supabaseClient
+        .from("admin_users")
+        .select("user_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+
+    // Database error
+    if (error) {
+
+        console.error(
+            "Admin verification failed:",
+            error
+        );
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href = "admin.html";
+
+        return null;
+
+    }
+
+
+    // Logged in but NOT an admin
+    if (!admin) {
+
+        console.warn(
+            "Access denied: user is not an admin."
+        );
+
+        await supabaseClient.auth.signOut();
+
+        window.location.href = "admin.html";
+
+        return null;
+
+    }
+
+
+    // User is authenticated AND is an admin
     return user;
 
 }
+```
 
 
 /* =====================================================
