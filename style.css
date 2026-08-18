@@ -287,105 +287,166 @@ select {
    PORTFOLIO
 ========================================================= */
 
-#portfolio {
-    padding: 130px 6vw;
+/* =========================================================
+   PROFESSIONAL PHOTOGRAPHY PORTFOLIO
+   Clean Editorial Gallery
+========================================================= */
 
+/* =========================
+   PORTFOLIO SECTION
+========================= */
+
+#portfolio {
+    padding: 120px 5vw 130px;
     background: #f5f1eb;
 }
 
+
+/* =========================
+   PORTFOLIO HEADER
+========================= */
+
 .portfolio-header {
-    max-width: 700px;
-
+    max-width: 760px;
     margin: 0 auto 55px;
-
     text-align: center;
 }
 
 .portfolio-header h2 {
     font-family: Georgia, serif;
-
-    font-size: clamp(45px, 7vw, 80px);
-
+    font-size: clamp(48px, 6vw, 76px);
     font-weight: normal;
-
     line-height: 1;
-
-    margin-bottom: 25px;
+    margin: 0 0 22px;
 }
 
 .portfolio-header > p:last-child {
+    max-width: 600px;
+    margin: 0 auto;
     color: #666;
-
     line-height: 1.8;
 }
 
 
 /* =========================================================
-   PORTFOLIO FILTERS
+   FILTERS
 ========================================================= */
 
 .portfolio-filters {
     display: flex;
-
     justify-content: center;
     align-items: center;
-
     flex-wrap: wrap;
 
     gap: 10px;
 
-    margin: 40px auto 45px;
+    margin: 0 auto 55px;
 }
 
 .filter-btn {
-    background: transparent;
-
-    border: 1px solid #ccc;
+    appearance: none;
 
     padding: 10px 18px;
 
+    border: 1px solid #cfc9c1;
+
+    background: transparent;
+
+    color: #333;
+
     font-family: inherit;
 
-    font-size: 11px;
+    font-size: 10px;
 
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
 
     cursor: pointer;
 
     transition:
-        background 0.3s ease,
+        background-color 0.3s ease,
         color 0.3s ease,
         border-color 0.3s ease;
 }
 
 .filter-btn:hover,
 .filter-btn.active {
-    background: #111;
-
+    background: #222;
+    border-color: #222;
     color: #fff;
-
-    border-color: #111;
 }
 
 
 /* =========================================================
-   PROFESSIONAL PORTFOLIO GRID
+   FEATURED IMAGE
+========================================================= */
+
+/*
+   The large featured photograph is intentionally restrained.
+   It is NOT full-screen.
+*/
+
+.portfolio-large-image {
+    width: min(1050px, 100%);
+
+    margin: 0 auto 55px;
+
+    position: relative;
+
+    overflow: hidden;
+
+    background: #e8e2da;
+
+    cursor: pointer;
+}
+
+
+/*
+   IMPORTANT:
+   contain = show the entire photograph.
+   No aggressive cropping.
+*/
+
+.portfolio-large-image img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-height: 620px;
+
+    object-fit: contain;
+
+    object-position: center;
+
+    margin: 0 auto;
+
+    transition: transform 0.7s ease;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
+}
+
+.portfolio-large-image:hover img {
+    transform: scale(1.015);
+}
+
+
+/* =========================================================
+   MAIN GALLERY
 ========================================================= */
 
 .gallery {
-    width: 100%;
-
-    max-width: 1250px;
+    width: min(1250px, 100%);
 
     margin: 0 auto;
 
     display: grid;
 
-    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
 
-    gap: 16px;
-
-    align-items: start;
+    gap: 18px;
 }
 
 
@@ -396,13 +457,18 @@ select {
 .gallery-item {
     position: relative;
 
-    min-width: 0;
-
     overflow: hidden;
 
-    background: #ebe6df;
+    background: #e8e2da;
 
     cursor: pointer;
+
+    /*
+       Every image gets a restrained frame.
+       This prevents the gallery from becoming huge.
+    */
+
+    height: 360px;
 
     transition:
         opacity 0.35s ease,
@@ -410,100 +476,79 @@ select {
 }
 
 
-/* =========================================================
+/*
    IMAGE
-========================================================= */
+*/
 
 .gallery-item img {
     display: block;
 
     width: 100%;
-    height: auto;
+    height: 100%;
 
-    max-width: 100%;
+    /*
+       THIS IS THE IMPORTANT PART.
+
+       contain = entire image is visible.
+       No cropping.
+    */
 
     object-fit: contain;
 
-    background: #ebe6df;
+    object-position: center;
 
-    cursor: pointer;
+    background: #e8e2da;
 
     transition:
         transform 0.6s ease,
         filter 0.6s ease;
+
+    user-select: none;
+
+    -webkit-user-drag: none;
 }
 
 
-/* =========================================================
-   FEATURED PORTFOLIO IMAGE
-   Bigger, but NOT a HERO
-========================================================= */
-
-.gallery-item.large {
-    grid-column: span 6;
-
-    grid-row: auto;
-}
-
-.gallery-item.large img {
-    width: 100%;
-
-    height: auto;
-
-    object-fit: contain;
-}
-
-
-/* =========================================================
-   NORMAL IMAGES
-========================================================= */
-
-.gallery-item:not(.large) {
-    grid-column: span 5;
-}
-
-
-/* =========================================================
-   EDITORIAL ARRANGEMENT
-========================================================= */
-
-.gallery-item:nth-child(2) {
-    grid-column: 8 / span 5;
-}
-
-.gallery-item:nth-child(3) {
-    grid-column: 1 / span 5;
-}
-
-.gallery-item:nth-child(4) {
-    grid-column: 6 / span 7;
-}
-
-.gallery-item:nth-child(5) {
-    grid-column: 1 / span 7;
-}
-
-.gallery-item:nth-child(6) {
-    grid-column: 8 / span 5;
-}
-
-.gallery-item:nth-child(7) {
-    grid-column: 1 / span 5;
-}
-
-.gallery-item:nth-child(8) {
-    grid-column: 6 / span 7;
-}
-
-
-/* =========================================================
-   PORTFOLIO HOVER
-========================================================= */
+/* subtle professional hover */
 
 .gallery-item:hover img {
     transform: scale(1.025);
 
-    filter: brightness(0.94);
+    filter: brightness(0.96);
+}
+
+
+/* =========================================================
+   LARGE GRID ITEM
+========================================================= */
+
+/*
+   If your HTML contains:
+
+   <div class="gallery-item large">
+
+   it will no longer become enormous.
+
+   It simply occupies two rows.
+*/
+
+.gallery-item.large {
+    grid-row: span 2;
+
+    height: auto;
+
+    min-height: 738px;
+}
+
+
+/*
+   Make the large image itself fit inside its area.
+*/
+
+.gallery-item.large img {
+    height: 100%;
+
+    object-fit: contain;
 }
 
 
@@ -515,6 +560,415 @@ select {
     display: none;
 }
 
+
+/* =========================================================
+   MORE WORK
+========================================================= */
+
+.more-work-section {
+    padding: 110px 6vw;
+
+    background: #f5f1eb;
+}
+
+.more-work-gallery {
+    width: min(1200px, 100%);
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+.more-work-item {
+    overflow: hidden;
+
+    background: #e8e2da;
+
+    aspect-ratio: 4 / 5;
+
+    cursor: pointer;
+}
+
+.more-work-item img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+
+    background: #e8e2da;
+
+    display: block;
+
+    transition: transform 0.6s ease;
+}
+
+.more-work-item:hover img {
+    transform: scale(1.025);
+}
+
+
+/* =========================================================
+   LIGHTBOX
+========================================================= */
+
+.lightbox {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 2000;
+
+    background: rgba(12, 12, 12, 0.96);
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding: 45px;
+
+    box-sizing: border-box;
+
+    touch-action: none;
+}
+
+
+/*
+   The lightbox should ALWAYS show the whole photograph.
+*/
+
+.lightbox img {
+    display: block;
+
+    width: auto;
+
+    height: auto;
+
+    max-width: 92vw;
+
+    max-height: 88vh;
+
+    object-fit: contain;
+
+    margin: auto;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+
+    -webkit-user-drag: none;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* =========================================================
+   LIGHTBOX CLOSE
+========================================================= */
+
+.lightbox .close {
+    position: absolute;
+
+    top: 22px;
+
+    right: 32px;
+
+    z-index: 2005;
+
+    color: white;
+
+    font-size: 38px;
+
+    line-height: 1;
+
+    font-family: Arial, sans-serif;
+
+    cursor: pointer;
+
+    transition: opacity 0.25s ease;
+}
+
+.lightbox .close:hover {
+    opacity: 0.55;
+}
+
+
+/* =========================================================
+   LIGHTBOX ARROWS
+========================================================= */
+
+.lightbox-arrow {
+    position: absolute;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 2005;
+
+    width: 55px;
+    height: 55px;
+
+    padding: 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    border: none;
+
+    background: rgba(255,255,255,0.06);
+
+    color: white;
+
+    font-size: 32px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.25s ease,
+        opacity 0.25s ease;
+}
+
+.lightbox-arrow:hover {
+    background: rgba(255,255,255,0.14);
+}
+
+.lightbox-arrow.left {
+    left: 25px;
+}
+
+.lightbox-arrow.right {
+    right: 25px;
+}
+
+
+/* =========================================================
+   LIGHTBOX COUNTER
+========================================================= */
+
+#lightbox-counter {
+    position: absolute;
+
+    bottom: 25px;
+
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    color: rgba(255,255,255,0.65);
+
+    font-size: 10px;
+
+    letter-spacing: 3px;
+
+    z-index: 2005;
+}
+
+
+/* =========================================================
+   MOBILE PORTFOLIO
+========================================================= */
+
+@media (max-width: 768px) {
+
+    #portfolio {
+        padding: 85px 18px 95px;
+    }
+
+
+    /* HEADER */
+
+    .portfolio-header {
+        margin-bottom: 40px;
+    }
+
+    .portfolio-header h2 {
+        font-size: 46px;
+    }
+
+
+    /* FILTERS */
+
+    .portfolio-filters {
+        gap: 7px;
+
+        margin-bottom: 40px;
+    }
+
+    .filter-btn {
+        padding: 9px 13px;
+
+        font-size: 9px;
+
+        letter-spacing: 1.3px;
+    }
+
+
+    /* FEATURED */
+
+    .portfolio-large-image {
+        width: 100%;
+
+        margin-bottom: 35px;
+    }
+
+    .portfolio-large-image img {
+        max-height: 480px;
+
+        width: 100%;
+
+        height: auto;
+
+        object-fit: contain;
+    }
+
+
+    /* GALLERY */
+
+    .gallery {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+
+    /*
+       Smaller cards on mobile.
+    */
+
+    .gallery-item {
+        height: 245px;
+    }
+
+
+    /*
+       Large image becomes normal card.
+       This prevents it from taking the whole screen.
+    */
+
+    .gallery-item.large {
+        grid-row: auto;
+
+        min-height: 245px;
+
+        height: 245px;
+    }
+
+    .gallery-item.large img {
+        height: 100%;
+
+        object-fit: contain;
+    }
+
+
+    /* MORE WORK */
+
+    .more-work-section {
+        padding: 80px 18px;
+    }
+
+    .more-work-gallery {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+    }
+
+    .more-work-item {
+        aspect-ratio: 4 / 5;
+    }
+
+
+    /* LIGHTBOX */
+
+    .lightbox {
+        padding: 20px;
+    }
+
+    .lightbox img {
+        max-width: 94vw;
+
+        max-height: 82vh;
+    }
+
+    .lightbox .close {
+        top: 15px;
+
+        right: 18px;
+
+        font-size: 34px;
+    }
+
+    .lightbox-arrow {
+        width: 42px;
+
+        height: 42px;
+
+        font-size: 25px;
+
+        background: transparent;
+    }
+
+    .lightbox-arrow.left {
+        left: 3px;
+    }
+
+    .lightbox-arrow.right {
+        right: 3px;
+    }
+
+    #lightbox-counter {
+        bottom: 18px;
+    }
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 480px) {
+
+    #portfolio {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
+    .gallery {
+        gap: 8px;
+    }
+
+    .gallery-item {
+        height: 210px;
+    }
+
+    .gallery-item.large {
+        height: 210px;
+        min-height: 210px;
+    }
+
+    .portfolio-large-image img {
+        max-height: 380px;
+    }
+
+    .filter-btn {
+        padding: 8px 11px;
+
+        font-size: 8px;
+    }
+}
 
 /* =========================================================
    ABOUT
