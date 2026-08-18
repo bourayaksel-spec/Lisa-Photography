@@ -453,46 +453,39 @@ select {
 /* =========================================================
    GALLERY ITEM
 ========================================================= */
+.gallery {
+    width: min(1250px, 100%);
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+}
 
 .gallery-item {
-    position: relative;
+    width: 100%;
+    height: 340px;
 
     overflow: hidden;
 
     background: #e8e2da;
 
     cursor: pointer;
-
-    /*
-       Every image gets a restrained frame.
-       This prevents the gallery from becoming huge.
-    */
-
-    height: 360px;
-
-    transition:
-        opacity 0.35s ease,
-        transform 0.35s ease;
 }
 
-
-/*
-   IMAGE
-*/
-
 .gallery-item img {
-    display: block;
-
     width: 100%;
     height: 100%;
 
+    display: block;
+
     /*
-       THIS IS THE IMPORTANT PART.
-
-       contain = entire image is visible.
-       No cropping.
+       IMPORTANT
+       Show the complete photograph.
     */
-
     object-fit: contain;
 
     object-position: center;
@@ -501,23 +494,12 @@ select {
 
     transition:
         transform 0.6s ease,
-        filter 0.6s ease;
-
-    user-select: none;
-
-    -webkit-user-drag: none;
+        opacity 0.4s ease;
 }
-
-
-/* subtle professional hover */
 
 .gallery-item:hover img {
     transform: scale(1.025);
-
-    filter: brightness(0.96);
 }
-
-
 /* =========================================================
    LARGE GRID ITEM
 ========================================================= */
@@ -2647,3 +2629,21 @@ select {
     }
 
 }
+@media (max-width: 768px) {
+
+    .gallery {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
+    .gallery-item {
+        height: 240px;
+    }
+
+    .gallery-item img {
+        object-fit: contain;
+    }
+}
+
+
+
