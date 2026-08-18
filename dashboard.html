@@ -1659,9 +1659,10 @@ async function getLargeImage(section) {
         } = await supabaseClient
             .from("portfolio_settings")
             .select("large_image")
-            .eq("section", section)
-            .eq("category", "portfolio")
+            .eq("section", "featured")
+            .eq("category", "portraits")
             .maybeSingle();
+
 
         if (error) {
 
@@ -1673,7 +1674,9 @@ async function getLargeImage(section) {
             return null;
         }
 
+
         return data?.large_image || null;
+
 
     } catch (error) {
 
@@ -1685,7 +1688,6 @@ async function getLargeImage(section) {
         return null;
     }
 }
-
 /* =====================================================
    SET LARGE IMAGE
 ===================================================== */
@@ -1697,43 +1699,34 @@ async function setLargeImage(
     imagePath
 ) {
 
-    showMessage(
-        "Updating large image..."
-    );
+    showMessage("Updating large image...");
 
     try {
 
         /*
-         * ONE Large Image for the whole Portfolio.
+         * There is ONE Large Image for the
+         * entire Featured Portfolio.
          *
-         * The image can come from ANY category:
+         * We store its setting in the
+         * "portraits" category because
+         * "portfolio" is not allowed by
+         * the database CHECK constraint.
          *
-         * portraits
-         * couples
-         * sports
-         * landscapes
-         * real-estate
-         * lifestyle
-         *
-         * category is NOT used to create
-         * separate Large Images.
+         * The actual imagePath can belong
+         * to ANY category.
          */
 
+        const settingsCategory = "portraits";
 
-        /*
-         * Find the current Large Image
-         * for this section.
-         */
 
         const {
             data: current,
             error: readError
         } = await supabaseClient
             .from("portfolio_settings")
-            .select("id, section, category, large_image")
-            .eq("section", section)
-            .not("large_image", "is", null)
-            .limit(1)
+            .select("id, large_image")
+            .eq("section", "featured")
+            .eq("category", settingsCategory)
             .maybeSingle();
 
 
@@ -1751,15 +1744,12 @@ async function setLargeImage(
             );
 
             return false;
-
         }
 
 
         /*
-         * SAME IMAGE
-         *
-         * Clicking Set Large again
-         * removes the Large status.
+         * Clicking the currently selected
+         * Large image again removes it.
          */
 
         if (
@@ -1791,7 +1781,6 @@ async function setLargeImage(
                 );
 
                 return false;
-
             }
 
 
@@ -1800,30 +1789,13 @@ async function setLargeImage(
                 "success"
             );
 
-
-            /*
-             * Refresh dashboard if available.
-             */
-
-            if (
-                typeof loadPortfolioSettings ===
-                "function"
-            ) {
-
-                await loadPortfolioSettings();
-
-            }
-
-
             return true;
-
         }
 
 
         /*
-         * DIFFERENT IMAGE
-         *
-         * Replace the current Large Image.
+         * Existing Large Image:
+         * replace it.
          */
 
         if (current) {
@@ -1852,15 +1824,13 @@ async function setLargeImage(
                 );
 
                 return false;
-
             }
 
         }
 
         /*
-         * NO Large Image exists yet.
-         *
-         * Create one record.
+         * No Large Image exists:
+         * create the single settings row.
          */
 
         else {
@@ -1871,9 +1841,9 @@ async function setLargeImage(
                 .from("portfolio_settings")
                 .insert({
 
-                    section: section,
+                    section: "featured",
 
-                    category: "portfolio",
+                    category: settingsCategory,
 
                     large_image: imagePath
 
@@ -1894,9 +1864,7 @@ async function setLargeImage(
                 );
 
                 return false;
-
             }
-
         }
 
 
@@ -1904,20 +1872,6 @@ async function setLargeImage(
             "Large image selected.",
             "success"
         );
-
-
-        /*
-         * Refresh dashboard if the function exists.
-         */
-
-        if (
-            typeof loadPortfolioSettings ===
-            "function"
-        ) {
-
-            await loadPortfolioSettings();
-
-        }
 
 
         return true;
@@ -1931,16 +1885,14 @@ async function setLargeImage(
         );
 
         showMessage(
-            "Could not update large image.",
+            "Could not update large image: " +
+            error.message,
             "error"
         );
 
         return false;
-
     }
-
 }
-
 
 /* =====================================================
    UPLOAD PORTFOLIO PHOTO
@@ -2603,7 +2555,7 @@ async function renderPortfolioSection(
                 ),
 
                 getLargeImage(
-                   "featured"
+                   section
                  
                 )
 
