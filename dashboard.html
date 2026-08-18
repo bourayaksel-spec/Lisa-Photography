@@ -1716,6 +1716,7 @@ async function getLargeImage(
    SET LARGE IMAGE
 ===================================================== */
 
+```javascript
 async function setLargeImage(
     section,
     category,
@@ -1723,45 +1724,176 @@ async function setLargeImage(
 ) {
 
     showMessage(
-        "Setting large image..."
+        "Updating large image..."
     );
 
+    try {
 
-    const {
-        error
-    } =
-        await supabaseClient
-            .from(
-                "portfolio_settings"
-            )
-            .upsert(
-                {
-                    section:
-                        section,
+        /*
+         * We use ONE global Large Image
+         * for the Portfolio.
+         *
+         * The category is kept only as
+         * information about where the image
+         * originally belongs.
+         */
 
-                    category:
-                        category,
+        const { data: current, error: readError } =
+            await supabaseClient
+                .from("portfolio_settings")
+                .select("id, large_image, category")
+                .eq("section", section)
+                .eq("category", "portfolio")
+                .maybeSingle();
 
-                    large_image:
-                        imagePath
 
-                },
-                {
-                    onConflict:
-                        "section,category"
-                }
+        if (readError) {
+
+            console.error(readError);
+
+            showMessage(
+                "Could not read large image: " +
+                readError.message,
+                "error"
             );
 
+            return false;
 
-    if (error) {
+        }
+
+
+        /*
+         * If the selected image is already
+         * the Large Image, clicking the button
+         * again removes it.
+         */
+
+        if (
+            current &&
+            current.large_image === imagePath
+        ) {
+
+            const { error: removeError } =
+                await supabaseClient
+                    .from("portfolio_settings")
+                    .update({
+                        large_image: null
+                    })
+                    .eq("id", current.id);
+
+
+            if (removeError) {
+
+                console.error(
+                    removeError
+                );
+
+                showMessage(
+                    "Could not remove large image: " +
+                    removeError.message,
+                    "error"
+                );
+
+                return false;
+
+            }
+
+
+            showMessage(
+                "Large image removed.",
+                "success"
+            );
+
+            return true;
+
+        }
+
+
+        /*
+         * If another image is currently Large,
+         * replace it with the newly selected image.
+         */
+
+        if (current) {
+
+            const { error: updateError } =
+                await supabaseClient
+                    .from("portfolio_settings")
+                    .update({
+                        large_image: imagePath
+                    })
+                    .eq("id", current.id);
+
+
+            if (updateError) {
+
+                console.error(
+                    updateError
+                );
+
+                showMessage(
+                    "Could not change large image: " +
+                    updateError.message,
+                    "error"
+                );
+
+                return false;
+
+            }
+
+        } else {
+
+            /*
+             * No Large Image exists yet.
+             * Create the single Portfolio record.
+             */
+
+            const { error: insertError } =
+                await supabaseClient
+                    .from("portfolio_settings")
+                    .insert({
+                        section: section,
+                        category: "portfolio",
+                        large_image: imagePath
+                    });
+
+
+            if (insertError) {
+
+                console.error(
+                    insertError
+                );
+
+                showMessage(
+                    "Could not set large image: " +
+                    insertError.message,
+                    "error"
+                );
+
+                return false;
+
+            }
+
+        }
+
+
+        showMessage(
+            "Large image selected.",
+            "success"
+        );
+
+
+        return true;
+
+    } catch (error) {
 
         console.error(
+            "setLargeImage error:",
             error
         );
 
         showMessage(
-            "Could not set large image: " +
-            error.message,
+            "Could not update large image.",
             "error"
         );
 
@@ -1769,16 +1901,8 @@ async function setLargeImage(
 
     }
 
-
-    showMessage(
-        "Large image selected.",
-        "success"
-    );
-
-
-    return true;
-
 }
+```
 
 
 /* =====================================================
