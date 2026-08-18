@@ -1927,39 +1927,39 @@ async function uploadPortfolioPhoto(
     files
 ) {
 
-    if (
-        !files ||
-        !files.length
-    ) {
-
+    if (!files || files.length === 0) {
         return;
-
     }
-
 
     showMessage(
         "Uploading " +
         files.length +
-        " portfolio photo(s)..."
+        " photo(s)..."
     );
 
+    let uploaded = 0;
+    let failed = 0;
 
-    let uploaded =
-        0;
-
-
-    for (
-        const file of files
-    ) {
+    for (const file of files) {
 
         try {
+
+            if (
+                !file.type.startsWith("image/")
+            ) {
+
+                failed++;
+
+                continue;
+            }
+
 
             const extension =
                 file.name.includes(".")
                     ? file.name.substring(
                         file.name.lastIndexOf(".")
                     )
-                    : "";
+                    : ".jpg";
 
 
             const baseName =
@@ -1979,16 +1979,13 @@ async function uploadPortfolioPhoto(
                 "-" +
                 Math.random()
                     .toString(36)
-                    .substring(
-                        2,
-                        8
-                    ) +
+                    .substring(2, 9) +
                 "-" +
                 baseName +
                 extension;
 
 
-            const path =
+            const filePath =
                 section +
                 "/" +
                 category +
@@ -2001,11 +1998,9 @@ async function uploadPortfolioPhoto(
             } =
                 await supabaseClient
                     .storage
-                    .from(
-                        PORTFOLIO_BUCKET
-                    )
+                    .from(PORTFOLIO_BUCKET)
                     .upload(
-                        path,
+                        filePath,
                         file,
                         {
                             cacheControl:
@@ -2015,21 +2010,17 @@ async function uploadPortfolioPhoto(
                                 false,
 
                             contentType:
-                                file.type ||
-                                "application/octet-stream"
+                                file.type
                         }
                     );
 
 
             if (error) {
-
                 throw error;
-
             }
 
 
             uploaded++;
-
 
         }
 
@@ -2040,16 +2031,36 @@ async function uploadPortfolioPhoto(
                 error
             );
 
+            failed++;
+
         }
 
     }
 
 
-    showMessage(
-        uploaded +
-        " portfolio photo(s) uploaded.",
-        "success"
-    );
+    if (failed > 0) {
+
+        showMessage(
+            uploaded +
+            " uploaded, " +
+            failed +
+            " failed.",
+            uploaded > 0
+                ? "success"
+                : "error"
+        );
+
+    }
+
+    else {
+
+        showMessage(
+            uploaded +
+            " photo(s) uploaded successfully.",
+            "success"
+        );
+
+    }
 
 
     await renderPortfolioSection(
@@ -2058,7 +2069,6 @@ async function uploadPortfolioPhoto(
     );
 
 }
-
 
 /* =====================================================
    REPLACE PORTFOLIO PHOTO
