@@ -1,11 +1,11 @@
 /* =========================================================
-   LISA PHOTOGRAPHY
-   CLEAN FINAL STYLESHEET
+   LISA MICHELLE VISUALS
+   CLEAN PROFESSIONAL STYLESHEET
 ========================================================= */
 
-/* =========================
+/* =========================================================
    RESET
-========================= */
+========================================================= */
 
 * {
     margin: 0;
@@ -45,8 +45,9 @@ select {
     position: fixed;
     top: 0;
     left: 0;
-
     width: 100%;
+
+    height: 76px;
 
     z-index: 1000;
 
@@ -54,7 +55,7 @@ select {
     justify-content: space-between;
     align-items: center;
 
-    padding: 22px 45px;
+    padding: 0 45px;
 
     background: rgba(245, 241, 235, 0.92);
     backdrop-filter: blur(10px);
@@ -74,6 +75,7 @@ select {
 
 .nav-links {
     display: flex;
+    align-items: center;
     gap: 30px;
 }
 
@@ -95,7 +97,6 @@ select {
     content: "";
 
     position: absolute;
-
     left: 0;
     bottom: 0;
 
@@ -116,23 +117,27 @@ select {
 }
 
 
-/* =========================
-   MOBILE MENU BUTTON
-========================= */
+/* =========================================================
+   MOBILE MENU
+========================================================= */
 
 .menu-toggle {
     display: none;
 
-    background: none;
+    width: 42px;
+    height: 42px;
+
+    padding: 0;
+
     border: none;
+    background: transparent;
 
     color: #222;
 
     font-size: 25px;
+    line-height: 42px;
 
     cursor: pointer;
-
-    padding: 5px;
 }
 
 
@@ -196,8 +201,6 @@ select {
     letter-spacing: 18px;
 
     line-height: 0.9;
-
-    margin: 0;
 }
 
 .hero-description {
@@ -250,9 +253,6 @@ select {
     opacity: 0.8;
 }
 
-
-/* HERO ANIMATION */
-
 @keyframes heroAppear {
 
     from {
@@ -269,7 +269,7 @@ select {
 
 
 /* =========================================================
-   COMMON SECTION LABEL
+   SECTION LABEL
 ========================================================= */
 
 .section-label {
@@ -296,7 +296,7 @@ select {
 .portfolio-header {
     max-width: 700px;
 
-    margin: 0 auto 80px;
+    margin: 0 auto 55px;
 
     text-align: center;
 }
@@ -310,7 +310,7 @@ select {
 
     line-height: 1;
 
-    margin: 0 0 25px;
+    margin-bottom: 25px;
 }
 
 .portfolio-header > p:last-child {
@@ -320,67 +320,202 @@ select {
 }
 
 
-/* GALLERY */
-
 /* =========================================================
-   PORTFOLIO — EDITORIAL MASONRY GALLERY
+   PORTFOLIO FILTERS
 ========================================================= */
 
-.gallery {
-    max-width: 1300px;
-    margin: 0 auto;
+.portfolio-filters {
+    display: flex;
 
-    columns: 3 320px;
-    column-gap: 18px;
+    justify-content: center;
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+
+    margin: 40px auto 45px;
 }
 
-.gallery-item {
-    width: 100%;
-    margin: 0 0 18px;
+.filter-btn {
+    background: transparent;
 
-    break-inside: avoid;
+    border: 1px solid #ccc;
 
-    overflow: hidden;
+    padding: 10px 18px;
 
-    position: relative;
+    font-family: inherit;
 
-    background: #ebe6df;
-}
+    font-size: 11px;
 
-.gallery-item img {
-    width: 100%;
-    height: auto;
-
-    display: block;
-
-    object-fit: contain;
+    letter-spacing: 1.5px;
 
     cursor: pointer;
 
     transition:
-        transform 0.8s ease,
-        filter 0.8s ease;
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
 }
 
-/* الصورة الكبيرة المختارة */
+.filter-btn:hover,
+.filter-btn.active {
+    background: #111;
+
+    color: #fff;
+
+    border-color: #111;
+}
+
+
+/* =========================================================
+   PROFESSIONAL PORTFOLIO GRID
+========================================================= */
+
+.gallery {
+    width: 100%;
+
+    max-width: 1250px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+
+    gap: 16px;
+
+    align-items: start;
+}
+
+
+/* =========================================================
+   GALLERY ITEM
+========================================================= */
+
+.gallery-item {
+    position: relative;
+
+    min-width: 0;
+
+    overflow: hidden;
+
+    background: #ebe6df;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+
+/* =========================================================
+   IMAGE
+========================================================= */
+
+.gallery-item img {
+    display: block;
+
+    width: 100%;
+    height: auto;
+
+    max-width: 100%;
+
+    object-fit: contain;
+
+    background: #ebe6df;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.6s ease,
+        filter 0.6s ease;
+}
+
+
+/* =========================================================
+   FEATURED PORTFOLIO IMAGE
+   Bigger, but NOT a HERO
+========================================================= */
+
 .gallery-item.large {
+    grid-column: span 7;
+
     grid-row: auto;
 }
 
-/* لا يوجد أي قص */
 .gallery-item.large img {
     width: 100%;
+
     height: auto;
 
     object-fit: contain;
 }
 
-/* Hover */
+
+/* =========================================================
+   NORMAL IMAGES
+========================================================= */
+
+.gallery-item:not(.large) {
+    grid-column: span 5;
+}
+
+
+/* =========================================================
+   EDITORIAL ARRANGEMENT
+========================================================= */
+
+.gallery-item:nth-child(2) {
+    grid-column: 8 / span 5;
+}
+
+.gallery-item:nth-child(3) {
+    grid-column: 1 / span 5;
+}
+
+.gallery-item:nth-child(4) {
+    grid-column: 6 / span 7;
+}
+
+.gallery-item:nth-child(5) {
+    grid-column: 1 / span 7;
+}
+
+.gallery-item:nth-child(6) {
+    grid-column: 8 / span 5;
+}
+
+.gallery-item:nth-child(7) {
+    grid-column: 1 / span 5;
+}
+
+.gallery-item:nth-child(8) {
+    grid-column: 6 / span 7;
+}
+
+
+/* =========================================================
+   PORTFOLIO HOVER
+========================================================= */
+
 .gallery-item:hover img {
     transform: scale(1.025);
 
     filter: brightness(0.94);
 }
+
+
+/* =========================================================
+   HIDDEN FILTER ITEMS
+========================================================= */
+
+.gallery-item.hidden {
+    display: none;
+}
+
+
 /* =========================================================
    ABOUT
 ========================================================= */
@@ -404,18 +539,16 @@ select {
 }
 
 .about-image {
-    height: 650px;
-
     overflow: hidden;
 }
 
 .about-image img {
     width: 100%;
-    height: 100%;
-
-    object-fit: cover;
+    height: auto;
 
     display: block;
+
+    object-fit: contain;
 
     transition: transform 0.8s ease;
 }
@@ -447,9 +580,6 @@ select {
 
     margin-bottom: 22px;
 }
-
-
-/* ABOUT BUTTON */
 
 .about-button {
     display: inline-flex;
@@ -531,9 +661,6 @@ select {
     line-height: 1.8;
 }
 
-
-/* SERVICES GRID */
-
 .services-grid {
     max-width: 1200px;
 
@@ -596,8 +723,6 @@ select {
     color: #aaa;
 
     line-height: 1.7;
-
-    margin: 0;
 }
 
 
@@ -643,9 +768,6 @@ select {
     line-height: 1.8;
 }
 
-
-/* TESTIMONIAL CARDS */
-
 .testimonials-grid {
     max-width: 1200px;
 
@@ -656,7 +778,6 @@ select {
     grid-template-columns: repeat(3, 1fr);
 
     border-top: 1px solid #444;
-
     border-left: 1px solid #444;
 }
 
@@ -666,14 +787,11 @@ select {
     padding: 35px;
 
     border-right: 1px solid #444;
-
     border-bottom: 1px solid #444;
 
     display: flex;
 
     flex-direction: column;
-
-    box-sizing: border-box;
 }
 
 .testimonial-number {
@@ -684,6 +802,18 @@ select {
     color: #777;
 
     text-align: left;
+}
+
+.testimonial-stars {
+    color: #d4af37;
+
+    font-size: 18px;
+
+    letter-spacing: 4px;
+
+    text-align: left;
+
+    margin: 25px 0 20px;
 }
 
 .testimonial-placeholder {
@@ -734,7 +864,7 @@ select {
 
     font-weight: normal;
 
-    margin: 0 0 15px;
+    margin-bottom: 15px;
 }
 
 .review-box > p {
@@ -757,8 +887,6 @@ select {
 .review-form textarea {
     width: 100%;
 
-    box-sizing: border-box;
-
     padding: 16px;
 
     border: 1px solid #444;
@@ -766,8 +894,6 @@ select {
     background: transparent;
 
     color: white;
-
-    font-family: inherit;
 
     outline: none;
 }
@@ -782,32 +908,39 @@ select {
 }
 
 
- /* =========================================================
+/* =========================================================
    STAR RATING
 ========================================================= */
 
 .rating {
     display: flex;
+
     align-items: center;
+
     gap: 18px;
+
     margin: 5px 0;
 }
 
 .rating p {
     margin: 0;
+
     color: #999;
+
     font-size: 11px;
+
     letter-spacing: 2px;
+
     white-space: nowrap;
 }
 
 .stars {
     display: flex;
+
     align-items: center;
+
     gap: 8px;
 }
-
-/* STAR BUTTONS */
 
 .review-form .stars .star {
     width: 42px;
@@ -817,17 +950,19 @@ select {
     margin: 0;
 
     border: none !important;
-    outline: none;
 
     background: transparent !important;
 
     color: #555 !important;
 
     font-size: 28px;
+
     line-height: 42px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     cursor: pointer;
@@ -837,23 +972,14 @@ select {
         transform 0.2s ease;
 }
 
-/* Hover */
-
-.review-form .stars .star:hover {
+.review-form .stars .star:hover,
+.review-form .stars .star.selected {
     color: #d4af37 !important;
+
     transform: scale(1.15);
 }
 
-/* Selected */
-
-.review-form .stars .star.selected {
-    color: #d4af37 !important;
-}
-
-
-/* REVIEW SUBMIT */
-
-.review-form button {
+.review-form > button {
     align-self: flex-start;
 
     margin-top: 10px;
@@ -875,7 +1001,7 @@ select {
     transition: all 0.3s ease;
 }
 
-.review-form button:hover {
+.review-form > button:hover {
     background: transparent;
 
     color: white;
@@ -927,9 +1053,6 @@ select {
 
     line-height: 1.8;
 }
-
-
-/* CONTACT LINKS */
 
 .contact-links {
     display: flex;
@@ -1005,8 +1128,6 @@ select {
 #booking-form textarea {
     width: 100%;
 
-    box-sizing: border-box;
-
     padding: 17px 18px;
 
     border: 1px solid #ccc;
@@ -1014,8 +1135,6 @@ select {
     background: transparent;
 
     color: #222;
-
-    font-family: inherit;
 
     font-size: 13px;
 
@@ -1139,8 +1258,6 @@ select {
 }
 
 .footer-brand h3 {
-    margin: 0;
-
     font-family: Georgia, serif;
 
     font-size: 42px;
@@ -1159,9 +1276,6 @@ select {
 
     letter-spacing: 2px;
 }
-
-
-/* FOOTER NAV */
 
 .footer-links {
     display: flex;
@@ -1193,9 +1307,6 @@ select {
     color: white;
 }
 
-
-/* FOOTER SOCIAL */
-
 .footer-social {
     display: flex;
 
@@ -1205,9 +1316,6 @@ select {
 
     margin-bottom: 60px;
 }
-
-
-/* FOOTER BOTTOM */
 
 .footer-bottom {
     padding-top: 25px;
@@ -1222,8 +1330,6 @@ select {
 }
 
 .footer-bottom p {
-    margin: 0;
-
     color: #666;
 
     font-size: 10px;
@@ -1243,8 +1349,7 @@ select {
 
     z-index: 2000;
 
-    top: 0;
-    left: 0;
+    inset: 0;
 
     width: 100%;
     height: 100%;
@@ -1257,6 +1362,8 @@ select {
     padding: 30px;
 
     box-sizing: border-box;
+
+    touch-action: none;
 }
 
 .lightbox img {
@@ -1264,14 +1371,25 @@ select {
 
     max-height: 90%;
 
+    width: auto;
+    height: auto;
+
     object-fit: contain;
+
+    user-select: none;
+
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
 }
 
 .lightbox .close {
     position: absolute;
 
     top: 25px;
-
     right: 40px;
 
     color: white;
@@ -1279,8 +1397,6 @@ select {
     font-size: 45px;
 
     cursor: pointer;
-
-    font-family: Arial, sans-serif;
 }
 
 .lightbox .close:hover {
@@ -1326,6 +1442,221 @@ select {
 
 
 /* =========================================================
+   PURCHASE BUTTON
+========================================================= */
+
+#purchase-button {
+    position: absolute;
+
+    bottom: 40px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    padding: 13px 28px;
+
+    background: rgba(255, 255, 255, 0.95);
+
+    color: #111;
+
+    border: none;
+
+    border-radius: 2px;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    letter-spacing: 2px;
+
+    cursor: pointer;
+
+    z-index: 20;
+
+    transition:
+        background 0.3s ease,
+        color 0.3s ease,
+        transform 0.3s ease;
+}
+
+#purchase-button:hover {
+    background: #111;
+
+    color: #fff;
+
+    transform: translateX(-50%) translateY(-2px);
+}
+
+
+/* =========================================================
+   MORE WORK
+========================================================= */
+
+.more-work-section {
+    padding: 120px 8%;
+}
+
+.more-work-header {
+    max-width: 700px;
+
+    margin: 0 auto 60px;
+
+    text-align: center;
+}
+
+.more-work-header h2 {
+    margin-bottom: 20px;
+}
+
+.more-work-header p {
+    line-height: 1.8;
+}
+
+.more-work-gallery {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 20px;
+}
+
+.more-work-item {
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+.more-work-item img {
+    width: 100%;
+
+    height: auto;
+
+    display: block;
+
+    object-fit: contain;
+
+    transition: transform 0.5s ease;
+}
+
+.more-work-item:hover img {
+    transform: scale(1.03);
+}
+
+.more-work-page {
+    padding: 160px 8% 100px;
+
+    min-height: 100vh;
+}
+
+.more-work {
+    display: flex;
+
+    justify-content: center;
+
+    margin: 60px 0 20px;
+}
+
+.more-work-button {
+    display: inline-block;
+
+    padding: 15px 35px;
+
+    border: 1px solid currentColor;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+
+    transition: 0.3s ease;
+}
+
+.more-work-button:hover {
+    background: #111;
+
+    color: #fff;
+}
+
+
+/* =========================================================
+   PRIVATE CLIENT GALLERY
+========================================================= */
+
+.client-gallery-page {
+    min-height: 100vh;
+
+    padding: 160px 6vw 100px;
+
+    background: #f5f1eb;
+}
+
+.client-gallery-header {
+    max-width: 750px;
+
+    margin: 0 auto 80px;
+
+    text-align: center;
+}
+
+.client-gallery-header h1 {
+    font-family: Georgia, serif;
+
+    font-size: clamp(55px, 8vw, 95px);
+
+    font-weight: normal;
+
+    line-height: 1;
+
+    margin: 20px 0 25px;
+}
+
+.client-gallery-header p:last-child {
+    max-width: 550px;
+
+    margin: 0 auto;
+
+    color: #666;
+
+    line-height: 1.8;
+}
+
+.client-gallery {
+    max-width: 1300px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+.client-photo {
+    overflow: hidden;
+
+    cursor: pointer;
+}
+
+.client-photo img {
+    width: 100%;
+
+    height: auto;
+
+    display: block;
+
+    object-fit: contain;
+
+    transition: transform 0.6s ease;
+}
+
+.client-photo:hover img {
+    transform: scale(1.03);
+}
+
+
+/* =========================================================
    MOBILE
 ========================================================= */
 
@@ -1334,16 +1665,15 @@ select {
     /* HEADER */
 
     .site-header {
-        padding: 15px 20px;
+        height: 64px;
+
+        padding: 0 20px;
     }
 
     .logo {
-        font-size: 20px;
-        letter-spacing: 4px;
-    }
+        font-size: 21px;
 
-    .main-nav {
-        width: auto;
+        letter-spacing: 5px;
     }
 
     .menu-toggle {
@@ -1355,49 +1685,41 @@ select {
     }
 
     .nav-links.active {
-        display: flex;
-
         position: fixed;
 
-        top: 70px;
+        top: 64px;
         left: 0;
 
-        width: 100vw;
-        min-height: calc(100vh - 70px);
+        width: 100%;
+        height: calc(100svh - 64px);
 
-        padding: 40px 30px;
+        padding: 45px 25px;
 
-        background: #222;
+        display: flex;
 
         flex-direction: column;
 
         align-items: flex-start;
 
-        justify-content: flex-start;
-
         gap: 28px;
 
-        z-index: 100000;
+        background: #222;
 
         overflow-y: auto;
+
+        z-index: 999;
     }
 
     .nav-links.active a {
-        display: block;
-
         color: white !important;
 
         font-size: 14px;
 
         letter-spacing: 3px;
 
-        line-height: 1.5;
+        line-height: 1.4;
 
         text-decoration: none;
-
-        padding: 0;
-
-        opacity: 1;
 
         white-space: nowrap;
     }
@@ -1409,78 +1731,149 @@ select {
 
     /* HERO */
 
-    .hero {
+    #home.hero {
+        width: 100vw;
+
         min-height: 100svh;
 
-        padding: 100px 20px 60px;
+        padding: 64px 20px 50px;
 
         background-position: center;
     }
 
-    .hero h1 {
-        font-size: clamp(55px, 17vw, 90px);
+    .hero-content {
+        width: 100%;
 
-        letter-spacing: 8px;
+        max-width: 360px;
+
+        padding: 0;
     }
 
     .hero-label {
         font-size: 9px;
 
-        letter-spacing: 4px;
+        letter-spacing: 3px;
+
+        margin-bottom: 22px;
+    }
+
+    .hero h1 {
+        font-size: clamp(60px, 20vw, 85px);
+
+        letter-spacing: 6px;
+
+        line-height: 0.9;
     }
 
     .hero-description {
+        max-width: 320px;
+
+        margin: 28px auto;
+
         font-size: 15px;
 
-        max-width: 320px;
+        line-height: 1.7;
+    }
+
+    .hero-button {
+        padding: 15px 28px;
+
+        font-size: 9px;
+
+        letter-spacing: 2px;
     }
 
     .hero-scroll {
+        bottom: 22px;
+
         font-size: 7px;
 
-        letter-spacing: 3px;
+        letter-spacing: 2px;
     }
 
 
-    /* PORTFOLIO */
+    /* =====================================================
+       PORTFOLIO MOBILE
+    ===================================================== */
 
-  /* =========================================================
-   PORTFOLIO — MOBILE
-========================================================= */
+    #portfolio {
+        width: 100%;
 
-#portfolio {
-    padding: 90px 20px;
-}
+        padding: 90px 20px;
 
-.portfolio-header {
-    margin-bottom: 50px;
-}
+        overflow: hidden;
+    }
 
-.portfolio-header h2 {
-    font-size: 45px;
-}
+    .portfolio-header {
+        margin-bottom: 40px;
+    }
 
-.gallery {
-    columns: 2 160px;
-    column-gap: 10px;
-}
+    .portfolio-header h2 {
+        font-size: 45px;
+    }
 
-.gallery-item {
-    width: 100%;
-    height: auto;
+    .portfolio-filters {
+        gap: 8px;
 
-    margin-bottom: 10px;
+        margin: 30px auto 35px;
+    }
 
-    break-inside: avoid;
-}
+    .filter-btn {
+        padding: 9px 13px;
 
-.gallery-item img {
-    width: 100%;
-    height: auto;
+        font-size: 10px;
 
-    object-fit: contain;
-}
-    /* ABOUT */
+        letter-spacing: 1px;
+    }
+
+
+    /* MOBILE EDITORIAL GRID */
+
+    .gallery {
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 10px;
+
+        align-items: start;
+    }
+
+    .gallery-item,
+    .gallery-item.large,
+    .gallery-item:not(.large),
+    .gallery-item:nth-child(2),
+    .gallery-item:nth-child(3),
+    .gallery-item:nth-child(4),
+    .gallery-item:nth-child(5),
+    .gallery-item:nth-child(6),
+    .gallery-item:nth-child(7),
+    .gallery-item:nth-child(8) {
+        grid-column: span 1;
+
+        grid-row: auto;
+
+        width: 100%;
+
+        height: auto;
+
+        min-height: 0;
+    }
+
+    .gallery-item img {
+        width: 100%;
+
+        height: auto;
+
+        object-fit: contain;
+    }
+
+
+    /* =====================================================
+       ABOUT
+    ===================================================== */
 
     .about-section {
         padding: 90px 20px;
@@ -1490,8 +1883,12 @@ select {
         gap: 50px;
     }
 
-    .about-image {
-        height: 500px;
+    .about-image img {
+        width: 100%;
+
+        height: auto;
+
+        object-fit: contain;
     }
 
     .about-text {
@@ -1505,7 +1902,9 @@ select {
     }
 
 
-    /* SERVICES */
+    /* =====================================================
+       SERVICES
+    ===================================================== */
 
     .services-section {
         padding: 90px 20px;
@@ -1536,7 +1935,9 @@ select {
     }
 
 
-    /* TESTIMONIALS */
+    /* =====================================================
+       TESTIMONIALS
+    ===================================================== */
 
     .testimonials-section {
         padding: 90px 20px;
@@ -1561,7 +1962,9 @@ select {
     }
 
 
-    /* REVIEW */
+    /* =====================================================
+       REVIEW
+    ===================================================== */
 
     .review-box {
         margin-top: 60px;
@@ -1573,31 +1976,18 @@ select {
         font-size: 32px;
     }
 
-  
-/* =========================================================
-   MOBILE STAR RATING
-========================================================= */
-
-@media (max-width: 768px) {
-
     .rating {
-        display: flex;
         flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-        width: 100%;
-    }
 
-    .rating p {
-        width: auto;
-        margin: 0;
+        align-items: flex-start;
+
+        gap: 10px;
     }
 
     .stars {
-        display: flex;
         width: 100%;
+
         gap: 5px;
-        justify-content: flex-start;
     }
 
     .review-form .stars .star {
@@ -1608,31 +1998,18 @@ select {
         height: 42px !important;
 
         padding: 0 !important;
+
         margin: 0 !important;
-
-        background: transparent !important;
-        border: none !important;
-
-        color: #555 !important;
-
-        font-size: 28px;
-        line-height: 42px;
     }
-
-    .review-form .stars .star:hover,
-    .review-form .stars .star.selected {
-        color: #d4af37 !important;
-    }
-
-    /* مهم جداً:
-       لا تجعل قاعدة submit button تؤثر على النجوم
-    */
 
     .review-form > button {
         width: 100%;
     }
-}
-    /* CONTACT */
+
+
+    /* =====================================================
+       CONTACT
+    ===================================================== */
 
     #contact {
         padding: 90px 20px;
@@ -1661,7 +2038,9 @@ select {
     }
 
 
-    /* FINAL CTA */
+    /* =====================================================
+       FINAL CTA
+    ===================================================== */
 
     .final-cta {
         padding: 90px 20px;
@@ -1672,12 +2051,68 @@ select {
     }
 
 
-    /* FOOTER */
+    /* =====================================================
+       MORE WORK
+    ===================================================== */
+
+    .more-work-section {
+        padding: 80px 5%;
+    }
+
+    .more-work-gallery {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 10px;
+    }
+
+    .more-work-page {
+        padding: 120px 5% 70px;
+    }
+
+    .more-work-button {
+        padding: 13px 28px;
+
+        font-size: 11px;
+    }
+
+
+    /* =====================================================
+       CLIENT GALLERY
+    ===================================================== */
+
+    .client-gallery-page {
+        padding: 120px 20px 70px;
+    }
+
+    .client-gallery-header {
+        margin-bottom: 50px;
+    }
+
+    .client-gallery-header h1 {
+        font-size: 52px;
+    }
+
+    .client-gallery {
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 10px;
+    }
+
+
+    /* =====================================================
+       FOOTER
+    ===================================================== */
 
     .site-footer {
         padding: 60px 20px 25px;
 
         text-align: center;
+    }
+
+    .footer-brand h3 {
+        font-size: 32px;
+
+        letter-spacing: 5px;
     }
 
     .footer-links {
@@ -1705,7 +2140,9 @@ select {
     }
 
 
-    /* LIGHTBOX */
+    /* =====================================================
+       LIGHTBOX MOBILE
+    ===================================================== */
 
     .lightbox {
         padding: 15px;
@@ -1715,6 +2152,12 @@ select {
         max-width: 90%;
 
         max-height: 80%;
+
+        width: auto;
+
+        height: auto;
+
+        object-fit: contain;
     }
 
     .lightbox .close {
@@ -1739,621 +2182,14 @@ select {
         right: 5px;
     }
 
-}
-/* =========================================
-   FINAL MOBILE HEADER
-========================================= */
-
-@media (max-width: 768px) {
-
-    .site-header {
-        position: fixed;
-        top: 0;
-        left: 0;
-
-        width: 100%;
-        height: 64px;
-
-        padding: 0 20px;
-
-        display: flex;
-        flex-direction: row;
-
-        justify-content: space-between;
-        align-items: center;
-
-        box-sizing: border-box;
-
-        z-index: 1000;
-    }
-
-    .site-header .logo {
-        font-size: 21px;
-        letter-spacing: 5px;
-        line-height: 1;
-    }
-
-    .main-nav {
-        width: auto;
-        position: static;
-        display: flex;
-        align-items: center;
-    }
-
-    .menu-toggle {
-        display: block;
-
-        width: 42px;
-        height: 42px;
-
-        padding: 0;
-
-        border: none;
-        background: transparent;
-
-        color: #222;
-
-        font-size: 25px;
-        line-height: 42px;
-
-        text-align: center;
-
-        cursor: pointer;
-    }
-
-    .nav-links {
-        display: none;
-    }
-
-    /* OPEN MENU */
-
-    .nav-links.active {
-        position: fixed;
-
-        top: 64px;
-        left: 0;
-
-        width: 100%;
-        height: calc(100svh - 64px);
-
-        padding: 45px 25px;
-
-        margin: 0;
-
-        box-sizing: border-box;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        gap: 28px;
-
-        background: #222;
-
-        overflow-y: auto;
-
-        z-index: 999;
-    }
-
-    .nav-links.active a {
-        display: block;
-
-        width: auto;
-
-        padding: 0;
-        margin: 0;
-
-        color: white !important;
-
-        font-size: 14px;
-
-        letter-spacing: 3px;
-
-        line-height: 1.4;
-
-        text-decoration: none;
-
-        white-space: nowrap;
-    }
-
-
-    /* =========================================
-       HERO
-    ========================================= */
-
-    #home {
-        min-height: 100svh;
-
-        padding: 64px 20px 50px;
-
-        box-sizing: border-box;
-    }
-
-    .hero-content {
-        width: 100%;
-        max-width: 360px;
-
-        padding: 0;
-
-        box-sizing: border-box;
-    }
-
-    .hero-label {
-        font-size: 9px;
-        letter-spacing: 3px;
-
-        margin-bottom: 22px;
-    }
-
-    .hero h1 {
-        font-size: clamp(60px, 20vw, 85px);
-
-        letter-spacing: 6px;
-
-        line-height: 0.9;
-
-        margin: 0;
-    }
-
-    .hero-description {
-        max-width: 320px;
-
-        margin: 28px auto;
-
-        font-size: 15px;
-
-        line-height: 1.7;
-    }
-
-    .hero-button {
-        padding: 15px 28px;
-
-        font-size: 9px;
-        letter-spacing: 2px;
-    }
-
-    .hero-scroll {
-        bottom: 22px;
-
-        font-size: 7px;
-        letter-spacing: 2px;
-    }
-
-
-    /* =========================================
-       GENERAL MOBILE WIDTH FIX
-    ========================================= */
-
-    #portfolio,
-    .about-section,
-    .services-section,
-    .testimonials-section,
-    #contact,
-    .final-cta,
-    .site-footer {
-        width: 100%;
-        max-width: 100%;
-
-        box-sizing: border-box;
-
-        overflow: hidden;
-    }
-
-    .gallery,
-    .services-grid,
-    .testimonials-grid {
-        width: 100%;
-        max-width: 100%;
-    }
-
-}
-/* =========================================================
-   MOBILE HERO — FULL SCREEN WIDTH
-========================================================= */
-
-@media (max-width: 768px) {
-
-    #home.hero {
-        width: 100vw !important;
-        max-width: 100vw !important;
-        min-width: 100vw !important;
-
-        margin: 0 !important;
-        padding: 64px 20px 50px;
-
-        box-sizing: border-box;
-
-        position: relative;
-        overflow: hidden;
-    }
-
-}
-.testimonial-stars {
-    color: #d4af37;
-    font-size: 18px;
-    letter-spacing: 4px;
-    text-align: left;
-    margin: 25px 0 20px;
-}
-/* =========================
-   PORTFOLIO FILTERS
-========================= */
-
-.portfolio-filters {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    margin: 45px auto 40px;
-}
-
-.filter-btn {
-    background: transparent;
-    border: 1px solid #ccc;
-    padding: 10px 18px;
-    font-family: inherit;
-    font-size: 12px;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.filter-btn:hover {
-    background: #111;
-    color: #fff;
-    border-color: #111;
-}
-
-.filter-btn.active {
-    background: #111;
-    color: #fff;
-    border-color: #111;
-}
-
-
-/* Animation */
-
-.gallery-item {
-    transition:
-        opacity 0.35s ease,
-        transform 0.35s ease;
-}
-
-.gallery-item.hidden {
-    opacity: 0;
-    transform: scale(0.95);
-    pointer-events: none;
-    position: absolute;
-}
-/* =========================
-   MORE WORK
-========================= */
-
-.more-work-section {
-    padding: 120px 8%;
-}
-
-.more-work-header {
-    max-width: 700px;
-    margin: 0 auto 60px;
-    text-align: center;
-}
-
-.more-work-header h2 {
-    margin-bottom: 20px;
-}
-
-.more-work-header p {
-    line-height: 1.8;
-}
-
-
-/* Gallery */
-
-.more-work-gallery {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-}
-
-.more-work-item {
-    overflow: hidden;
-    aspect-ratio: 4 / 5;
-    cursor: pointer;
-}
-
-.more-work-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.5s ease;
-}
-
-.more-work-item:hover img {
-    transform: scale(1.05);
-}
-/* Mobile */
-
-@media (max-width: 768px) {
-
-    .more-work-section {
-        padding: 80px 5%;
-    }
-
-    .more-work-gallery {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-    }
-
-}
-/* =========================================================
-   MORE WORK PAGE
-========================================================= */
-
-.more-work-page {
-    padding: 160px 8% 100px;
-    min-height: 100vh;
-}
-
-
-/* =========================
-   FILTER BUTTONS
-========================= */
-
-.portfolio-filters {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin: 50px auto;
-}
-
-
-.filter-btn {
-    background: transparent;
-    border: 1px solid currentColor;
-    padding: 12px 22px;
-    font-family: inherit;
-    font-size: 12px;
-    letter-spacing: 2px;
-    cursor: pointer;
-    transition: 0.3s ease;
-}
-
-
-.filter-btn:hover,
-.filter-btn.active {
-    background: #111;
-    color: #fff;
-}
-
-
-/* =========================
-   HIDDEN IMAGES
-========================= */
-
-.gallery-item.hidden {
-    display: none;
-}
-
-
-/* =========================
-   MORE WORK BUTTON
-========================= */
-
-.more-work {
-    display: flex;
-    justify-content: center;
-    margin: 60px 0 20px;
-}
-
-
-.more-work-button {
-    display: inline-block;
-    padding: 15px 35px;
-    border: 1px solid currentColor;
-    text-decoration: none;
-    font-size: 12px;
-    letter-spacing: 3px;
-    transition: 0.3s ease;
-}
-
-
-.more-work-button:hover {
-    background: #111;
-    color: #fff;
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 768px) {
-
-    .more-work-page {
-        padding: 120px 5% 70px;
-    }
-
-
-    .portfolio-filters {
-        gap: 8px;
-        margin: 35px auto;
-    }
-
-
-    .filter-btn {
-        padding: 10px 14px;
-        font-size: 10px;
-        letter-spacing: 1.5px;
-    }
-
-
-    .more-work-button {
-        padding: 13px 28px;
-        font-size: 11px;
-    }
-
-}
-/* =========================================================
-   LIGHTBOX MOBILE SWIPE
-========================================================= */
-
-.lightbox {
-    touch-action: none;
-}
-
-.lightbox img {
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-user-drag: none;
-}
-/* =========================================================
-   LIGHTBOX IMAGE TRANSITION
-========================================================= */
-
-#lightbox-image {
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-/* =========================
-   PURCHASE BUTTON
-========================= */
-
-#purchase-button {
-    position: absolute;
-    bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
-
-    padding: 13px 28px;
-
-    background: rgba(255, 255, 255, 0.95);
-    color: #111;
-
-    border: none;
-    border-radius: 2px;
-
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 2px;
-
-    cursor: pointer;
-
-    z-index: 20;
-
-    transition:
-        background 0.3s ease,
-        color 0.3s ease,
-        transform 0.3s ease;
-}
-
-#purchase-button:hover {
-    background: #111;
-    color: #fff;
-
-    transform: translateX(-50%) translateY(-2px);
-}
-
-
-/* Mobile */
-
-@media (max-width: 768px) {
-
     #purchase-button {
         bottom: 25px;
 
         padding: 11px 20px;
 
         font-size: 10px;
+
         letter-spacing: 1.5px;
-    }
-
-}
-/* =========================================================
-   PRIVATE CLIENT GALLERY
-========================================================= */
-
-.client-gallery-page {
-    min-height: 100vh;
-    padding: 160px 6vw 100px;
-    background: #f5f1eb;
-}
-
-.client-gallery-header {
-    max-width: 750px;
-    margin: 0 auto 80px;
-    text-align: center;
-}
-
-.client-gallery-header h1 {
-    font-family: Georgia, serif;
-    font-size: clamp(55px, 8vw, 95px);
-    font-weight: normal;
-    line-height: 1;
-    margin: 20px 0 25px;
-}
-
-.client-gallery-header p:last-child {
-    max-width: 550px;
-    margin: 0 auto;
-    color: #666;
-    line-height: 1.8;
-}
-
-.client-gallery {
-    max-width: 1300px;
-    margin: 0 auto;
-
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-}
-
-.client-photo {
-    overflow: hidden;
-    cursor: pointer;
-}
-
-.client-photo img {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    display: block;
-
-    transition: transform 0.6s ease;
-}
-
-.client-photo:hover img {
-    transform: scale(1.04);
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media (max-width: 768px) {
-
-    .client-gallery-page {
-        padding: 120px 20px 70px;
-    }
-
-    .client-gallery-header {
-        margin-bottom: 50px;
-    }
-
-    .client-gallery-header h1 {
-        font-size: 52px;
-    }
-
-    .client-gallery {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 10px;
     }
 
 }
