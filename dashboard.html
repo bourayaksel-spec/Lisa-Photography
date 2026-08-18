@@ -1649,7 +1649,14 @@ async function listPortfolioFiles(
    GET LARGE IMAGE
 ===================================================== */
 
-async function getLargeImage(section) {
+/* =====================================================
+   GET LARGE IMAGE
+   There is ONE Large Image for the entire Featured
+   Portfolio. It is stored in:
+   featured / portraits
+===================================================== */
+
+async function getLargeImage() {
 
     try {
 
@@ -1687,11 +1694,17 @@ async function getLargeImage(section) {
 
         return null;
     }
+
 }
 /* =====================================================
    SET LARGE IMAGE
 ===================================================== */
 
+
+/* =====================================================
+   SET LARGE IMAGE
+   ONE Large Image for the entire Featured Portfolio
+===================================================== */
 
 async function setLargeImage(
     section,
@@ -1699,24 +1712,26 @@ async function setLargeImage(
     imagePath
 ) {
 
-    showMessage("Updating large image...");
+    showMessage(
+        "Updating large image..."
+    );
+
 
     try {
 
         /*
-         * There is ONE Large Image for the
-         * entire Featured Portfolio.
+         * The database requires a valid category.
          *
-         * We store its setting in the
-         * "portraits" category because
-         * "portfolio" is not allowed by
-         * the database CHECK constraint.
-         *
-         * The actual imagePath can belong
-         * to ANY category.
+         * We use featured / portraits as the single
+         * settings row that stores the Large Image
+         * for the entire Featured Portfolio.
          */
 
-        const settingsCategory = "portraits";
+        const settingsSection =
+            "featured";
+
+        const settingsCategory =
+            "portraits";
 
 
         const {
@@ -1725,7 +1740,7 @@ async function setLargeImage(
         } = await supabaseClient
             .from("portfolio_settings")
             .select("id, large_image")
-            .eq("section", "featured")
+            .eq("section", settingsSection)
             .eq("category", settingsCategory)
             .maybeSingle();
 
@@ -1748,8 +1763,8 @@ async function setLargeImage(
 
 
         /*
-         * Clicking the currently selected
-         * Large image again removes it.
+         * Clicking the current Large Image again
+         * removes it.
          */
 
         if (
@@ -1762,7 +1777,8 @@ async function setLargeImage(
             } = await supabaseClient
                 .from("portfolio_settings")
                 .update({
-                    large_image: null
+                    large_image: null,
+                    updated_at: new Date().toISOString()
                 })
                 .eq("id", current.id);
 
@@ -1789,13 +1805,14 @@ async function setLargeImage(
                 "success"
             );
 
+
             return true;
         }
 
 
         /*
-         * Existing Large Image:
-         * replace it.
+         * Existing settings row:
+         * replace the current Large Image.
          */
 
         if (current) {
@@ -1805,7 +1822,8 @@ async function setLargeImage(
             } = await supabaseClient
                 .from("portfolio_settings")
                 .update({
-                    large_image: imagePath
+                    large_image: imagePath,
+                    updated_at: new Date().toISOString()
                 })
                 .eq("id", current.id);
 
@@ -1828,9 +1846,10 @@ async function setLargeImage(
 
         }
 
+
         /*
-         * No Large Image exists:
-         * create the single settings row.
+         * No settings row exists:
+         * create it.
          */
 
         else {
@@ -1841,11 +1860,14 @@ async function setLargeImage(
                 .from("portfolio_settings")
                 .insert({
 
-                    section: "featured",
+                    section:
+                        settingsSection,
 
-                    category: settingsCategory,
+                    category:
+                        settingsCategory,
 
-                    large_image: imagePath
+                    large_image:
+                        imagePath
 
                 });
 
@@ -1865,6 +1887,7 @@ async function setLargeImage(
 
                 return false;
             }
+
         }
 
 
@@ -1892,8 +1915,8 @@ async function setLargeImage(
 
         return false;
     }
-}
 
+}
 /* =====================================================
    UPLOAD PORTFOLIO PHOTO
 ===================================================== */
@@ -2206,33 +2229,36 @@ async function deletePortfolioPhoto(
            clear the database setting.
         */
 
-        const largeImage =
-            await getLargeImage(
-                section,
-                category
-            );
+      const largeImage =
+    await getLargeImage();
 
 
-        if (
-            largeImage ===
-            filePath
-        ) {
+if (
+    largeImage === filePath
+) {
 
-            await supabaseClient
-                .from(
-                    "portfolio_settings"
-                )
-                .delete()
-                .eq(
-                    "section",
-                    section
-                )
-                .eq(
-                    "category",
-                    category
-                );
+    const {
+        error: clearLargeError
+    } = await supabaseClient
+        .from("portfolio_settings")
+        .update({
+            large_image: null,
+            updated_at: new Date().toISOString()
+        })
+        .eq("section", "featured")
+        .eq("category", "portraits");
 
-        }
+
+    if (clearLargeError) {
+
+        console.error(
+            "Could not clear large image:",
+            clearLargeError
+        );
+
+    }
+
+}
 
 
         showMessage(
@@ -2554,9 +2580,7 @@ async function renderPortfolioSection(
                     category
                 ),
 
-            getLargeImage(
-    section
-)
+getLargeImage()
 
             ]);
 
