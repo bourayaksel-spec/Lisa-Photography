@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", function () {
+```javascript
+document.addEventListener("DOMContentLoaded", () => {
 
     /* =========================================================
        SUPABASE CONFIGURATION
@@ -11,38 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
 
     const BUCKET_NAME = "portfolio";
-
-    /*
-       Featured folders:
-
-       portfolio/featured/portraits/
-       portfolio/featured/couples/
-       portfolio/featured/sports/
-       portfolio/featured/landscapes/
-       portfolio/featured/real-estate/
-       portfolio/featured/lifestyle/
-
-       IMPORTANT:
-
-       portfolio_settings.large_image
-
-       contains ONE image for the whole homepage.
-
-       Example:
-
-       featured/portraits/19.webp
-
-       OR
-
-       featured/couples/05.webp
-
-       OR
-
-       featured/sports/12.webp
-    */
-
     const FEATURED_FOLDER = "featured";
-
 
     const categories = [
         "portraits",
@@ -55,106 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       BOOKING FORM
-    ========================================================= */
-
-    const bookingForm =
-        document.getElementById("booking-form");
-
-    if (bookingForm) {
-
-        bookingForm.addEventListener(
-            "submit",
-            async function (event) {
-
-                event.preventDefault();
-
-                const submitButton =
-                    bookingForm.querySelector(
-                        "button[type='submit']"
-                    );
-
-                if (submitButton) {
-
-                    submitButton.disabled = true;
-                    submitButton.textContent = "SENDING...";
-
-                }
-
-                try {
-
-                    const response =
-                        await fetch(
-                            bookingForm.action,
-                            {
-                                method: "POST",
-                                body: new FormData(bookingForm),
-                                headers: {
-                                    "Accept": "application/json"
-                                }
-                            }
-                        );
-
-                    if (response.ok) {
-
-                        bookingForm.innerHTML = `
-                            <div class="form-success">
-
-                                <h3>Thank you.</h3>
-
-                                <p>
-                                    Your request has been received successfully.
-                                    Lisa will get back to you as soon as possible.
-                                </p>
-
-                            </div>
-                        `;
-
-                    } else {
-
-                        if (submitButton) {
-
-                            submitButton.disabled = false;
-                            submitButton.textContent =
-                                "SEND REQUEST";
-
-                        }
-
-                        alert(
-                            "Something went wrong. Please try again."
-                        );
-
-                    }
-
-                } catch (error) {
-
-                    console.error(
-                        "Booking error:",
-                        error
-                    );
-
-                    if (submitButton) {
-
-                        submitButton.disabled = false;
-                        submitButton.textContent =
-                            "SEND REQUEST";
-
-                    }
-
-                    alert(
-                        "Unable to send your request. Please try again."
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =========================================================
-       PORTFOLIO ELEMENTS
+       DOM ELEMENTS
     ========================================================= */
 
     const gallery =
@@ -169,44 +40,84 @@ document.addEventListener("DOMContentLoaded", function () {
     const filterButtons =
         document.querySelectorAll(".filter-btn");
 
+    const lightbox =
+        document.getElementById("lightbox");
 
-    let currentFilter = "all";
+    const lightboxImage =
+        document.getElementById("lightbox-image");
 
+    const closeButton =
+        document.querySelector(".close");
 
-    /*
-       The single Large Image for the entire portfolio.
+    const previousButton =
+        document.getElementById("prev");
 
-       Example:
+    const nextButton =
+        document.getElementById("next");
 
-       featured/portraits/19.webp
-    */
+    const lightboxCounter =
+        document.getElementById("lightbox-counter");
 
-    let largeImagePath = null;
+    const menuToggle =
+        document.querySelector(".menu-toggle");
+
+    const navLinks =
+        document.querySelector(".nav-links");
 
 
     /* =========================================================
-       SUPABASE PUBLIC IMAGE URL
+       STATE
+    ========================================================= */
+
+    let currentFilter = "all";
+    let currentImage = 0;
+
+    let allPortfolioFiles = [];
+    let largeImagePath = null;
+
+    let lightboxItems = [];
+
+
+    /* =========================================================
+       SUPABASE HEADERS
+    ========================================================= */
+
+    const supabaseHeaders = {
+        "Authorization":
+            `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+
+        "apikey":
+            SUPABASE_PUBLISHABLE_KEY,
+
+        "Content-Type":
+            "application/json"
+    };
+
+
+    /* =========================================================
+       PUBLIC IMAGE URL
     ========================================================= */
 
     function getPublicImageUrl(filePath) {
 
-        if (!filePath) {
+        const normalized =
+            normalizeImagePath(filePath);
+
+        if (!normalized) {
             return "";
         }
 
         return (
-            SUPABASE_URL +
-            "/storage/v1/object/public/" +
-            BUCKET_NAME +
-            "/" +
-            filePath
+            `${SUPABASE_URL}` +
+            `/storage/v1/object/public/` +
+            `${BUCKET_NAME}/` +
+            normalized
         );
-
     }
 
 
     /* =========================================================
-       NORMALIZE IMAGE PATH
+       NORMALIZE PATH
     ========================================================= */
 
     function normalizeImagePath(path) {
@@ -217,8 +128,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return String(path)
             .trim()
-            .replace(/^\/+/, "");
+            .replace(/^\/+/, "")
+            .replace(/\\/g, "/");
+    }
 
+
+    /* =========================================================
+       CATEGORY
+    ========================================================= */
+
+    function getCategoryFromPath(filePath) {
+
+        const path =
+            normalizeImagePath(filePath);
+
+        if (!path) {
+            return "";
+        }
+
+        const parts =
+            path.split("/");
+
+        if (
+            parts.length >= 3 &&
+            parts[0] === FEATURED_FOLDER
+        ) {
+            return parts[1];
+        }
+
+        return "";
     }
 
 
@@ -252,119 +190,141 @@ document.addEventListener("DOMContentLoaded", function () {
 
         return (
             names[category] ||
-            "Photography by Lisa Michelle Visuals"
+            "Photography by Lisa Michelle Visuals in East Alabama"
         );
-
     }
 
 
     /* =========================================================
-       FIND CATEGORY FROM PATH
+       IMAGE PROTECTION
     ========================================================= */
 
-    function getCategoryFromPath(filePath) {
+    function protectImage(image) {
 
-        const path =
-            normalizeImagePath(filePath);
-
-
-        if (!path) {
-            return "";
+        if (!image) {
+            return;
         }
 
+        image.draggable = false;
 
-        const parts =
-            path.split("/");
-
-
-        /*
-           Expected:
-
-           featured/portraits/19.webp
-
-           parts[0] = featured
-           parts[1] = portraits
-           parts[2] = 19.webp
-        */
-
-        if (
-            parts.length >= 3 &&
-            parts[0] === FEATURED_FOLDER
-        ) {
-
-            return parts[1];
-
-        }
-
-
-        return "";
-
+        image.addEventListener(
+            "contextmenu",
+            event => {
+                event.preventDefault();
+            }
+        );
     }
 
 
     /* =========================================================
-       LOAD SINGLE LARGE IMAGE SETTING
-       
-       Reads:
+       BOOKING FORM
+    ========================================================= */
 
-       portfolio_settings.large_image
+    const bookingForm =
+        document.getElementById("booking-form");
 
-       IMPORTANT:
+    if (bookingForm) {
 
-       There is only ONE large_image
-       for the whole portfolio.
+        bookingForm.addEventListener(
+            "submit",
+            async event => {
+
+                event.preventDefault();
+
+                const submitButton =
+                    bookingForm.querySelector(
+                        "button[type='submit']"
+                    );
+
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = "SENDING...";
+                }
+
+                try {
+
+                    const response =
+                        await fetch(
+                            bookingForm.action,
+                            {
+                                method: "POST",
+                                body: new FormData(bookingForm),
+                                headers: {
+                                    "Accept":
+                                        "application/json"
+                                }
+                            }
+                        );
+
+                    if (!response.ok) {
+                        throw new Error(
+                            "Booking request failed."
+                        );
+                    }
+
+                    bookingForm.innerHTML = `
+                        <div class="form-success">
+                            <h3>Thank you.</h3>
+                            <p>
+                                Your request has been received successfully.
+                                Lisa will get back to you as soon as possible.
+                            </p>
+                        </div>
+                    `;
+
+                } catch (error) {
+
+                    console.error(
+                        "Booking error:",
+                        error
+                    );
+
+                    if (submitButton) {
+                        submitButton.disabled = false;
+                        submitButton.textContent =
+                            "SEND REQUEST";
+                    }
+
+                    alert(
+                        "Unable to send your request. Please try again."
+                    );
+                }
+            }
+        );
+    }
+
+
+    /* =========================================================
+       LOAD LARGE IMAGE SETTING
     ========================================================= */
 
     async function loadLargeImageSetting() {
 
         try {
 
-            const url =
-                SUPABASE_URL +
-                "/rest/v1/portfolio_settings" +
-                "?select=large_image&limit=1";
-
-
             const response =
                 await fetch(
-                    url,
+                    `${SUPABASE_URL}/rest/v1/portfolio_settings` +
+                    `?select=large_image&limit=1`,
                     {
                         method: "GET",
-
-                        headers: {
-
-                            "Authorization":
-                                "Bearer " +
-                                SUPABASE_PUBLISHABLE_KEY,
-
-                            "apikey":
-                                SUPABASE_PUBLISHABLE_KEY,
-
-                            "Content-Type":
-                                "application/json"
-
-                        }
-
+                        headers: supabaseHeaders
                     }
                 );
 
-
             if (!response.ok) {
-
                 throw new Error(
-                    "Could not load portfolio large image setting."
+                    "Could not load large image setting."
                 );
-
             }
-
 
             const data =
                 await response.json();
 
-
             if (
                 Array.isArray(data) &&
-                data.length > 0
+                data.length > 0 &&
+                data[0].large_image
             ) {
 
                 largeImagePath =
@@ -378,12 +338,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
 
-
             console.log(
                 "Portfolio Large Image:",
                 largeImagePath
             );
-
 
             return largeImagePath;
 
@@ -394,179 +352,94 @@ document.addEventListener("DOMContentLoaded", function () {
                 error
             );
 
-
             largeImagePath = null;
 
             return null;
-
         }
-
     }
 
 
     /* =========================================================
-       CREATE LARGE IMAGE SECTION
-       
-       This is the ONE large image for the whole portfolio.
+       LOAD FEATURED CATEGORY
     ========================================================= */
 
-    function createLargeImageSection() {
+    async function loadFeaturedCategory(category) {
 
-        if (!gallery) {
-            return;
+        const prefix =
+            `${FEATURED_FOLDER}/${category}/`;
+
+        const response =
+            await fetch(
+                `${SUPABASE_URL}/storage/v1/object/list/${BUCKET_NAME}`,
+                {
+                    method: "POST",
+                    headers: supabaseHeaders,
+
+                    body: JSON.stringify({
+                        prefix,
+                        limit: 1000,
+                        offset: 0,
+
+                        sortBy: {
+                            column: "name",
+                            order: "asc"
+                        }
+                    })
+                }
+            );
+
+        if (!response.ok) {
+
+            throw new Error(
+                `Featured folder failed: ${category}`
+            );
         }
 
+        const files =
+            await response.json();
 
-        /*
-           Remove an old large image section
-           if one already exists.
-        */
-
-        const oldLarge =
-            document.getElementById(
-                "portfolio-large-image"
-            );
-
-
-        if (oldLarge) {
-
-            oldLarge.remove();
-
+        if (!Array.isArray(files)) {
+            return [];
         }
 
+        return files
+            .filter(file => {
 
-        /*
-           If no Large Image has been selected,
-           do not create the section.
-        */
+                if (
+                    !file ||
+                    !file.name
+                ) {
+                    return false;
+                }
 
-        if (!largeImagePath) {
+                if (
+                    file.name ===
+                    ".emptyFolderPlaceholder"
+                ) {
+                    return false;
+                }
 
-            return;
-
-        }
-
-
-        const largeSection =
-            document.createElement("div");
-
-
-        largeSection.id =
-            "portfolio-large-image";
-
-
-        largeSection.className =
-            "portfolio-large-image";
-
-
-        const image =
-            document.createElement("img");
-
-
-        image.src =
-            getPublicImageUrl(
-                largeImagePath
-            );
-
-
-        const largeCategory =
-            getCategoryFromPath(
-                largeImagePath
-            );
-
-
-        image.alt =
-            createAltText(
-                largeCategory
-            );
-
-
-        image.loading =
-            "eager";
-
-
-        image.decoding =
-            "async";
-
-
-        image.draggable =
-            false;
-
-
-        /*
-           Prevent right click.
-        */
-
-        image.addEventListener(
-            "contextmenu",
-            function (event) {
-
-                event.preventDefault();
-
-            }
-        );
-
-
-        /*
-           Open the same lightbox.
-        */
-
-        image.addEventListener(
-            "click",
-            function () {
-
-                openLargeImageInLightbox(
-                    image
+                return (
+                    file.metadata ||
+                    file.id
                 );
+            })
+            .map(file => ({
 
-            }
-        );
+                path:
+                    `${prefix}${file.name}`,
 
+                category,
 
-        /*
-           If the Large Image cannot load,
-           hide the section.
-        */
+                name:
+                    file.name
 
-        image.addEventListener(
-            "error",
-            function () {
-
-                console.warn(
-                    "Large image could not load:",
-                    largeImagePath
-                );
-
-
-                largeSection.remove();
-
-            }
-        );
-
-
-        largeSection.appendChild(
-            image
-        );
-
-
-        /*
-           Put the Large Image BEFORE
-           the normal gallery.
-        */
-
-        gallery.parentNode.insertBefore(
-            largeSection,
-            gallery
-        );
-
+            }));
     }
 
 
     /* =========================================================
-       LARGE IMAGE CSS
-       
-       Creates the visual presentation automatically,
-       so no HTML change is required.
+       LARGE IMAGE STYLES
     ========================================================= */
 
     function addLargeImageStyles() {
@@ -576,19 +449,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 "portfolio-large-image-styles"
             )
         ) {
-
             return;
-
         }
-
 
         const style =
             document.createElement("style");
 
-
         style.id =
             "portfolio-large-image-styles";
-
 
         style.textContent = `
 
@@ -624,147 +492,101 @@ document.addEventListener("DOMContentLoaded", function () {
                 .portfolio-large-image img {
                     max-height: 500px;
                 }
-
             }
-
         `;
 
-
-        document.head.appendChild(
-            style
-        );
-
+        document.head.appendChild(style);
     }
 
 
     /* =========================================================
-       LOAD FEATURED CATEGORY
-       
-       Example:
-
-       featured/portraits/01.webp
-       featured/portraits/02.webp
-       featured/portraits/19.webp
+       CREATE LARGE IMAGE
     ========================================================= */
 
-    async function loadFeaturedCategory(category) {
+    function createLargeImageSection() {
 
-        const prefix =
-            FEATURED_FOLDER +
-            "/" +
-            category +
-            "/";
-
-
-        const response =
-            await fetch(
-
-                SUPABASE_URL +
-                "/storage/v1/object/list/" +
-                BUCKET_NAME,
-
-                {
-
-                    method: "POST",
-
-                    headers: {
-
-                        "Authorization":
-                            "Bearer " +
-                            SUPABASE_PUBLISHABLE_KEY,
-
-                        "apikey":
-                            SUPABASE_PUBLISHABLE_KEY,
-
-                        "Content-Type":
-                            "application/json"
-
-                    },
-
-                    body: JSON.stringify({
-
-                        prefix: prefix,
-
-                        limit: 1000,
-
-                        offset: 0,
-
-                        sortBy: {
-
-                            column: "name",
-
-                            order: "asc"
-
-                        }
-
-                    })
-
-                }
-
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Featured folder failed: " +
-                category
-            );
-
+        if (!gallery) {
+            return;
         }
 
+        const oldLarge =
+            document.getElementById(
+                "portfolio-large-image"
+            );
 
-        const files =
-            await response.json();
+        if (oldLarge) {
+            oldLarge.remove();
+        }
 
+        if (!largeImagePath) {
+            return;
+        }
 
-        return files
-            .filter(function (file) {
+        const category =
+            getCategoryFromPath(
+                largeImagePath
+            );
 
-                if (
-                    !file ||
-                    !file.name
-                ) {
+        const section =
+            document.createElement("div");
 
-                    return false;
+        section.id =
+            "portfolio-large-image";
 
-                }
+        section.className =
+            "portfolio-large-image";
 
+        section.dataset.category =
+            category;
 
-                if (
-                    file.name ===
-                    ".emptyFolderPlaceholder"
-                ) {
+        const image =
+            document.createElement("img");
 
-                    return false;
+        image.src =
+            getPublicImageUrl(
+                largeImagePath
+            );
 
-                }
+        image.alt =
+            createAltText(category);
 
+        image.loading =
+            "eager";
 
-                return (
-                    file.metadata ||
-                    file.id
+        image.decoding =
+            "async";
+
+        protectImage(image);
+
+        image.addEventListener(
+            "click",
+            () => {
+
+                openLightboxFromPath(
+                    largeImagePath
+                );
+            }
+        );
+
+        image.addEventListener(
+            "error",
+            () => {
+
+                console.warn(
+                    "Large image could not load:",
+                    largeImagePath
                 );
 
-            })
-            .map(function (file) {
+                section.remove();
+            }
+        );
 
-                return {
+        section.appendChild(image);
 
-                    path:
-                        prefix +
-                        file.name,
-
-                    category:
-                        category,
-
-                    name:
-                        file.name
-
-                };
-
-            });
-
+        gallery.parentNode.insertBefore(
+            section,
+            gallery
+        );
     }
 
 
@@ -773,6 +595,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ========================================================= */
 
     function createGalleryItem(file) {
+
+        if (!gallery) {
+            return;
+        }
 
         const item =
             document.createElement("div");
@@ -783,28 +609,23 @@ document.addEventListener("DOMContentLoaded", function () {
         item.dataset.category =
             file.category;
 
-
         item.dataset.path =
             normalizeImagePath(
                 file.path
             );
 
-
         const image =
             document.createElement("img");
-
 
         image.src =
             getPublicImageUrl(
                 file.path
             );
 
-
         image.alt =
             createAltText(
                 file.category
             );
-
 
         image.loading =
             "lazy";
@@ -812,45 +633,20 @@ document.addEventListener("DOMContentLoaded", function () {
         image.decoding =
             "async";
 
-        image.draggable =
-            false;
-
-
-        /*
-           Prevent right click.
-        */
-
-        image.addEventListener(
-            "contextmenu",
-            function (event) {
-
-                event.preventDefault();
-
-            }
-        );
-
-
-        /*
-           Open lightbox.
-        */
+        protectImage(image);
 
         image.addEventListener(
             "click",
-            function () {
-
-                openLightbox(image);
-
+            () => {
+                openLightboxFromPath(
+                    file.path
+                );
             }
         );
 
-
-        /*
-           Image loading error.
-        */
-
         image.addEventListener(
             "error",
-            function () {
+            () => {
 
                 console.warn(
                     "Image could not load:",
@@ -858,130 +654,87 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
 
                 item.remove();
-
             }
         );
 
+        item.appendChild(image);
 
-        item.appendChild(
-            image
-        );
-
-
-        gallery.appendChild(
-            item
-        );
-
+        gallery.appendChild(item);
     }
 
 
     /* =========================================================
        LOAD PORTFOLIO
-       
-       Loads:
-
-       1. ONE Large Image
-       2. ALL Featured Images
-
-       The Large Image is NOT removed from Supabase.
-       It is only excluded from the normal grid
-       to prevent the same image appearing twice.
     ========================================================= */
 
     async function loadPortfolio() {
 
         if (!gallery) {
-
             return;
-
         }
-
 
         try {
 
             if (portfolioLoading) {
-
                 portfolioLoading.style.display =
                     "block";
-
             }
-
 
             if (portfolioError) {
-
                 portfolioError.style.display =
                     "none";
-
             }
-
 
             gallery.innerHTML = "";
 
-
-            /*
-               Load the single Large Image
-               from portfolio_settings.
-            */
+            allPortfolioFiles = [];
 
             await loadLargeImageSetting();
-
-
-            /*
-               Add the Large Image section.
-            */
 
             addLargeImageStyles();
 
             createLargeImageSection();
 
 
-            let allFiles = [];
+            /* -----------------------------------------
+               LOAD ALL CATEGORIES IN PARALLEL
+            ----------------------------------------- */
 
+            const results =
+                await Promise.allSettled(
+                    categories.map(
+                        category =>
+                            loadFeaturedCategory(
+                                category
+                            )
+                    )
+                );
 
-            /*
-               Load every Featured category.
-            */
+            results.forEach(result => {
 
-            for (
-                const category of categories
-            ) {
+                if (
+                    result.status ===
+                    "fulfilled"
+                ) {
 
-                try {
-
-                    const files =
-                        await loadFeaturedCategory(
-                            category
+                    allPortfolioFiles =
+                        allPortfolioFiles.concat(
+                            result.value
                         );
 
-
-                    allFiles =
-                        allFiles.concat(files);
-
-                } catch (error) {
+                } else {
 
                     console.warn(
-                        error.message
+                        "Category loading failed:",
+                        result.reason
                     );
-
                 }
+            });
 
-            }
 
-
-            /*
-               Remove the Large Image from
-               the normal gallery.
-
-               Example:
-
-               Large:
-               featured/portraits/19.webp
-
-               It will appear ONLY in the
-               Large Image area.
-
-               All other images remain.
-            */
+            /* -----------------------------------------
+               REMOVE LARGE IMAGE FROM GRID
+            ----------------------------------------- */
 
             if (largeImagePath) {
 
@@ -990,44 +743,28 @@ document.addEventListener("DOMContentLoaded", function () {
                         largeImagePath
                     );
 
-
-                allFiles =
-                    allFiles.filter(
-                        function (file) {
-
-                            return (
-                                normalizeImagePath(
-                                    file.path
-                                ) !==
-                                normalizedLarge
-                            );
-
-                        }
+                allPortfolioFiles =
+                    allPortfolioFiles.filter(
+                        file =>
+                            normalizeImagePath(
+                                file.path
+                            ) !== normalizedLarge
                     );
-
             }
 
 
-            /*
-               Sort images.
+            /* -----------------------------------------
+               SORT
+            ----------------------------------------- */
 
-               Category first,
-               filename second.
-            */
-
-            allFiles.sort(
-                function (a, b) {
+            allPortfolioFiles.sort(
+                (a, b) => {
 
                     const first =
-                        a.category +
-                        "/" +
-                        a.name;
+                        `${a.category}/${a.name}`;
 
                     const second =
-                        b.category +
-                        "/" +
-                        b.name;
-
+                        `${b.category}/${b.name}`;
 
                     return first.localeCompare(
                         second,
@@ -1037,49 +774,42 @@ document.addEventListener("DOMContentLoaded", function () {
                             sensitivity: "base"
                         }
                     );
-
                 }
             );
 
 
-            /*
-               Display ALL remaining Featured images.
-            */
+            /* -----------------------------------------
+               CREATE GRID
+            ----------------------------------------- */
 
-            allFiles.forEach(
-                function (file) {
+            allPortfolioFiles.forEach(
+                createGalleryItem
+            );
 
-                    createGalleryItem(
-                        file
-                    );
 
-                }
+            /* -----------------------------------------
+               APPLY INITIAL FILTER
+            ----------------------------------------- */
+
+            applyPortfolioFilter(
+                currentFilter
             );
 
 
             if (portfolioLoading) {
-
                 portfolioLoading.style.display =
                     "none";
-
             }
 
 
             if (
-                allFiles.length === 0 &&
+                allPortfolioFiles.length === 0 &&
                 !largeImagePath
             ) {
 
-                if (portfolioError) {
-
-                    portfolioError.textContent =
-                        "No featured photographs found.";
-
-                    portfolioError.style.display =
-                        "block";
-
-                }
-
+                showPortfolioError(
+                    "No featured photographs found."
+                );
             }
 
         } catch (error) {
@@ -1089,269 +819,334 @@ document.addEventListener("DOMContentLoaded", function () {
                 error
             );
 
-
             if (portfolioLoading) {
-
                 portfolioLoading.style.display =
                     "none";
-
             }
 
+            showPortfolioError(
+                "Unable to load the portfolio. Please try again later."
+            );
+        }
+    }
 
-            if (portfolioError) {
+
+    /* =========================================================
+       PORTFOLIO ERROR
+    ========================================================= */
+
+    function showPortfolioError(message) {
+
+        if (!portfolioError) {
+            return;
+        }
+
+        portfolioError.textContent =
+            message;
+
+        portfolioError.style.display =
+            "block";
+    }
+
+
+    /* =========================================================
+       APPLY PORTFOLIO FILTER
+    ========================================================= */
+
+    function applyPortfolioFilter(filter) {
+
+        currentFilter = filter;
+
+        const items =
+            gallery
+                ? gallery.querySelectorAll(
+                    ".gallery-item"
+                )
+                : [];
+
+        let visibleCount = 0;
+
+
+        items.forEach(item => {
+
+            const category =
+                item.dataset.category;
+
+            const visible =
+                filter === "all" ||
+                category === filter;
+
+            if (visible) {
+
+                item.classList.remove(
+                    "hidden"
+                );
+
+                visibleCount++;
+
+            } else {
+
+                item.classList.add(
+                    "hidden"
+                );
+            }
+        });
+
+
+        /* -----------------------------------------
+           LARGE IMAGE FILTER
+        ----------------------------------------- */
+
+        const largeSection =
+            document.getElementById(
+                "portfolio-large-image"
+            );
+
+        if (largeSection) {
+
+            const largeCategory =
+                largeSection.dataset.category;
+
+            const showLarge =
+                filter === "all" ||
+                largeCategory === filter;
+
+            largeSection.style.display =
+                showLarge
+                    ? ""
+                    : "none";
+        }
+
+
+        /* -----------------------------------------
+           ERROR MESSAGE
+        ----------------------------------------- */
+
+        if (portfolioError) {
+
+            if (
+                filter !== "all" &&
+                visibleCount === 0
+            ) {
 
                 portfolioError.textContent =
-                    "Unable to load the portfolio.";
+                    "No photographs found in this category.";
 
                 portfolioError.style.display =
                     "block";
 
+            } else {
+
+                portfolioError.style.display =
+                    "none";
             }
-
         }
-
     }
 
 
     /* =========================================================
-       GET VISIBLE GALLERY IMAGES
+       FILTER BUTTONS
     ========================================================= */
 
-    function getVisibleGalleryImages() {
+    filterButtons.forEach(button => {
 
-        if (!gallery) {
+        button.addEventListener(
+            "click",
+            () => {
 
-            return [];
+                const filter =
+                    button.dataset.filter ||
+                    "all";
 
-        }
-
-
-        const images =
-            gallery.querySelectorAll(
-                ".gallery-item img"
-            );
-
-
-        return Array.from(images)
-            .filter(function (image) {
-
-                const item =
-                    image.closest(
-                        ".gallery-item"
-                    );
-
-
-                return (
-                    item &&
-                    !item.classList.contains(
-                        "hidden"
-                    )
+                filterButtons.forEach(
+                    btn =>
+                        btn.classList.remove(
+                            "active"
+                        )
                 );
 
-            });
+                button.classList.add(
+                    "active"
+                );
 
-    }
+                closeLightbox();
+
+                applyPortfolioFilter(
+                    filter
+                );
+            }
+        );
+    });
 
 
     /* =========================================================
-       LIGHTBOX ELEMENTS
+       LIGHTBOX ITEMS
     ========================================================= */
 
-    const lightbox =
-        document.getElementById("lightbox");
+    function getVisibleLightboxItems() {
 
-    const lightboxImage =
-        document.getElementById(
-            "lightbox-image"
-        );
+        const items = [];
 
-    const closeButton =
-        document.querySelector(".close");
+        /* -----------------------------------------
+           LARGE IMAGE
+        ----------------------------------------- */
 
-    const previousButton =
-        document.getElementById("prev");
-
-    const nextButton =
-        document.getElementById("next");
-
-    const lightboxCounter =
-        document.getElementById(
-            "lightbox-counter"
-        );
-
-
-    let currentImage = 0;
-
-
-    /* =========================================================
-       OPEN NORMAL GALLERY IMAGE
-    ========================================================= */
-
-    function openLightbox(image) {
-
-        const visibleImages =
-            getVisibleGalleryImages();
-
-
-        const index =
-            visibleImages.indexOf(
-                image
+        const largeSection =
+            document.getElementById(
+                "portfolio-large-image"
             );
 
+        if (
+            largeSection &&
+            largeSection.style.display !== "none" &&
+            largeImagePath
+        ) {
+
+            items.push({
+
+                path:
+                    normalizeImagePath(
+                        largeImagePath
+                    ),
+
+                src:
+                    getPublicImageUrl(
+                        largeImagePath
+                    ),
+
+                alt:
+                    createAltText(
+                        getCategoryFromPath(
+                            largeImagePath
+                        )
+                    ),
+
+                category:
+                    getCategoryFromPath(
+                        largeImagePath
+                    )
+            });
+        }
+
+
+        /* -----------------------------------------
+           GRID IMAGES
+        ----------------------------------------- */
+
+        if (gallery) {
+
+            gallery
+                .querySelectorAll(
+                    ".gallery-item"
+                )
+                .forEach(item => {
+
+                    if (
+                        item.classList.contains(
+                            "hidden"
+                        )
+                    ) {
+                        return;
+                    }
+
+                    const image =
+                        item.querySelector(
+                            "img"
+                        );
+
+                    if (!image) {
+                        return;
+                    }
+
+                    items.push({
+
+                        path:
+                            item.dataset.path,
+
+                        src:
+                            image.src,
+
+                        alt:
+                            image.alt,
+
+                        category:
+                            item.dataset.category
+                    });
+                });
+        }
+
+        return items;
+    }
+
+
+    /* =========================================================
+       OPEN LIGHTBOX
+    ========================================================= */
+
+    function openLightboxFromPath(path) {
+
+        const normalizedPath =
+            normalizeImagePath(path);
+
+        lightboxItems =
+            getVisibleLightboxItems();
+
+        const index =
+            lightboxItems.findIndex(
+                item =>
+                    item.path ===
+                    normalizedPath
+            );
 
         if (index === -1) {
-
             return;
-
         }
-
-
-        showGalleryImage(
-            index
-        );
-
-    }
-
-
-    /* =========================================================
-       OPEN LARGE IMAGE IN LIGHTBOX
-    ========================================================= */
-
-    function openLargeImageInLightbox(
-        image
-    ) {
-
-        if (
-            !lightbox ||
-            !lightboxImage
-        ) {
-
-            return;
-
-        }
-
-
-        lightboxImage.src =
-            image.src;
-
-
-        lightboxImage.alt =
-            image.alt;
-
-
-        /*
-           Large image is outside the
-           normal gallery, so it gets
-           its own simple counter.
-        */
-
-        if (lightboxCounter) {
-
-            lightboxCounter.textContent =
-                "Large";
-
-        }
-
-
-        if (previousButton) {
-
-            previousButton.style.visibility =
-                "hidden";
-
-        }
-
-
-        if (nextButton) {
-
-            nextButton.style.visibility =
-                "hidden";
-
-        }
-
-
-        lightbox.style.display =
-            "flex";
-
-
-        lightbox.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-
-    }
-
-
-    /* =========================================================
-       SHOW GALLERY IMAGE
-    ========================================================= */
-
-    function showGalleryImage(
-        index
-    ) {
-
-        const visibleImages =
-            getVisibleGalleryImages();
-
-
-        if (
-            !visibleImages.length ||
-            !lightbox ||
-            !lightboxImage
-        ) {
-
-            return;
-
-        }
-
-
-        if (index < 0) {
-
-            index = 0;
-
-        }
-
-
-        if (
-            index >=
-            visibleImages.length
-        ) {
-
-            index =
-                visibleImages.length - 1;
-
-        }
-
 
         currentImage =
             index;
 
+        showCurrentLightboxImage();
+    }
 
-        const image =
-            visibleImages[
+
+    /* =========================================================
+       SHOW CURRENT LIGHTBOX IMAGE
+    ========================================================= */
+
+    function showCurrentLightboxImage() {
+
+        if (
+            !lightbox ||
+            !lightboxImage ||
+            !lightboxItems.length
+        ) {
+            return;
+        }
+
+        const item =
+            lightboxItems[
                 currentImage
             ];
 
+        if (!item) {
+            return;
+        }
 
         lightboxImage.src =
-            image.src;
-
+            item.src;
 
         lightboxImage.alt =
-            image.alt;
-
+            item.alt;
 
         lightbox.style.display =
             "flex";
-
 
         lightbox.setAttribute(
             "aria-hidden",
             "false"
         );
 
-
         updateLightbox();
-
     }
 
 
@@ -1361,47 +1156,32 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function updateLightbox() {
 
-        const visibleImages =
-            getVisibleGalleryImages();
-
-
-        if (
-            !visibleImages.length
-        ) {
-
+        if (!lightboxItems.length) {
             return;
-
         }
-
 
         if (lightboxCounter) {
 
             lightboxCounter.textContent =
-                `${currentImage + 1} / ${visibleImages.length}`;
-
+                `${currentImage + 1} / ${lightboxItems.length}`;
         }
-
 
         if (previousButton) {
 
             previousButton.style.visibility =
-                currentImage === 0
-                    ? "hidden"
-                    : "visible";
-
+                currentImage > 0
+                    ? "visible"
+                    : "hidden";
         }
-
 
         if (nextButton) {
 
             nextButton.style.visibility =
-                currentImage ===
-                visibleImages.length - 1
-                    ? "hidden"
-                    : "visible";
-
+                currentImage <
+                lightboxItems.length - 1
+                    ? "visible"
+                    : "hidden";
         }
-
     }
 
 
@@ -1412,29 +1192,22 @@ document.addEventListener("DOMContentLoaded", function () {
     function closeLightbox() {
 
         if (!lightbox) {
-
             return;
-
         }
-
 
         lightbox.style.display =
             "none";
-
 
         lightbox.setAttribute(
             "aria-hidden",
             "true"
         );
 
-
         if (lightboxImage) {
-
-            lightboxImage.src =
-                "";
-
+            lightboxImage.src = "";
         }
 
+        lightboxItems = [];
     }
 
 
@@ -1444,110 +1217,96 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             closeLightbox
         );
-
     }
 
 
     /* =========================================================
-       NEXT
+       NEXT IMAGE
     ========================================================= */
 
     if (nextButton) {
 
         nextButton.addEventListener(
             "click",
-            function () {
+            event => {
 
-                const visibleImages =
-                    getVisibleGalleryImages();
-
+                event.stopPropagation();
 
                 if (
                     currentImage <
-                    visibleImages.length - 1
+                    lightboxItems.length - 1
                 ) {
 
-                    showGalleryImage(
-                        currentImage + 1
-                    );
+                    currentImage++;
 
+                    showCurrentLightboxImage();
                 }
-
             }
         );
-
     }
 
 
     /* =========================================================
-       PREVIOUS
+       PREVIOUS IMAGE
     ========================================================= */
 
     if (previousButton) {
 
         previousButton.addEventListener(
             "click",
-            function () {
+            event => {
+
+                event.stopPropagation();
 
                 if (
                     currentImage > 0
                 ) {
 
-                    showGalleryImage(
-                        currentImage - 1
-                    );
+                    currentImage--;
 
+                    showCurrentLightboxImage();
                 }
-
             }
         );
-
     }
 
 
     /* =========================================================
-       CLICK OUTSIDE LIGHTBOX
+       CLICK OUTSIDE
     ========================================================= */
 
     if (lightbox) {
 
         lightbox.addEventListener(
             "click",
-            function (event) {
+            event => {
 
                 if (
                     event.target ===
                     lightbox
                 ) {
-
                     closeLightbox();
-
                 }
-
             }
         );
-
     }
 
 
     /* =========================================================
-       KEYBOARD
+       KEYBOARD NAVIGATION
     ========================================================= */
 
     document.addEventListener(
         "keydown",
-        function (event) {
+        event => {
 
             if (
                 !lightbox ||
                 lightbox.style.display !==
                     "flex"
             ) {
-
                 return;
-
             }
-
 
             if (
                 event.key ===
@@ -1556,36 +1315,35 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 closeLightbox();
 
-            }
-
-
-            else if (
+            } else if (
                 event.key ===
                 "ArrowRight"
             ) {
 
-                if (nextButton) {
+                if (
+                    currentImage <
+                    lightboxItems.length - 1
+                ) {
 
-                    nextButton.click();
+                    currentImage++;
 
+                    showCurrentLightboxImage();
                 }
 
-            }
-
-
-            else if (
+            } else if (
                 event.key ===
                 "ArrowLeft"
             ) {
 
-                if (previousButton) {
+                if (
+                    currentImage > 0
+                ) {
 
-                    previousButton.click();
+                    currentImage--;
 
+                    showCurrentLightboxImage();
                 }
-
             }
-
         }
     );
 
@@ -1596,212 +1354,60 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let touchStartX = 0;
 
-
     if (lightboxImage) {
 
         lightboxImage.addEventListener(
             "touchstart",
-            function (event) {
+            event => {
 
                 touchStartX =
                     event.changedTouches[0]
                         .screenX;
-
-            }
+            },
+            { passive: true }
         );
 
 
         lightboxImage.addEventListener(
             "touchend",
-            function (event) {
+            event => {
 
                 const touchEndX =
                     event.changedTouches[0]
                         .screenX;
 
-
                 const distance =
                     touchEndX -
                     touchStartX;
 
-
                 if (
-                    distance < -50
+                    distance < -50 &&
+                    currentImage <
+                        lightboxItems.length - 1
                 ) {
 
-                    if (nextButton) {
+                    currentImage++;
 
-                        nextButton.click();
+                    showCurrentLightboxImage();
 
-                    }
-
-                }
-
-
-                else if (
-                    distance > 50
+                } else if (
+                    distance > 50 &&
+                    currentImage > 0
                 ) {
 
-                    if (previousButton) {
+                    currentImage--;
 
-                        previousButton.click();
-
-                    }
-
+                    showCurrentLightboxImage();
                 }
-
-            }
+            },
+            { passive: true }
         );
-
     }
-
-
-    /* =========================================================
-       PORTFOLIO FILTERS
-    ========================================================= */
-
-    filterButtons.forEach(
-        function (button) {
-
-            button.addEventListener(
-                "click",
-                function () {
-
-                    currentFilter =
-                        button.dataset.filter;
-
-
-                    filterButtons.forEach(
-                        function (btn) {
-
-                            btn.classList.remove(
-                                "active"
-                            );
-
-                        }
-                    );
-
-
-                    button.classList.add(
-                        "active"
-                    );
-
-
-                    if (gallery) {
-
-                        const items =
-                            gallery.querySelectorAll(
-                                ".gallery-item"
-                            );
-
-
-                        let visibleCount = 0;
-
-
-                        items.forEach(
-                            function (item) {
-
-                                const category =
-                                    item.dataset.category;
-
-
-                                if (
-                                    currentFilter ===
-                                        "all" ||
-                                    category ===
-                                        currentFilter
-                                ) {
-
-                                    item.classList.remove(
-                                        "hidden"
-                                    );
-
-                                    visibleCount++;
-
-                                } else {
-
-                                    item.classList.add(
-                                        "hidden"
-                                    );
-
-                                }
-
-                            }
-                        );
-
-
-                        /*
-                           IMPORTANT:
-
-                           The Large Image is independent
-                           from categories.
-
-                           Therefore it ALWAYS stays visible
-                           when filtering Portraits, Couples,
-                           Sports, etc.
-                        */
-
-                        closeLightbox();
-
-
-                        if (
-                            portfolioError &&
-                            currentFilter !== "all"
-                        ) {
-
-                            if (
-                                visibleCount === 0
-                            ) {
-
-                                portfolioError.textContent =
-                                    "No photographs found in this category.";
-
-                                portfolioError.style.display =
-                                    "block";
-
-                            } else {
-
-                                portfolioError.style.display =
-                                    "none";
-
-                            }
-
-                        }
-
-
-                        if (
-                            portfolioError &&
-                            currentFilter === "all"
-                        ) {
-
-                            portfolioError.style.display =
-                                "none";
-
-                        }
-
-                    }
-
-                }
-            );
-
-        }
-    );
 
 
     /* =========================================================
        MOBILE MENU
     ========================================================= */
-
-    const menuToggle =
-        document.querySelector(
-            ".menu-toggle"
-        );
-
-    const navLinks =
-        document.querySelector(
-            ".nav-links"
-        );
-
 
     if (
         menuToggle &&
@@ -1810,13 +1416,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
         menuToggle.addEventListener(
             "click",
-            function () {
+            () => {
 
                 const active =
                     navLinks.classList.toggle(
                         "active"
                     );
-
 
                 menuToggle.setAttribute(
                     "aria-expanded",
@@ -1825,35 +1430,40 @@ document.addEventListener("DOMContentLoaded", function () {
                         : "false"
                 );
 
+                menuToggle.setAttribute(
+                    "aria-label",
+                    active
+                        ? "Close menu"
+                        : "Open menu"
+                );
             }
         );
 
 
         navLinks
             .querySelectorAll("a")
-            .forEach(
-                function (link) {
+            .forEach(link => {
 
-                    link.addEventListener(
-                        "click",
-                        function () {
+                link.addEventListener(
+                    "click",
+                    () => {
 
-                            navLinks.classList.remove(
-                                "active"
-                            );
+                        navLinks.classList.remove(
+                            "active"
+                        );
 
+                        menuToggle.setAttribute(
+                            "aria-expanded",
+                            "false"
+                        );
 
-                            menuToggle.setAttribute(
-                                "aria-expanded",
-                                "false"
-                            );
-
-                        }
-                    );
-
-                }
-            );
-
+                        menuToggle.setAttribute(
+                            "aria-label",
+                            "Open menu"
+                        );
+                    }
+                );
+            });
     }
 
 
@@ -1871,62 +1481,37 @@ document.addEventListener("DOMContentLoaded", function () {
             "rating-value"
         );
 
+    stars.forEach(star => {
 
-    stars.forEach(
-        function (star) {
+        star.addEventListener(
+            "click",
+            () => {
 
-            star.addEventListener(
-                "click",
-                function () {
-
-                    const rating =
-                        Number(
-                            star.dataset.rating
-                        );
-
-
-                    if (ratingValue) {
-
-                        ratingValue.value =
-                            rating;
-
-                    }
-
-
-                    stars.forEach(
-                        function (item) {
-
-                            const itemRating =
-                                Number(
-                                    item.dataset.rating
-                                );
-
-
-                            if (
-                                itemRating <=
-                                rating
-                            ) {
-
-                                item.classList.add(
-                                    "selected"
-                                );
-
-                            } else {
-
-                                item.classList.remove(
-                                    "selected"
-                                );
-
-                            }
-
-                        }
+                const rating =
+                    Number(
+                        star.dataset.rating
                     );
 
+                if (ratingValue) {
+                    ratingValue.value =
+                        rating;
                 }
-            );
 
-        }
-    );
+                stars.forEach(item => {
+
+                    const itemRating =
+                        Number(
+                            item.dataset.rating
+                        );
+
+                    item.classList.toggle(
+                        "selected",
+                        itemRating <= rating
+                    );
+                });
+            }
+        );
+    });
 
 
     /* =========================================================
@@ -1938,21 +1523,30 @@ document.addEventListener("DOMContentLoaded", function () {
             "review-form"
         );
 
-
     if (reviewForm) {
 
         reviewForm.addEventListener(
             "submit",
-            async function (event) {
+            async event => {
 
                 event.preventDefault();
 
+                if (
+                    ratingValue &&
+                    !ratingValue.value
+                ) {
+
+                    alert(
+                        "Please select a rating."
+                    );
+
+                    return;
+                }
 
                 const submitButton =
                     reviewForm.querySelector(
                         "button[type='submit']"
                     );
-
 
                 if (submitButton) {
 
@@ -1960,9 +1554,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     submitButton.textContent =
                         "SENDING...";
-
                 }
-
 
                 try {
 
@@ -1981,45 +1573,24 @@ document.addEventListener("DOMContentLoaded", function () {
                                     "Accept":
                                         "application/json"
                                 }
-
                             }
                         );
 
-
-                    if (response.ok) {
-
-                        reviewForm.innerHTML = `
-                            <div class="form-success">
-
-                                <h3>
-                                    Thank you.
-                                </h3>
-
-                                <p>
-                                    Your review has been received.
-                                    Thank you for sharing your experience.
-                                </p>
-
-                            </div>
-                        `;
-
-                    } else {
-
-                        if (submitButton) {
-
-                            submitButton.disabled =
-                                false;
-
-                            submitButton.textContent =
-                                "SUBMIT REVIEW";
-
-                        }
-
-                        alert(
-                            "Something went wrong. Please try again."
+                    if (!response.ok) {
+                        throw new Error(
+                            "Review submission failed."
                         );
-
                     }
+
+                    reviewForm.innerHTML = `
+                        <div class="form-success">
+                            <h3>Thank you.</h3>
+                            <p>
+                                Your review has been received.
+                                Thank you for sharing your experience.
+                            </p>
+                        </div>
+                    `;
 
                 } catch (error) {
 
@@ -2028,7 +1599,6 @@ document.addEventListener("DOMContentLoaded", function () {
                         error
                     );
 
-
                     if (submitButton) {
 
                         submitButton.disabled =
@@ -2036,18 +1606,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         submitButton.textContent =
                             "SUBMIT REVIEW";
-
                     }
 
                     alert(
                         "Unable to send your review. Please try again."
                     );
-
                 }
-
             }
         );
-
     }
 
 
@@ -2055,54 +1621,29 @@ document.addEventListener("DOMContentLoaded", function () {
        COPYRIGHT YEAR
     ========================================================= */
 
-    const currentYears =
-        document.querySelectorAll(
-            ".current-year"
-        );
-
-
-    currentYears.forEach(
-        function (year) {
+    document
+        .querySelectorAll(".current-year")
+        .forEach(year => {
 
             year.textContent =
                 new Date().getFullYear();
-
-        }
-    );
+        });
 
 
     /* =========================================================
-       IMAGE PROTECTION
+       GLOBAL IMAGE PROTECTION
     ========================================================= */
 
     document
         .querySelectorAll("img")
-        .forEach(
-            function (img) {
-
-                img.setAttribute(
-                    "draggable",
-                    "false"
-                );
-
-
-                img.addEventListener(
-                    "contextmenu",
-                    function (event) {
-
-                        event.preventDefault();
-
-                    }
-                );
-
-            }
-        );
+        .forEach(protectImage);
 
 
     /* =========================================================
-       START
+       START PORTFOLIO
     ========================================================= */
 
     loadPortfolio();
 
 });
+```
