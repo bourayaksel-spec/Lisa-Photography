@@ -84,7 +84,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const supabaseHeaders = {
         "Authorization":
-            `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+            `Bearer ${SUPABASE_PUBLISHABLE_KEY},`
+            
 
         "apikey":
             SUPABASE_PUBLISHABLE_KEY,
