@@ -2071,92 +2071,72 @@ async function replacePortfolioPhoto(
 ) {
 
     const input =
-        document.createElement(
-            "input"
-        );
+        document.createElement("input");
 
-
-    input.type =
-        "file";
+    input.type = "file";
 
     input.accept =
-        "image/jpeg,image/png,image/webp,image/heic,image/heif";
-
+        "image/jpeg,image/png,image/webp";
 
     input.click();
-
 
     input.addEventListener(
         "change",
         async function () {
 
-            const file =
-                input.files[0];
-
+            const file = input.files[0];
 
             if (!file) {
-
                 return;
-
             }
 
-
-            showMessage(
-                "Replacing photo..."
-            );
-
+            showMessage("Replacing photo...");
 
             try {
+
+                /*
+                 * Upload directly to the same path.
+                 * upsert=true replaces the existing file.
+                 */
 
                 const {
                     error
                 } =
                     await supabaseClient
                         .storage
-                        .from(
-                            PORTFOLIO_BUCKET
-                        )
+                        .from(PORTFOLIO_BUCKET)
                         .upload(
                             filePath,
                             file,
                             {
-                                cacheControl:
-                                    "3600",
-
-                                upsert:
-                                    true,
-
+                                cacheControl: "3600",
+                                upsert: true,
                                 contentType:
                                     file.type ||
-                                    "application/octet-stream"
+                                    "image/jpeg"
                             }
                         );
 
-
                 if (error) {
-
                     throw error;
-
                 }
-
 
                 showMessage(
                     "Photo replaced successfully.",
                     "success"
                 );
 
-
                 await renderPortfolioSection(
                     section,
                     category
                 );
-
 
             }
 
             catch (error) {
 
                 console.error(
+                    "Replace portfolio photo error:",
                     error
                 );
 
@@ -2170,10 +2150,7 @@ async function replacePortfolioPhoto(
 
         }
     );
-
 }
-
-
 /* =====================================================
    DELETE PORTFOLIO PHOTO
 ===================================================== */
