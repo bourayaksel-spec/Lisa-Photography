@@ -1730,26 +1730,45 @@ async function setLargeImage(
     try {
 
         /*
-         * We use ONE global Large Image
-         * for the Portfolio.
+         * ONE Large Image for the whole Portfolio.
          *
-         * The category is kept only as
-         * information about where the image
-         * originally belongs.
+         * The image can come from ANY category:
+         *
+         * portraits
+         * couples
+         * sports
+         * landscapes
+         * real-estate
+         * lifestyle
+         *
+         * category is NOT used to create
+         * separate Large Images.
          */
 
-        const { data: current, error: readError } =
-            await supabaseClient
-                .from("portfolio_settings")
-                .select("id, large_image, category")
-                .eq("section", section)
-                .eq("category", "portfolio")
-                .maybeSingle();
+
+        /*
+         * Find the current Large Image
+         * for this section.
+         */
+
+        const {
+            data: current,
+            error: readError
+        } = await supabaseClient
+            .from("portfolio_settings")
+            .select("id, section, category, large_image")
+            .eq("section", section)
+            .not("large_image", "is", null)
+            .limit(1)
+            .maybeSingle();
 
 
         if (readError) {
 
-            console.error(readError);
+            console.error(
+                "Read large image error:",
+                readError
+            );
 
             showMessage(
                 "Could not read large image: " +
@@ -1763,9 +1782,10 @@ async function setLargeImage(
 
 
         /*
-         * If the selected image is already
-         * the Large Image, clicking the button
-         * again removes it.
+         * SAME IMAGE
+         *
+         * Clicking Set Large again
+         * removes the Large status.
          */
 
         if (
@@ -1773,18 +1793,20 @@ async function setLargeImage(
             current.large_image === imagePath
         ) {
 
-            const { error: removeError } =
-                await supabaseClient
-                    .from("portfolio_settings")
-                    .update({
-                        large_image: null
-                    })
-                    .eq("id", current.id);
+            const {
+                error: removeError
+            } = await supabaseClient
+                .from("portfolio_settings")
+                .update({
+                    large_image: null
+                })
+                .eq("id", current.id);
 
 
             if (removeError) {
 
                 console.error(
+                    "Remove large image error:",
                     removeError
                 );
 
@@ -1804,30 +1826,48 @@ async function setLargeImage(
                 "success"
             );
 
+
+            /*
+             * Refresh dashboard if available.
+             */
+
+            if (
+                typeof loadPortfolioSettings ===
+                "function"
+            ) {
+
+                await loadPortfolioSettings();
+
+            }
+
+
             return true;
 
         }
 
 
         /*
-         * If another image is currently Large,
-         * replace it with the newly selected image.
+         * DIFFERENT IMAGE
+         *
+         * Replace the current Large Image.
          */
 
         if (current) {
 
-            const { error: updateError } =
-                await supabaseClient
-                    .from("portfolio_settings")
-                    .update({
-                        large_image: imagePath
-                    })
-                    .eq("id", current.id);
+            const {
+                error: updateError
+            } = await supabaseClient
+                .from("portfolio_settings")
+                .update({
+                    large_image: imagePath
+                })
+                .eq("id", current.id);
 
 
             if (updateError) {
 
                 console.error(
+                    "Change large image error:",
                     updateError
                 );
 
@@ -1841,26 +1881,35 @@ async function setLargeImage(
 
             }
 
-        } else {
+        }
 
-            /*
-             * No Large Image exists yet.
-             * Create the single Portfolio record.
-             */
+        /*
+         * NO Large Image exists yet.
+         *
+         * Create one record.
+         */
 
-            const { error: insertError } =
-                await supabaseClient
-                    .from("portfolio_settings")
-                    .insert({
-                        section: section,
-                        category: "portfolio",
-                        large_image: imagePath
-                    });
+        else {
+
+            const {
+                error: insertError
+            } = await supabaseClient
+                .from("portfolio_settings")
+                .insert({
+
+                    section: section,
+
+                    category: "portfolio",
+
+                    large_image: imagePath
+
+                });
 
 
             if (insertError) {
 
                 console.error(
+                    "Insert large image error:",
                     insertError
                 );
 
@@ -1883,7 +1932,22 @@ async function setLargeImage(
         );
 
 
+        /*
+         * Refresh dashboard if the function exists.
+         */
+
+        if (
+            typeof loadPortfolioSettings ===
+            "function"
+        ) {
+
+            await loadPortfolioSettings();
+
+        }
+
+
         return true;
+
 
     } catch (error) {
 
