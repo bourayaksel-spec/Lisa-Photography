@@ -298,66 +298,119 @@ document.addEventListener("DOMContentLoaded", () => {
        LOAD LARGE IMAGE SETTING
     ========================================================= */
 
-    async function loadLargeImageSetting() {
+  async function loadLargeImageSetting() {
 
-        try {
+    try {
 
-            const response =
-                await fetch(
-                    `${SUPABASE_URL}/rest/v1/portfolio_settings` +
-                    `?select=large_image&limit=1`,
-                    {
-                        method: "GET",
-                        headers: supabaseHeaders
+        const url =
+            SUPABASE_URL +
+            "/rest/v1/portfolio_settings" +
+            "?select=large_image" +
+            "&large_image=not.is.null" +
+            "&limit=1";
+
+        const response =
+            await fetch(
+                url,
+                {
+                    method: "GET",
+
+                    headers: {
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            "Bearer " +
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Content-Type":
+                            "application/json"
                     }
-                );
-
-            if (!response.ok) {
-                throw new Error(
-                    "Could not load large image setting."
-                );
-            }
-
-            const data =
-                await response.json();
-
-            if (
-                Array.isArray(data) &&
-                data.length > 0 &&
-                data[0].large_image
-            ) {
-
-                largeImagePath =
-                    normalizeImagePath(
-                        data[0].large_image
-                    );
-
-            } else {
-
-                largeImagePath = null;
-
-            }
-
-            console.log(
-                "Portfolio Large Image:",
-                largeImagePath
+                }
             );
 
-            return largeImagePath;
 
-        } catch (error) {
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
 
             console.error(
-                "Large image setting error:",
-                error
+                "Supabase portfolio_settings error:",
+                response.status,
+                errorText
             );
+
+            throw new Error(
+                "Could not load portfolio large image setting."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        console.log(
+            "portfolio_settings response:",
+            data
+        );
+
+
+        if (
+            Array.isArray(data) &&
+            data.length > 0 &&
+            data[0].large_image
+        ) {
+
+            largeImagePath =
+                normalizeImagePath(
+                    data[0].large_image
+                );
+
+        } else {
 
             largeImagePath = null;
 
-            return null;
         }
+
+
+        console.log(
+            "Large Image Path:",
+            largeImagePath
+        );
+
+
+        if (largeImagePath) {
+
+            console.log(
+                "Large Image URL:",
+                getPublicImageUrl(
+                    largeImagePath
+                )
+            );
+
+        }
+
+
+        return largeImagePath;
+
+
+    } catch (error) {
+
+        console.error(
+            "Large image setting error:",
+            error
+        );
+
+        largeImagePath = null;
+
+        return null;
+
     }
 
+}
 
     /* =========================================================
        LOAD FEATURED CATEGORY
