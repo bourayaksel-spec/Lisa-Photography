@@ -73,6 +73,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let allPortfolioFiles = [];
 
+    /*
+       This contains exactly one path, for example:
+
+       featured/portraits/19.webp
+    */
+
     let largeImagePath = null;
 
     let lightboxItems = [];
@@ -221,9 +227,7 @@ document.addEventListener("DOMContentLoaded", function () {
         image.addEventListener(
             "contextmenu",
             function (event) {
-
                 event.preventDefault();
-
             }
         );
     }
@@ -251,9 +255,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (submitButton) {
 
-                    submitButton.disabled =
-                        true;
-
+                    submitButton.disabled = true;
                     submitButton.textContent =
                         "SENDING...";
                 }
@@ -304,8 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (submitButton) {
 
-                        submitButton.disabled =
-                            false;
+                        submitButton.disabled = false;
 
                         submitButton.textContent =
                             "SEND REQUEST";
@@ -322,6 +323,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
        LOAD LARGE IMAGE FROM DATABASE
+       
+       Reads:
+
+       portfolio_settings.large_image
+
+       Example:
+
+       featured/portraits/19.webp
     ========================================================= */
 
     async function loadLargeImageSetting() {
@@ -360,6 +369,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 );
 
+
+            /* -----------------------------------------
+               CHECK RESPONSE
+            ----------------------------------------- */
+
             if (!response.ok) {
 
                 const errorText =
@@ -377,13 +391,24 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
             }
 
+
+            /* -----------------------------------------
+               READ JSON
+            ----------------------------------------- */
+
             const data =
                 await response.json();
+
 
             console.log(
                 "portfolio_settings response:",
                 data
             );
+
+
+            /* -----------------------------------------
+               GET LARGE IMAGE
+            ----------------------------------------- */
 
             if (
                 Array.isArray(data) &&
@@ -402,10 +427,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 largeImagePath = null;
             }
 
+
             console.log(
                 "Large Image Path:",
                 largeImagePath
             );
+
+
+            /* -----------------------------------------
+               SHOW PUBLIC URL IN CONSOLE
+            ----------------------------------------- */
 
             if (largeImagePath) {
 
@@ -420,7 +451,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
             }
 
+
             return largeImagePath;
+
 
         } catch (error) {
 
@@ -437,6 +470,69 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
+       LARGE IMAGE CSS
+    ========================================================= */
+
+    function addLargeImageStyles() {
+
+        if (
+            document.getElementById(
+                "portfolio-large-image-styles"
+            )
+        ) {
+            return;
+        }
+
+        const style =
+            document.createElement("style");
+
+        style.id =
+            "portfolio-large-image-styles";
+
+        style.textContent = `
+
+            .portfolio-large-image {
+                width: 100%;
+                margin: 0 auto 40px;
+                position: relative;
+                overflow: hidden;
+                cursor: pointer;
+            }
+
+            .portfolio-large-image img {
+                display: block;
+                width: 100%;
+                max-height: 700px;
+                object-fit: cover;
+                object-position: center;
+                transition: transform 0.5s ease;
+                user-select: none;
+                -webkit-user-drag: none;
+            }
+
+            .portfolio-large-image:hover img {
+                transform: scale(1.02);
+            }
+
+            @media (max-width: 768px) {
+
+                .portfolio-large-image {
+                    margin-bottom: 25px;
+                }
+
+                .portfolio-large-image img {
+                    max-height: 500px;
+                }
+
+            }
+
+        `;
+
+        document.head.appendChild(style);
+    }
+
+
+    /* =========================================================
        CREATE LARGE IMAGE SECTION
     ========================================================= */
 
@@ -445,6 +541,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!gallery) {
             return;
         }
+
 
         /* -----------------------------------------
            REMOVE OLD LARGE IMAGE
@@ -461,7 +558,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /* -----------------------------------------
-           NO IMAGE
+           NO IMAGE SELECTED
         ----------------------------------------- */
 
         if (!largeImagePath) {
@@ -502,17 +599,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /* -----------------------------------------
-           INNER WRAPPER
-        ----------------------------------------- */
-
-        const wrapper =
-            document.createElement("div");
-
-        wrapper.className =
-            "portfolio-large-image-inner";
-
-
-        /* -----------------------------------------
            IMAGE
         ----------------------------------------- */
 
@@ -538,9 +624,6 @@ document.addEventListener("DOMContentLoaded", function () {
         image.decoding =
             "async";
 
-        image.className =
-            "portfolio-featured-image";
-
         protectImage(image);
 
 
@@ -555,22 +638,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 openLightboxFromPath(
                     largeImagePath
                 );
-
             }
         );
 
 
         /* -----------------------------------------
-           IMAGE LOAD
+           SUCCESS
         ----------------------------------------- */
 
         image.addEventListener(
             "load",
             function () {
-
-                section.classList.add(
-                    "loaded"
-                );
 
                 console.log(
                     "Large Image loaded successfully:",
@@ -581,7 +659,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         /* -----------------------------------------
-           IMAGE ERROR
+           ERROR
         ----------------------------------------- */
 
         image.addEventListener(
@@ -603,16 +681,8 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* -----------------------------------------
-           BUILD
-        ----------------------------------------- */
-
-        wrapper.appendChild(
-            image
-        );
-
         section.appendChild(
-            wrapper
+            image
         );
 
 
@@ -645,6 +715,7 @@ document.addEventListener("DOMContentLoaded", function () {
             "/" +
             category +
             "/";
+
 
         const response =
             await fetch(
@@ -679,6 +750,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             );
 
+
         if (!response.ok) {
 
             const errorText =
@@ -697,12 +769,15 @@ document.addEventListener("DOMContentLoaded", function () {
             );
         }
 
+
         const files =
             await response.json();
+
 
         if (!Array.isArray(files)) {
             return [];
         }
+
 
         return files
             .filter(function (file) {
@@ -726,6 +801,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     file.id
                 );
             })
+
             .map(function (file) {
 
                 return {
@@ -754,6 +830,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+
         const item =
             document.createElement("div");
 
@@ -772,13 +849,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const image =
             document.createElement("img");
 
-        const imageUrl =
+
+        image.src =
             getPublicImageUrl(
                 file.path
             );
-
-        image.src =
-            imageUrl;
 
         image.alt =
             createAltText(
@@ -791,12 +866,9 @@ document.addEventListener("DOMContentLoaded", function () {
         image.decoding =
             "async";
 
+
         protectImage(image);
 
-
-        /* -----------------------------------------
-           CLICK → LIGHTBOX
-        ----------------------------------------- */
 
         image.addEventListener(
             "click",
@@ -805,14 +877,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 openLightboxFromPath(
                     file.path
                 );
-
             }
         );
 
-
-        /* -----------------------------------------
-           ERROR
-        ----------------------------------------- */
 
         image.addEventListener(
             "error",
@@ -853,6 +920,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
+
         try {
 
             /* -----------------------------------------
@@ -880,7 +948,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             /* -----------------------------------------
-               LOAD LARGE IMAGE
+               LOAD LARGE IMAGE FIRST
             ----------------------------------------- */
 
             await loadLargeImageSetting();
@@ -889,6 +957,8 @@ document.addEventListener("DOMContentLoaded", function () {
             /* -----------------------------------------
                CREATE LARGE IMAGE
             ----------------------------------------- */
+
+            addLargeImageStyles();
 
             createLargeImageSection();
 
@@ -909,10 +979,6 @@ document.addEventListener("DOMContentLoaded", function () {
                     )
                 );
 
-
-            /* -----------------------------------------
-               COMBINE RESULTS
-            ----------------------------------------- */
 
             results.forEach(
                 function (result) {
@@ -940,13 +1006,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             /* -----------------------------------------
                REMOVE LARGE IMAGE FROM GRID
-               
-               This prevents duplicate images.
             ----------------------------------------- */
 
             if (largeImagePath) {
 
-                const normalizedLargePath =
+                const normalizedLarge =
                     normalizeImagePath(
                         largeImagePath
                     );
@@ -959,7 +1023,7 @@ document.addEventListener("DOMContentLoaded", function () {
                                 normalizeImagePath(
                                     file.path
                                 ) !==
-                                normalizedLargePath
+                                normalizedLarge
                             );
                         }
                     );
@@ -1043,6 +1107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 );
             }
 
+
         } catch (error) {
 
             console.error(
@@ -1050,11 +1115,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 error
             );
 
+
             if (portfolioLoading) {
 
                 portfolioLoading.style.display =
                     "none";
             }
+
 
             showPortfolioError(
                 "Unable to load the portfolio. Please try again later."
@@ -1155,9 +1222,11 @@ document.addEventListener("DOMContentLoaded", function () {
             const largeCategory =
                 largeSection.dataset.category;
 
+
             const showLarge =
                 filter === "all" ||
                 largeCategory === filter;
+
 
             largeSection.style.display =
                 showLarge
@@ -1174,11 +1243,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (
                 filter !== "all" &&
-                visibleCount === 0 &&
-                !(
-                    largeSection &&
-                    largeSection.style.display !== "none"
-                )
+                visibleCount === 0
             ) {
 
                 portfolioError.textContent =
@@ -1240,7 +1305,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       GET VISIBLE LIGHTBOX ITEMS
+       LIGHTBOX ITEMS
     ========================================================= */
 
     function getVisibleLightboxItems() {
@@ -1518,10 +1583,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    /* =========================================================
-       CLOSE BUTTON
-    ========================================================= */
-
     if (closeButton) {
 
         closeButton.addEventListener(
@@ -1667,7 +1728,8 @@ document.addEventListener("DOMContentLoaded", function () {
        MOBILE SWIPE
     ========================================================= */
 
-    let touchStartX = 0;
+    let touchStartX =
+        0;
 
 
     if (lightboxImage) {
@@ -2001,7 +2063,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
-       START PORTFOLIO
+       START
     ========================================================= */
 
     loadPortfolio();
