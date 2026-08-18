@@ -473,75 +473,13 @@ document.addEventListener("DOMContentLoaded", function () {
        LARGE IMAGE CSS
     ========================================================= */
 
-    function addLargeImageStyles() {
-
-        if (
-            document.getElementById(
-                "portfolio-large-image-styles"
-            )
-        ) {
-            return;
-        }
-
-        const style =
-            document.createElement("style");
-
-        style.id =
-            "portfolio-large-image-styles";
-
-        style.textContent = `
-
-            .portfolio-large-image {
-                width: 100%;
-                margin: 0 auto 40px;
-                position: relative;
-                overflow: hidden;
-                cursor: pointer;
-            }
-
-            .portfolio-large-image img {
-                display: block;
-                width: 100%;
-                max-height: 700px;
-                object-fit: cover;
-                object-position: center;
-                transition: transform 0.5s ease;
-                user-select: none;
-                -webkit-user-drag: none;
-            }
-
-            .portfolio-large-image:hover img {
-                transform: scale(1.02);
-            }
-
-            @media (max-width: 768px) {
-
-                .portfolio-large-image {
-                    margin-bottom: 25px;
-                }
-
-                .portfolio-large-image img {
-                    max-height: 500px;
-                }
-
-            }
-
-        `;
-
-        document.head.appendChild(style);
-    }
-
+  
 
     /* =========================================================
        CREATE LARGE IMAGE SECTION
     ========================================================= */
 
-    function createLargeImageSection() {
-
-        if (!gallery) {
-            return;
-        }
-
+   
 
         /* -----------------------------------------
            REMOVE OLD LARGE IMAGE
@@ -824,87 +762,79 @@ document.addEventListener("DOMContentLoaded", function () {
        CREATE GALLERY ITEM
     ========================================================= */
 
-    function createGalleryItem(file) {
+  function createGalleryItem(file) {
 
-        if (!gallery) {
-            return;
-        }
-
-
-        const item =
-            document.createElement("div");
-
-        item.className =
-            "gallery-item";
-
-        item.dataset.category =
-            file.category;
-
-        item.dataset.path =
-            normalizeImagePath(
-                file.path
-            );
-
-
-        const image =
-            document.createElement("img");
-
-
-        image.src =
-            getPublicImageUrl(
-                file.path
-            );
-
-        image.alt =
-            createAltText(
-                file.category
-            );
-
-        image.loading =
-            "lazy";
-
-        image.decoding =
-            "async";
-
-
-        protectImage(image);
-
-
-        image.addEventListener(
-            "click",
-            function () {
-
-                openLightboxFromPath(
-                    file.path
-                );
-            }
-        );
-
-
-        image.addEventListener(
-            "error",
-            function () {
-
-                console.warn(
-                    "Gallery image could not load:",
-                    file.path
-                );
-
-                item.remove();
-            }
-        );
-
-
-        item.appendChild(
-            image
-        );
-
-        gallery.appendChild(
-            item
-        );
+    if (!gallery) {
+        return;
     }
 
+    const item =
+        document.createElement("div");
 
+    item.className = "gallery-item";
+
+    item.dataset.category =
+        file.category;
+
+    item.dataset.path =
+        normalizeImagePath(file.path);
+
+
+    const image =
+        document.createElement("img");
+
+
+    const imageUrl =
+        getPublicImageUrl(file.path);
+
+
+    image.src =
+        imageUrl;
+
+    image.alt =
+        createAltText(file.category);
+
+    image.loading =
+        "lazy";
+
+    image.decoding =
+        "async";
+
+
+    protectImage(image);
+
+
+    image.addEventListener(
+        "click",
+        function () {
+
+            openLightboxFromPath(
+                file.path
+            );
+
+        }
+    );
+
+
+    image.addEventListener(
+        "error",
+        function () {
+
+            console.warn(
+                "Gallery image could not load:",
+                file.path
+            );
+
+            item.remove();
+
+        }
+    );
+
+
+    item.appendChild(image);
+
+    gallery.appendChild(item);
+}
     /* =========================================================
        LOAD PORTFOLIO
     ========================================================= */
@@ -958,10 +888,12 @@ document.addEventListener("DOMContentLoaded", function () {
                CREATE LARGE IMAGE
             ----------------------------------------- */
 
-            addLargeImageStyles();
-
-            createLargeImageSection();
-
+        /* -----------------------------------------
+   LARGE IMAGE
+   Do not create a separate oversized image.
+   The selected image will remain part of
+   the portfolio collection.
+----------------------------------------- */
 
             /* -----------------------------------------
                LOAD ALL CATEGORIES
@@ -1007,27 +939,6 @@ document.addEventListener("DOMContentLoaded", function () {
             /* -----------------------------------------
                REMOVE LARGE IMAGE FROM GRID
             ----------------------------------------- */
-
-            if (largeImagePath) {
-
-                const normalizedLarge =
-                    normalizeImagePath(
-                        largeImagePath
-                    );
-
-                allPortfolioFiles =
-                    allPortfolioFiles.filter(
-                        function (file) {
-
-                            return (
-                                normalizeImagePath(
-                                    file.path
-                                ) !==
-                                normalizedLarge
-                            );
-                        }
-                    );
-            }
 
 
             /* -----------------------------------------
