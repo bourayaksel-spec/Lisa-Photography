@@ -1,5 +1,4 @@
-```javascript
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
        SUPABASE CONFIGURATION
@@ -73,6 +72,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentImage = 0;
 
     let allPortfolioFiles = [];
+
+    /*
+       This contains exactly one path, for example:
+
+       featured/portraits/19.webp
+    */
+
     let largeImagePath = null;
 
     let lightboxItems = [];
@@ -84,8 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const supabaseHeaders = {
         "Authorization":
-            `Bearer ${SUPABASE_PUBLISHABLE_KEY},`
-            
+            `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
 
         "apikey":
             SUPABASE_PUBLISHABLE_KEY,
@@ -109,9 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         return (
-            `${SUPABASE_URL}` +
-            `/storage/v1/object/public/` +
-            `${BUCKET_NAME}/` +
+            SUPABASE_URL +
+            "/storage/v1/object/public/" +
+            BUCKET_NAME +
+            "/" +
             normalized
         );
     }
@@ -135,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
-       CATEGORY
+       GET CATEGORY FROM PATH
     ========================================================= */
 
     function getCategoryFromPath(filePath) {
@@ -150,10 +156,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const parts =
             path.split("/");
 
+        /*
+           Example:
+
+           featured/portraits/19.webp
+
+           parts[0] = featured
+           parts[1] = portraits
+           parts[2] = 19.webp
+        */
+
         if (
             parts.length >= 3 &&
             parts[0] === FEATURED_FOLDER
         ) {
+
             return parts[1];
         }
 
@@ -186,7 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             lifestyle:
                 "Lifestyle photography by Lisa Michelle Visuals in East Alabama"
-
         };
 
         return (
@@ -210,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         image.addEventListener(
             "contextmenu",
-            event => {
+            function (event) {
                 event.preventDefault();
             }
         );
@@ -228,7 +244,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         bookingForm.addEventListener(
             "submit",
-            async event => {
+            async function (event) {
 
                 event.preventDefault();
 
@@ -238,8 +254,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
 
                 if (submitButton) {
+
                     submitButton.disabled = true;
-                    submitButton.textContent = "SENDING...";
+                    submitButton.textContent =
+                        "SENDING...";
                 }
 
                 try {
@@ -249,7 +267,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             bookingForm.action,
                             {
                                 method: "POST",
-                                body: new FormData(bookingForm),
+
+                                body:
+                                    new FormData(
+                                        bookingForm
+                                    ),
+
                                 headers: {
                                     "Accept":
                                         "application/json"
@@ -258,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         );
 
                     if (!response.ok) {
+
                         throw new Error(
                             "Booking request failed."
                         );
@@ -281,7 +305,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     );
 
                     if (submitButton) {
+
                         submitButton.disabled = false;
+
                         submitButton.textContent =
                             "SEND REQUEST";
                     }
@@ -296,204 +322,155 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
-       LOAD LARGE IMAGE SETTING
+       LOAD LARGE IMAGE FROM DATABASE
+       
+       Reads:
+
+       portfolio_settings.large_image
+
+       Example:
+
+       featured/portraits/19.webp
     ========================================================= */
 
-  async function loadLargeImageSetting() {
-
-    try {
-
-        const url =
-            SUPABASE_URL +
-            "/rest/v1/portfolio_settings" +
-            "?select=large_image" +
-            "&large_image=not.is.null" +
-            "&limit=1";
-
-        const response =
-            await fetch(
-                url,
-                {
-                    method: "GET",
-
-                    headers: {
-                        "apikey":
-                            SUPABASE_PUBLISHABLE_KEY,
-
-                        "Authorization":
-                            "Bearer " +
-                            SUPABASE_PUBLISHABLE_KEY,
-
-                        "Content-Type":
-                            "application/json"
-                    }
-                }
-            );
-
-
-        if (!response.ok) {
-
-            const errorText =
-                await response.text();
-
-            console.error(
-                "Supabase portfolio_settings error:",
-                response.status,
-                errorText
-            );
-
-            throw new Error(
-                "Could not load portfolio large image setting."
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        console.log(
-            "portfolio_settings response:",
-            data
-        );
-
-
-        if (
-            Array.isArray(data) &&
-            data.length > 0 &&
-            data[0].large_image
-        ) {
-
-            largeImagePath =
-                normalizeImagePath(
-                    data[0].large_image
-                );
-
-        } else {
-
-            largeImagePath = null;
-
-        }
-
-
-        console.log(
-            "Large Image Path:",
-            largeImagePath
-        );
-
-
-        if (largeImagePath) {
-
-            console.log(
-                "Large Image URL:",
-                getPublicImageUrl(
-                    largeImagePath
-                )
-            );
-
-        }
-
-
-        return largeImagePath;
-
-
-    } catch (error) {
-
-        console.error(
-            "Large image setting error:",
-            error
-        );
+    async function loadLargeImageSetting() {
 
         largeImagePath = null;
 
-        return null;
+        try {
 
-    }
+            const url =
+                SUPABASE_URL +
+                "/rest/v1/portfolio_settings" +
+                "?select=large_image" +
+                "&large_image=not.is.null" +
+                "&limit=1";
 
-}
+            console.log(
+                "Loading portfolio_settings..."
+            );
 
-    /* =========================================================
-       LOAD FEATURED CATEGORY
-    ========================================================= */
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "GET",
 
-    async function loadFeaturedCategory(category) {
+                        headers: {
+                            "apikey":
+                                SUPABASE_PUBLISHABLE_KEY,
 
-        const prefix =
-            `${FEATURED_FOLDER}/${category}/`;
+                            "Authorization":
+                                `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
 
-        const response =
-            await fetch(
-                `${SUPABASE_URL}/storage/v1/object/list/${BUCKET_NAME}`,
-                {
-                    method: "POST",
-                    headers: supabaseHeaders,
-
-                    body: JSON.stringify({
-                        prefix,
-                        limit: 1000,
-                        offset: 0,
-
-                        sortBy: {
-                            column: "name",
-                            order: "asc"
+                            "Content-Type":
+                                "application/json"
                         }
-                    })
-                }
-            );
-
-        if (!response.ok) {
-
-            throw new Error(
-                `Featured folder failed: ${category}`
-            );
-        }
-
-        const files =
-            await response.json();
-
-        if (!Array.isArray(files)) {
-            return [];
-        }
-
-        return files
-            .filter(file => {
-
-                if (
-                    !file ||
-                    !file.name
-                ) {
-                    return false;
-                }
-
-                if (
-                    file.name ===
-                    ".emptyFolderPlaceholder"
-                ) {
-                    return false;
-                }
-
-                return (
-                    file.metadata ||
-                    file.id
+                    }
                 );
-            })
-            .map(file => ({
 
-                path:
-                    `${prefix}${file.name}`,
 
-                category,
+            /* -----------------------------------------
+               CHECK RESPONSE
+            ----------------------------------------- */
 
-                name:
-                    file.name
+            if (!response.ok) {
 
-            }));
+                const errorText =
+                    await response.text();
+
+                console.error(
+                    "portfolio_settings error:",
+                    response.status,
+                    errorText
+                );
+
+                throw new Error(
+                    "portfolio_settings request failed: " +
+                    response.status
+                );
+            }
+
+
+            /* -----------------------------------------
+               READ JSON
+            ----------------------------------------- */
+
+            const data =
+                await response.json();
+
+
+            console.log(
+                "portfolio_settings response:",
+                data
+            );
+
+
+            /* -----------------------------------------
+               GET LARGE IMAGE
+            ----------------------------------------- */
+
+            if (
+                Array.isArray(data) &&
+                data.length > 0 &&
+                data[0] &&
+                data[0].large_image
+            ) {
+
+                largeImagePath =
+                    normalizeImagePath(
+                        data[0].large_image
+                    );
+
+            } else {
+
+                largeImagePath = null;
+            }
+
+
+            console.log(
+                "Large Image Path:",
+                largeImagePath
+            );
+
+
+            /* -----------------------------------------
+               SHOW PUBLIC URL IN CONSOLE
+            ----------------------------------------- */
+
+            if (largeImagePath) {
+
+                const imageUrl =
+                    getPublicImageUrl(
+                        largeImagePath
+                    );
+
+                console.log(
+                    "Large Image URL:",
+                    imageUrl
+                );
+            }
+
+
+            return largeImagePath;
+
+
+        } catch (error) {
+
+            console.error(
+                "Large image setting error:",
+                error
+            );
+
+            largeImagePath = null;
+
+            return null;
+        }
     }
 
 
     /* =========================================================
-       LARGE IMAGE STYLES
+       LARGE IMAGE CSS
     ========================================================= */
 
     function addLargeImageStyles() {
@@ -546,7 +523,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 .portfolio-large-image img {
                     max-height: 500px;
                 }
+
             }
+
         `;
 
         document.head.appendChild(style);
@@ -554,7 +533,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
-       CREATE LARGE IMAGE
+       CREATE LARGE IMAGE SECTION
     ========================================================= */
 
     function createLargeImageSection() {
@@ -562,6 +541,11 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!gallery) {
             return;
         }
+
+
+        /* -----------------------------------------
+           REMOVE OLD LARGE IMAGE
+        ----------------------------------------- */
 
         const oldLarge =
             document.getElementById(
@@ -572,14 +556,34 @@ document.addEventListener("DOMContentLoaded", () => {
             oldLarge.remove();
         }
 
+
+        /* -----------------------------------------
+           NO IMAGE SELECTED
+        ----------------------------------------- */
+
         if (!largeImagePath) {
+
+            console.warn(
+                "No Large Image selected."
+            );
+
             return;
         }
+
+
+        /* -----------------------------------------
+           CATEGORY
+        ----------------------------------------- */
 
         const category =
             getCategoryFromPath(
                 largeImagePath
             );
+
+
+        /* -----------------------------------------
+           SECTION
+        ----------------------------------------- */
 
         const section =
             document.createElement("div");
@@ -593,16 +597,26 @@ document.addEventListener("DOMContentLoaded", () => {
         section.dataset.category =
             category;
 
+
+        /* -----------------------------------------
+           IMAGE
+        ----------------------------------------- */
+
         const image =
             document.createElement("img");
 
-        image.src =
+        const imageUrl =
             getPublicImageUrl(
                 largeImagePath
             );
 
+        image.src =
+            imageUrl;
+
         image.alt =
-            createAltText(category);
+            createAltText(
+                category
+            );
 
         image.loading =
             "eager";
@@ -612,9 +626,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         protectImage(image);
 
+
+        /* -----------------------------------------
+           CLICK → LIGHTBOX
+        ----------------------------------------- */
+
         image.addEventListener(
             "click",
-            () => {
+            function () {
 
                 openLightboxFromPath(
                     largeImagePath
@@ -622,25 +641,182 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
+
+        /* -----------------------------------------
+           SUCCESS
+        ----------------------------------------- */
+
+        image.addEventListener(
+            "load",
+            function () {
+
+                console.log(
+                    "Large Image loaded successfully:",
+                    largeImagePath
+                );
+            }
+        );
+
+
+        /* -----------------------------------------
+           ERROR
+        ----------------------------------------- */
+
         image.addEventListener(
             "error",
-            () => {
+            function () {
 
-                console.warn(
-                    "Large image could not load:",
+                console.error(
+                    "Large Image FAILED TO LOAD:",
                     largeImagePath
+                );
+
+                console.error(
+                    "Image URL:",
+                    imageUrl
                 );
 
                 section.remove();
             }
         );
 
-        section.appendChild(image);
+
+        section.appendChild(
+            image
+        );
+
+
+        /* -----------------------------------------
+           INSERT BEFORE GRID
+        ----------------------------------------- */
 
         gallery.parentNode.insertBefore(
             section,
             gallery
         );
+
+
+        console.log(
+            "Large Image section created."
+        );
+    }
+
+
+    /* =========================================================
+       LOAD FEATURED CATEGORY
+    ========================================================= */
+
+    async function loadFeaturedCategory(
+        category
+    ) {
+
+        const prefix =
+            FEATURED_FOLDER +
+            "/" +
+            category +
+            "/";
+
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/storage/v1/object/list/" +
+                BUCKET_NAME,
+                {
+                    method: "POST",
+
+                    headers:
+                        supabaseHeaders,
+
+                    body:
+                        JSON.stringify({
+                            prefix:
+                                prefix,
+
+                            limit:
+                                1000,
+
+                            offset:
+                                0,
+
+                            sortBy: {
+                                column:
+                                    "name",
+
+                                order:
+                                    "asc"
+                            }
+                        })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Storage category error:",
+                category,
+                response.status,
+                errorText
+            );
+
+            throw new Error(
+                "Featured folder failed: " +
+                category
+            );
+        }
+
+
+        const files =
+            await response.json();
+
+
+        if (!Array.isArray(files)) {
+            return [];
+        }
+
+
+        return files
+            .filter(function (file) {
+
+                if (
+                    !file ||
+                    !file.name
+                ) {
+                    return false;
+                }
+
+                if (
+                    file.name ===
+                    ".emptyFolderPlaceholder"
+                ) {
+                    return false;
+                }
+
+                return (
+                    file.metadata ||
+                    file.id
+                );
+            })
+
+            .map(function (file) {
+
+                return {
+
+                    path:
+                        prefix +
+                        file.name,
+
+                    category:
+                        category,
+
+                    name:
+                        file.name
+                };
+            });
     }
 
 
@@ -653,6 +829,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!gallery) {
             return;
         }
+
 
         const item =
             document.createElement("div");
@@ -668,8 +845,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 file.path
             );
 
+
         const image =
             document.createElement("img");
+
 
         image.src =
             getPublicImageUrl(
@@ -687,23 +866,27 @@ document.addEventListener("DOMContentLoaded", () => {
         image.decoding =
             "async";
 
+
         protectImage(image);
+
 
         image.addEventListener(
             "click",
-            () => {
+            function () {
+
                 openLightboxFromPath(
                     file.path
                 );
             }
         );
 
+
         image.addEventListener(
             "error",
-            () => {
+            function () {
 
                 console.warn(
-                    "Image could not load:",
+                    "Gallery image could not load:",
                     file.path
                 );
 
@@ -711,9 +894,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         );
 
-        item.appendChild(image);
 
-        gallery.appendChild(item);
+        item.appendChild(
+            image
+        );
+
+        gallery.appendChild(
+            item
+        );
     }
 
 
@@ -724,26 +912,51 @@ document.addEventListener("DOMContentLoaded", () => {
     async function loadPortfolio() {
 
         if (!gallery) {
+
+            console.warn(
+                "Portfolio gallery not found."
+            );
+
             return;
         }
 
+
         try {
 
+            /* -----------------------------------------
+               LOADING
+            ----------------------------------------- */
+
             if (portfolioLoading) {
+
                 portfolioLoading.style.display =
                     "block";
             }
 
             if (portfolioError) {
+
                 portfolioError.style.display =
                     "none";
             }
 
-            gallery.innerHTML = "";
 
-            allPortfolioFiles = [];
+            gallery.innerHTML =
+                "";
+
+            allPortfolioFiles =
+                [];
+
+
+            /* -----------------------------------------
+               LOAD LARGE IMAGE FIRST
+            ----------------------------------------- */
 
             await loadLargeImageSetting();
+
+
+            /* -----------------------------------------
+               CREATE LARGE IMAGE
+            ----------------------------------------- */
 
             addLargeImageStyles();
 
@@ -751,39 +964,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
             /* -----------------------------------------
-               LOAD ALL CATEGORIES IN PARALLEL
+               LOAD ALL CATEGORIES
             ----------------------------------------- */
 
             const results =
                 await Promise.allSettled(
                     categories.map(
-                        category =>
-                            loadFeaturedCategory(
+                        function (category) {
+
+                            return loadFeaturedCategory(
                                 category
-                            )
+                            );
+                        }
                     )
                 );
 
-            results.forEach(result => {
 
-                if (
-                    result.status ===
-                    "fulfilled"
-                ) {
+            results.forEach(
+                function (result) {
 
-                    allPortfolioFiles =
-                        allPortfolioFiles.concat(
-                            result.value
+                    if (
+                        result.status ===
+                        "fulfilled"
+                    ) {
+
+                        allPortfolioFiles =
+                            allPortfolioFiles.concat(
+                                result.value
+                            );
+
+                    } else {
+
+                        console.warn(
+                            "Category loading failed:",
+                            result.reason
                         );
-
-                } else {
-
-                    console.warn(
-                        "Category loading failed:",
-                        result.reason
-                    );
+                    }
                 }
-            });
+            );
 
 
             /* -----------------------------------------
@@ -799,10 +1017,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 allPortfolioFiles =
                     allPortfolioFiles.filter(
-                        file =>
-                            normalizeImagePath(
-                                file.path
-                            ) !== normalizedLarge
+                        function (file) {
+
+                            return (
+                                normalizeImagePath(
+                                    file.path
+                                ) !==
+                                normalizedLarge
+                            );
+                        }
                     );
             }
 
@@ -812,13 +1035,17 @@ document.addEventListener("DOMContentLoaded", () => {
             ----------------------------------------- */
 
             allPortfolioFiles.sort(
-                (a, b) => {
+                function (a, b) {
 
                     const first =
-                        `${a.category}/${a.name}`;
+                        a.category +
+                        "/" +
+                        a.name;
 
                     const second =
-                        `${b.category}/${b.name}`;
+                        b.category +
+                        "/" +
+                        b.name;
 
                     return first.localeCompare(
                         second,
@@ -837,12 +1064,17 @@ document.addEventListener("DOMContentLoaded", () => {
             ----------------------------------------- */
 
             allPortfolioFiles.forEach(
-                createGalleryItem
+                function (file) {
+
+                    createGalleryItem(
+                        file
+                    );
+                }
             );
 
 
             /* -----------------------------------------
-               APPLY INITIAL FILTER
+               APPLY FILTER
             ----------------------------------------- */
 
             applyPortfolioFilter(
@@ -850,11 +1082,20 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
 
+            /* -----------------------------------------
+               STOP LOADING
+            ----------------------------------------- */
+
             if (portfolioLoading) {
+
                 portfolioLoading.style.display =
                     "none";
             }
 
+
+            /* -----------------------------------------
+               EMPTY PORTFOLIO
+            ----------------------------------------- */
 
             if (
                 allPortfolioFiles.length === 0 &&
@@ -866,6 +1107,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
 
+
         } catch (error) {
 
             console.error(
@@ -873,10 +1115,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 error
             );
 
+
             if (portfolioLoading) {
+
                 portfolioLoading.style.display =
                     "none";
             }
+
 
             showPortfolioError(
                 "Unable to load the portfolio. Please try again later."
@@ -889,7 +1134,9 @@ document.addEventListener("DOMContentLoaded", () => {
        PORTFOLIO ERROR
     ========================================================= */
 
-    function showPortfolioError(message) {
+    function showPortfolioError(
+        message
+    ) {
 
         if (!portfolioError) {
             return;
@@ -907,9 +1154,13 @@ document.addEventListener("DOMContentLoaded", () => {
        APPLY PORTFOLIO FILTER
     ========================================================= */
 
-    function applyPortfolioFilter(filter) {
+    function applyPortfolioFilter(
+        filter
+    ) {
 
-        currentFilter = filter;
+        currentFilter =
+            filter;
+
 
         const items =
             gallery
@@ -918,33 +1169,42 @@ document.addEventListener("DOMContentLoaded", () => {
                 )
                 : [];
 
-        let visibleCount = 0;
+
+        let visibleCount =
+            0;
 
 
-        items.forEach(item => {
+        /* -----------------------------------------
+           GRID FILTER
+        ----------------------------------------- */
 
-            const category =
-                item.dataset.category;
+        items.forEach(
+            function (item) {
 
-            const visible =
-                filter === "all" ||
-                category === filter;
+                const category =
+                    item.dataset.category;
 
-            if (visible) {
+                const visible =
+                    filter === "all" ||
+                    category === filter;
 
-                item.classList.remove(
-                    "hidden"
-                );
 
-                visibleCount++;
+                if (visible) {
 
-            } else {
+                    item.classList.remove(
+                        "hidden"
+                    );
 
-                item.classList.add(
-                    "hidden"
-                );
+                    visibleCount++;
+
+                } else {
+
+                    item.classList.add(
+                        "hidden"
+                    );
+                }
             }
-        });
+        );
 
 
         /* -----------------------------------------
@@ -956,14 +1216,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 "portfolio-large-image"
             );
 
+
         if (largeSection) {
 
             const largeCategory =
                 largeSection.dataset.category;
 
+
             const showLarge =
                 filter === "all" ||
                 largeCategory === filter;
+
 
             largeSection.style.display =
                 showLarge
@@ -973,7 +1236,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
         /* -----------------------------------------
-           ERROR MESSAGE
+           ERROR
         ----------------------------------------- */
 
         if (portfolioError) {
@@ -1002,35 +1265,43 @@ document.addEventListener("DOMContentLoaded", () => {
        FILTER BUTTONS
     ========================================================= */
 
-    filterButtons.forEach(button => {
+    filterButtons.forEach(
+        function (button) {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                function () {
 
-                const filter =
-                    button.dataset.filter ||
-                    "all";
+                    const filter =
+                        button.dataset.filter ||
+                        "all";
 
-                filterButtons.forEach(
-                    btn =>
-                        btn.classList.remove(
-                            "active"
-                        )
-                );
 
-                button.classList.add(
-                    "active"
-                );
+                    filterButtons.forEach(
+                        function (btn) {
 
-                closeLightbox();
+                            btn.classList.remove(
+                                "active"
+                            );
+                        }
+                    );
 
-                applyPortfolioFilter(
-                    filter
-                );
-            }
-        );
-    });
+
+                    button.classList.add(
+                        "active"
+                    );
+
+
+                    closeLightbox();
+
+
+                    applyPortfolioFilter(
+                        filter
+                    );
+                }
+            );
+        }
+    );
 
 
     /* =========================================================
@@ -1041,8 +1312,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const items = [];
 
+
         /* -----------------------------------------
-           LARGE IMAGE
+           LARGE IMAGE FIRST
         ----------------------------------------- */
 
         const largeSection =
@@ -1050,11 +1322,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 "portfolio-large-image"
             );
 
+
         if (
             largeSection &&
             largeSection.style.display !== "none" &&
             largeImagePath
         ) {
+
+            const largeCategory =
+                getCategoryFromPath(
+                    largeImagePath
+                );
+
 
             items.push({
 
@@ -1070,15 +1349,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 alt:
                     createAltText(
-                        getCategoryFromPath(
-                            largeImagePath
-                        )
+                        largeCategory
                     ),
 
                 category:
-                    getCategoryFromPath(
-                        largeImagePath
-                    )
+                    largeCategory
             });
         }
 
@@ -1093,41 +1368,47 @@ document.addEventListener("DOMContentLoaded", () => {
                 .querySelectorAll(
                     ".gallery-item"
                 )
-                .forEach(item => {
+                .forEach(
+                    function (item) {
 
-                    if (
-                        item.classList.contains(
-                            "hidden"
-                        )
-                    ) {
-                        return;
+                        if (
+                            item.classList.contains(
+                                "hidden"
+                            )
+                        ) {
+                            return;
+                        }
+
+
+                        const image =
+                            item.querySelector(
+                                "img"
+                            );
+
+
+                        if (!image) {
+                            return;
+                        }
+
+
+                        items.push({
+
+                            path:
+                                item.dataset.path,
+
+                            src:
+                                image.src,
+
+                            alt:
+                                image.alt,
+
+                            category:
+                                item.dataset.category
+                        });
                     }
-
-                    const image =
-                        item.querySelector(
-                            "img"
-                        );
-
-                    if (!image) {
-                        return;
-                    }
-
-                    items.push({
-
-                        path:
-                            item.dataset.path,
-
-                        src:
-                            image.src,
-
-                        alt:
-                            image.alt,
-
-                        category:
-                            item.dataset.category
-                    });
-                });
+                );
         }
+
 
         return items;
     }
@@ -1137,27 +1418,46 @@ document.addEventListener("DOMContentLoaded", () => {
        OPEN LIGHTBOX
     ========================================================= */
 
-    function openLightboxFromPath(path) {
+    function openLightboxFromPath(
+        path
+    ) {
 
         const normalizedPath =
-            normalizeImagePath(path);
+            normalizeImagePath(
+                path
+            );
+
 
         lightboxItems =
             getVisibleLightboxItems();
 
+
         const index =
             lightboxItems.findIndex(
-                item =>
-                    item.path ===
-                    normalizedPath
+                function (item) {
+
+                    return (
+                        item.path ===
+                        normalizedPath
+                    );
+                }
             );
 
+
         if (index === -1) {
+
+            console.warn(
+                "Lightbox image not found:",
+                normalizedPath
+            );
+
             return;
         }
 
+
         currentImage =
             index;
+
 
         showCurrentLightboxImage();
     }
@@ -1177,14 +1477,17 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+
         const item =
             lightboxItems[
                 currentImage
             ];
 
+
         if (!item) {
             return;
         }
+
 
         lightboxImage.src =
             item.src;
@@ -1192,13 +1495,16 @@ document.addEventListener("DOMContentLoaded", () => {
         lightboxImage.alt =
             item.alt;
 
+
         lightbox.style.display =
             "flex";
+
 
         lightbox.setAttribute(
             "aria-hidden",
             "false"
         );
+
 
         updateLightbox();
     }
@@ -1210,15 +1516,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function updateLightbox() {
 
-        if (!lightboxItems.length) {
+        if (
+            !lightboxItems.length
+        ) {
             return;
         }
+
 
         if (lightboxCounter) {
 
             lightboxCounter.textContent =
                 `${currentImage + 1} / ${lightboxItems.length}`;
         }
+
 
         if (previousButton) {
 
@@ -1227,6 +1537,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ? "visible"
                     : "hidden";
         }
+
 
         if (nextButton) {
 
@@ -1249,19 +1560,26 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+
         lightbox.style.display =
             "none";
+
 
         lightbox.setAttribute(
             "aria-hidden",
             "true"
         );
 
+
         if (lightboxImage) {
-            lightboxImage.src = "";
+
+            lightboxImage.src =
+                "";
         }
 
-        lightboxItems = [];
+
+        lightboxItems =
+            [];
     }
 
 
@@ -1282,9 +1600,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         nextButton.addEventListener(
             "click",
-            event => {
+            function (event) {
 
                 event.stopPropagation();
+
 
                 if (
                     currentImage <
@@ -1308,9 +1627,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         previousButton.addEventListener(
             "click",
-            event => {
+            function (event) {
 
                 event.stopPropagation();
+
 
                 if (
                     currentImage > 0
@@ -1326,19 +1646,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     /* =========================================================
-       CLICK OUTSIDE
+       CLICK OUTSIDE LIGHTBOX
     ========================================================= */
 
     if (lightbox) {
 
         lightbox.addEventListener(
             "click",
-            event => {
+            function (event) {
 
                 if (
                     event.target ===
                     lightbox
                 ) {
+
                     closeLightbox();
                 }
             }
@@ -1352,7 +1673,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener(
         "keydown",
-        event => {
+        function (event) {
 
             if (
                 !lightbox ||
@@ -1361,6 +1682,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ) {
                 return;
             }
+
 
             if (
                 event.key ===
@@ -1406,38 +1728,45 @@ document.addEventListener("DOMContentLoaded", () => {
        MOBILE SWIPE
     ========================================================= */
 
-    let touchStartX = 0;
+    let touchStartX =
+        0;
+
 
     if (lightboxImage) {
 
         lightboxImage.addEventListener(
             "touchstart",
-            event => {
+            function (event) {
 
                 touchStartX =
                     event.changedTouches[0]
                         .screenX;
+
             },
-            { passive: true }
+            {
+                passive: true
+            }
         );
 
 
         lightboxImage.addEventListener(
             "touchend",
-            event => {
+            function (event) {
 
                 const touchEndX =
                     event.changedTouches[0]
                         .screenX;
 
+
                 const distance =
                     touchEndX -
                     touchStartX;
 
+
                 if (
                     distance < -50 &&
                     currentImage <
-                        lightboxItems.length - 1
+                    lightboxItems.length - 1
                 ) {
 
                     currentImage++;
@@ -1453,8 +1782,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     showCurrentLightboxImage();
                 }
+
             },
-            { passive: true }
+            {
+                passive: true
+            }
         );
     }
 
@@ -1470,12 +1802,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         menuToggle.addEventListener(
             "click",
-            () => {
+            function () {
 
                 const active =
                     navLinks.classList.toggle(
                         "active"
                     );
+
 
                 menuToggle.setAttribute(
                     "aria-expanded",
@@ -1483,6 +1816,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         ? "true"
                         : "false"
                 );
+
 
                 menuToggle.setAttribute(
                     "aria-label",
@@ -1496,28 +1830,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
         navLinks
             .querySelectorAll("a")
-            .forEach(link => {
+            .forEach(
+                function (link) {
 
-                link.addEventListener(
-                    "click",
-                    () => {
+                    link.addEventListener(
+                        "click",
+                        function () {
 
-                        navLinks.classList.remove(
-                            "active"
-                        );
+                            navLinks.classList.remove(
+                                "active"
+                            );
 
-                        menuToggle.setAttribute(
-                            "aria-expanded",
-                            "false"
-                        );
 
-                        menuToggle.setAttribute(
-                            "aria-label",
-                            "Open menu"
-                        );
-                    }
-                );
-            });
+                            menuToggle.setAttribute(
+                                "aria-expanded",
+                                "false"
+                            );
+
+
+                            menuToggle.setAttribute(
+                                "aria-label",
+                                "Open menu"
+                            );
+                        }
+                    );
+                }
+            );
     }
 
 
@@ -1530,42 +1868,53 @@ document.addEventListener("DOMContentLoaded", () => {
             ".stars .star"
         );
 
+
     const ratingValue =
         document.getElementById(
             "rating-value"
         );
 
-    stars.forEach(star => {
 
-        star.addEventListener(
-            "click",
-            () => {
+    stars.forEach(
+        function (star) {
 
-                const rating =
-                    Number(
-                        star.dataset.rating
-                    );
+            star.addEventListener(
+                "click",
+                function () {
 
-                if (ratingValue) {
-                    ratingValue.value =
-                        rating;
-                }
-
-                stars.forEach(item => {
-
-                    const itemRating =
+                    const rating =
                         Number(
-                            item.dataset.rating
+                            star.dataset.rating
                         );
 
-                    item.classList.toggle(
-                        "selected",
-                        itemRating <= rating
+
+                    if (ratingValue) {
+
+                        ratingValue.value =
+                            rating;
+                    }
+
+
+                    stars.forEach(
+                        function (item) {
+
+                            const itemRating =
+                                Number(
+                                    item.dataset.rating
+                                );
+
+
+                            item.classList.toggle(
+                                "selected",
+                                itemRating <=
+                                    rating
+                            );
+                        }
                     );
-                });
-            }
-        );
-    });
+                }
+            );
+        }
+    );
 
 
     /* =========================================================
@@ -1577,13 +1926,15 @@ document.addEventListener("DOMContentLoaded", () => {
             "review-form"
         );
 
+
     if (reviewForm) {
 
         reviewForm.addEventListener(
             "submit",
-            async event => {
+            async function (event) {
 
                 event.preventDefault();
+
 
                 if (
                     ratingValue &&
@@ -1597,18 +1948,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
+
                 const submitButton =
                     reviewForm.querySelector(
                         "button[type='submit']"
                     );
 
+
                 if (submitButton) {
 
-                    submitButton.disabled = true;
+                    submitButton.disabled =
+                        true;
 
                     submitButton.textContent =
                         "SENDING...";
                 }
+
 
                 try {
 
@@ -1616,7 +1971,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         await fetch(
                             reviewForm.action,
                             {
-                                method: "POST",
+                                method:
+                                    "POST",
 
                                 body:
                                     new FormData(
@@ -1630,11 +1986,14 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
                         );
 
+
                     if (!response.ok) {
+
                         throw new Error(
                             "Review submission failed."
                         );
                     }
+
 
                     reviewForm.innerHTML = `
                         <div class="form-success">
@@ -1646,12 +2005,14 @@ document.addEventListener("DOMContentLoaded", () => {
                         </div>
                     `;
 
+
                 } catch (error) {
 
                     console.error(
                         "Review error:",
                         error
                     );
+
 
                     if (submitButton) {
 
@@ -1661,6 +2022,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         submitButton.textContent =
                             "SUBMIT REVIEW";
                     }
+
 
                     alert(
                         "Unable to send your review. Please try again."
@@ -1676,12 +2038,17 @@ document.addEventListener("DOMContentLoaded", () => {
     ========================================================= */
 
     document
-        .querySelectorAll(".current-year")
-        .forEach(year => {
+        .querySelectorAll(
+            ".current-year"
+        )
+        .forEach(
+            function (year) {
 
-            year.textContent =
-                new Date().getFullYear();
-        });
+                year.textContent =
+                    new Date()
+                        .getFullYear();
+            }
+        );
 
 
     /* =========================================================
@@ -1690,14 +2057,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document
         .querySelectorAll("img")
-        .forEach(protectImage);
+        .forEach(
+            protectImage
+        );
 
 
     /* =========================================================
-       START PORTFOLIO
+       START
     ========================================================= */
 
     loadPortfolio();
 
 });
-```
