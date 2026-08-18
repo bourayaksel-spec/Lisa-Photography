@@ -1118,7 +1118,581 @@ button:hover,
     }
 
 }
+/* =====================================================
+   WEBSITE CONTENT MANAGER
+===================================================== */
 
+.content-manager {
+    margin-top: 35px;
+}
+
+.content-manager-intro {
+    margin: 10px 0 28px;
+
+    max-width: 720px;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   CONTENT IMAGE MANAGEMENT
+===================================================== */
+
+.content-image-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+
+    margin-top: 25px;
+}
+
+.content-image-card {
+    overflow: hidden;
+
+    border:
+        1px solid rgba(255,255,255,.09);
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255,255,255,.045),
+            rgba(255,255,255,.012)
+        );
+}
+
+.content-image-preview {
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 16 / 9;
+
+    overflow: hidden;
+
+    background:
+        linear-gradient(
+            145deg,
+            #151515,
+            #090909
+        );
+}
+
+.content-image-preview img {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    cursor: zoom-in;
+
+    transition:
+        transform .4s ease,
+        opacity .3s ease;
+}
+
+.content-image-preview:hover img {
+    transform: scale(1.025);
+}
+
+.content-image-empty {
+    position: absolute;
+
+    inset: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: #555;
+
+    text-align: center;
+}
+
+.content-image-empty strong {
+    color: #777;
+
+    font-family: Georgia, serif;
+
+    font-size: 19px;
+
+    font-weight: 400;
+}
+
+.content-image-empty span {
+    font-size: 9px;
+
+    letter-spacing: .14em;
+
+    text-transform: uppercase;
+}
+
+.content-image-info {
+    padding: 17px;
+}
+
+.content-image-title {
+    margin-bottom: 6px;
+
+    font-family: Georgia, serif;
+
+    font-size: 21px;
+
+    font-weight: 400;
+}
+
+.content-image-description {
+    margin-bottom: 15px;
+
+    color: #666;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+.content-image-actions {
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap: 8px;
+}
+
+.content-image-actions button {
+    min-height: 38px;
+
+    padding: 8px;
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   CONTENT STATUS
+===================================================== */
+
+.content-status {
+    position: absolute;
+
+    top: 12px;
+    left: 12px;
+
+    padding: 7px 9px;
+
+    color: #111;
+
+    background: #fff;
+
+    border-radius: 6px;
+
+    font-size: 8px;
+
+    font-weight: 800;
+
+    letter-spacing: .1em;
+
+    text-transform: uppercase;
+}
+
+.content-status.empty {
+    color: #aaa;
+
+    background: rgba(0,0,0,.7);
+
+    border:
+        1px solid rgba(255,255,255,.12);
+}
+
+
+/* =====================================================
+   REVIEWS
+===================================================== */
+
+.reviews-section {
+    margin-top: 35px;
+
+    padding-top: 30px;
+
+    border-top:
+        1px solid rgba(255,255,255,.08);
+}
+
+.reviews-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 20px;
+}
+
+.reviews-header-text h4 {
+    margin: 0 0 5px;
+
+    font-family: Georgia, serif;
+
+    font-size: 22px;
+
+    font-weight: 400;
+}
+
+.reviews-header-text p {
+    margin: 0;
+
+    color: #666;
+
+    font-size: 11px;
+}
+
+.reviews-list {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 13px;
+}
+
+.review-admin-card {
+    position: relative;
+
+    padding: 20px;
+
+    border:
+        1px solid rgba(255,255,255,.08);
+
+    border-radius: 13px;
+
+    background:
+        rgba(255,255,255,.025);
+
+    transition:
+        border-color .2s ease,
+        transform .2s ease;
+}
+
+.review-admin-card:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(255,255,255,.15);
+}
+
+.review-stars {
+    margin-bottom: 13px;
+
+    color: #fff;
+
+    font-size: 14px;
+
+    letter-spacing: 3px;
+}
+
+.review-text {
+    margin: 0 0 16px;
+
+    color: #c9c9c9;
+
+    font-family: Georgia, serif;
+
+    font-size: 16px;
+
+    line-height: 1.65;
+}
+
+.review-author {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding-top: 13px;
+
+    border-top:
+        1px solid rgba(255,255,255,.07);
+}
+
+.review-author-name {
+    color: #888;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: .12em;
+
+    text-transform: uppercase;
+}
+
+.review-actions {
+    display: flex;
+
+    gap: 6px;
+}
+
+.review-actions button {
+    min-height: 32px;
+
+    padding: 6px 10px;
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   REVIEW MODAL
+===================================================== */
+
+.review-modal {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 10000;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        rgba(0,0,0,.82);
+
+    backdrop-filter: blur(12px);
+}
+
+.review-modal.show {
+    display: flex;
+}
+
+.review-modal-box {
+    width: 100%;
+
+    max-width: 540px;
+
+    padding: 28px;
+
+    border:
+        1px solid rgba(255,255,255,.12);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #171717,
+            #0c0c0c
+        );
+
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.7);
+}
+
+.review-modal-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 25px;
+}
+
+.review-modal-header h3 {
+    font-size: 25px;
+}
+
+.review-modal-close {
+    width: 38px;
+    height: 38px;
+
+    min-height: 38px;
+
+    padding: 0;
+
+    color: #aaa;
+
+    background: transparent;
+
+    border:
+        1px solid rgba(255,255,255,.1);
+
+    border-radius: 50%;
+
+    font-size: 20px;
+}
+
+.review-form-group {
+    margin-bottom: 17px;
+}
+
+.review-form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #777;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: .15em;
+
+    text-transform: uppercase;
+}
+
+.review-form-group input,
+.review-form-group textarea {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    color: #fff;
+
+    background: rgba(0,0,0,.45);
+
+    border:
+        1px solid rgba(255,255,255,.1);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    transition:
+        border-color .2s ease;
+}
+
+.review-form-group textarea {
+    min-height: 125px;
+
+    resize: vertical;
+
+    line-height: 1.6;
+}
+
+.review-form-group input:focus,
+.review-form-group textarea:focus {
+    border-color:
+        rgba(255,255,255,.3);
+}
+
+
+/* =====================================================
+   STAR SELECTOR
+===================================================== */
+
+.rating-selector {
+    display: flex;
+
+    gap: 5px;
+}
+
+.rating-star {
+    width: 38px;
+    height: 38px;
+
+    min-height: 38px;
+
+    padding: 0;
+
+    color: #555;
+
+    background: transparent;
+
+    border:
+        1px solid rgba(255,255,255,.1);
+
+    border-radius: 8px;
+
+    font-size: 17px;
+}
+
+.rating-star.active {
+    color: #111;
+
+    background: #fff;
+
+    border-color: #fff;
+}
+
+.review-modal-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+
+    margin-top: 25px;
+}
+
+
+/* =====================================================
+   RESPONSIVE CONTENT MANAGER
+===================================================== */
+
+@media (max-width: 750px) {
+
+    .content-image-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .reviews-list {
+        grid-template-columns: 1fr;
+    }
+
+    .reviews-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
+
+@media (max-width: 450px) {
+
+    .content-image-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .review-modal-box {
+        padding: 20px;
+    }
+
+    .review-author {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+}
 </style>
 
 </head>
@@ -1403,7 +1977,145 @@ button:hover,
 
 </section>
 
+<!-- =====================================================
+     WEBSITE CONTENT
+===================================================== -->
 
+<section class="card content-manager">
+
+    <div class="card-header">
+
+        <h3>
+            Website Content
+        </h3>
+
+        <span class="section-label">
+            Site Management
+        </span>
+
+    </div>
+
+
+    <p class="content-manager-intro">
+
+        Manage the visual content displayed across Lisa Michelle
+        Visuals. Update the Hero image, About image and client
+        testimonials without editing the website code.
+
+    </p>
+
+
+    <!-- =================================================
+         HERO + ABOUT
+    ================================================= -->
+
+    <div class="content-image-grid">
+
+
+        <!-- HERO -->
+
+        <div class="content-image-card">
+
+            <div
+                id="hero-preview"
+                class="content-image-preview"
+            ></div>
+
+            <div class="content-image-info">
+
+                <div class="content-image-title">
+                    Hero Image
+                </div>
+
+                <div class="content-image-description">
+
+                    The main visual displayed in the website
+                    Hero section.
+
+                </div>
+
+                <div
+                    id="hero-actions"
+                    class="content-image-actions"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ABOUT -->
+
+        <div class="content-image-card">
+
+            <div
+                id="about-preview"
+                class="content-image-preview"
+            ></div>
+
+            <div class="content-image-info">
+
+                <div class="content-image-title">
+                    About Image
+                </div>
+
+                <div class="content-image-description">
+
+                    The portrait or visual displayed in the
+                    About section.
+
+                </div>
+
+                <div
+                    id="about-actions"
+                    class="content-image-actions"
+                ></div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =================================================
+         REVIEWS
+    ================================================= -->
+
+    <div class="reviews-section">
+
+        <div class="reviews-header">
+
+            <div class="reviews-header-text">
+
+                <h4>
+                    Reviews & Testimonials
+                </h4>
+
+                <p>
+                    Manage the testimonials displayed on the website.
+                </p>
+
+            </div>
+
+
+            <button
+                id="add-review-button"
+            >
+                + ADD REVIEW
+            </button>
+
+        </div>
+
+
+        <div
+            id="reviews-list"
+            class="reviews-list"
+        ></div>
+
+    </div>
+
+</section>
 <!-- =====================================================
      CLIENTS
 ===================================================== -->
@@ -1456,6 +2168,116 @@ button:hover,
 </div>
 
 
+<!-- =====================================================
+     REVIEW MODAL
+===================================================== -->
+
+<div
+    id="review-modal"
+    class="review-modal"
+>
+
+    <div class="review-modal-box">
+
+        <div class="review-modal-header">
+
+            <h3 id="review-modal-title">
+                Add Review
+            </h3>
+
+            <button
+                type="button"
+                id="review-modal-close"
+                class="review-modal-close"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <form id="review-form">
+
+            <input
+                type="hidden"
+                id="review-id"
+            >
+
+
+            <div class="review-form-group">
+
+                <label>
+                    Client Name
+                </label>
+
+                <input
+                    type="text"
+                    id="review-client-name"
+                    placeholder="Sarah Johnson"
+                    required
+                >
+
+            </div>
+
+
+            <div class="review-form-group">
+
+                <label>
+                    Rating
+                </label>
+
+                <div
+                    id="rating-selector"
+                    class="rating-selector"
+                ></div>
+
+                <input
+                    type="hidden"
+                    id="review-rating"
+                    value="5"
+                >
+
+            </div>
+
+
+            <div class="review-form-group">
+
+                <label>
+                    Review
+                </label>
+
+                <textarea
+                    id="review-text"
+                    placeholder="Write the client's testimonial..."
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <div class="review-modal-actions">
+
+                <button
+                    type="button"
+                    id="review-cancel"
+                    class="secondary"
+                >
+                    CANCEL
+                </button>
+
+                <button
+                    type="submit"
+                >
+                    SAVE REVIEW
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
@@ -4567,7 +5389,1634 @@ document
         }
     );
 
+/* =====================================================
+   WEBSITE CONTENT MANAGEMENT
+===================================================== */
 
+const CONTENT_BUCKET = "portfolio";
+
+
+/* =====================================================
+   CONTENT PUBLIC URL
+===================================================== */
+
+function getContentPublicUrl(path) {
+
+    return (
+        SUPABASE_URL +
+        "/storage/v1/object/public/" +
+        CONTENT_BUCKET +
+        "/" +
+        path
+    );
+
+}
+
+
+/* =====================================================
+   LOAD WEBSITE CONTENT
+===================================================== */
+
+async function loadWebsiteContent() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("site_content")
+                .select("*")
+                .limit(1)
+                .maybeSingle();
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        renderContentImage(
+            "hero",
+            data?.hero_image || null
+        );
+
+
+        renderContentImage(
+            "about",
+            data?.about_image || null
+        );
+
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Website content error:",
+            error
+        );
+
+        showMessage(
+            "Could not load website content.",
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDER HERO / ABOUT
+===================================================== */
+
+function renderContentImage(
+    type,
+    imagePath
+) {
+
+    const preview =
+        document.getElementById(
+            type + "-preview"
+        );
+
+
+    const actions =
+        document.getElementById(
+            type + "-actions"
+        );
+
+
+    if (!preview || !actions) {
+
+        return;
+
+    }
+
+
+    preview.innerHTML =
+        "";
+
+
+    actions.innerHTML =
+        "";
+
+
+    if (imagePath) {
+
+        const image =
+            document.createElement(
+                "img"
+            );
+
+
+        image.src =
+            getContentPublicUrl(
+                imagePath
+            );
+
+
+        image.alt =
+            type === "hero"
+                ? "Website Hero"
+                : "Website About";
+
+
+        image.addEventListener(
+            "click",
+            () =>
+                openPortfolioLightbox(
+                    image
+                )
+        );
+
+
+        preview.appendChild(
+            image
+        );
+
+
+        const status =
+            document.createElement(
+                "div"
+            );
+
+
+        status.className =
+            "content-status";
+
+
+        status.textContent =
+            type === "hero"
+                ? "ACTIVE HERO"
+                : "ACTIVE ABOUT";
+
+
+        preview.appendChild(
+            status
+        );
+
+
+        const changeButton =
+            createContentButton(
+                "CHANGE " +
+                type.toUpperCase(),
+                "upload-button",
+                () =>
+                    chooseContentImage(
+                        type
+                    )
+            );
+
+
+        const removeButton =
+            createContentButton(
+                "REMOVE",
+                "danger",
+                () =>
+                    removeContentImage(
+                        type
+                    )
+            );
+
+
+        actions.appendChild(
+            changeButton
+        );
+
+        actions.appendChild(
+            removeButton
+        );
+
+    }
+
+    else {
+
+        const empty =
+            document.createElement(
+                "div"
+            );
+
+
+        empty.className =
+            "content-image-empty";
+
+
+        const strong =
+            document.createElement(
+                "strong"
+            );
+
+
+        strong.textContent =
+            type === "hero"
+                ? "No Hero Image"
+                : "No About Image";
+
+
+        const span =
+            document.createElement(
+                "span"
+            );
+
+
+        span.textContent =
+            "Upload an image to display it here";
+
+
+        empty.appendChild(
+            strong
+        );
+
+        empty.appendChild(
+            span
+        );
+
+
+        preview.appendChild(
+            empty
+        );
+
+
+        const status =
+            document.createElement(
+                "div"
+            );
+
+
+        status.className =
+            "content-status empty";
+
+
+        status.textContent =
+            "NOT SET";
+
+
+        preview.appendChild(
+            status
+        );
+
+
+        const uploadButton =
+            createContentButton(
+                "UPLOAD " +
+                type.toUpperCase(),
+                "upload-button",
+                () =>
+                    chooseContentImage(
+                        type
+                    )
+            );
+
+
+        actions.appendChild(
+            uploadButton
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CREATE CONTENT BUTTON
+===================================================== */
+
+function createContentButton(
+    text,
+    className,
+    callback
+) {
+
+    const button =
+        document.createElement(
+            "button"
+        );
+
+
+    button.type =
+        "button";
+
+
+    button.textContent =
+        text;
+
+
+    button.className =
+        className;
+
+
+    button.addEventListener(
+        "click",
+        callback
+    );
+
+
+    return button;
+
+}
+
+
+/* =====================================================
+   CHOOSE CONTENT IMAGE
+===================================================== */
+
+function chooseContentImage(
+    type
+) {
+
+    const input =
+        document.createElement(
+            "input"
+        );
+
+
+    input.type =
+        "file";
+
+
+    input.accept =
+        "image/jpeg,image/png,image/webp,image/heic,image/heif";
+
+
+    input.click();
+
+
+    input.addEventListener(
+        "change",
+        async function () {
+
+            const file =
+                input.files?.[0];
+
+
+            if (!file) {
+
+                return;
+
+            }
+
+
+            await uploadContentImage(
+                type,
+                file
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   UPLOAD HERO / ABOUT
+===================================================== */
+
+async function uploadContentImage(
+    type,
+    file
+) {
+
+    if (
+        !file.type.startsWith(
+            "image/"
+        )
+    ) {
+
+        showMessage(
+            "Please select an image.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        "Uploading " +
+        type +
+        " image..."
+    );
+
+
+    try {
+
+        /*
+         * Use one stable filename per content type.
+         *
+         * This means changing the image replaces the
+         * existing website image.
+         */
+
+        const extension =
+            file.name.includes(".")
+                ? file.name.substring(
+                    file.name.lastIndexOf(".")
+                ).toLowerCase()
+                : ".jpg";
+
+
+        const filePath =
+            type +
+            "/" +
+            type +
+            "-" +
+            Date.now() +
+            extension;
+
+
+        const {
+            error: uploadError
+        } =
+            await supabaseClient
+                .storage
+                .from(
+                    CONTENT_BUCKET
+                )
+                .upload(
+                    filePath,
+                    file,
+                    {
+                        cacheControl:
+                            "3600",
+
+                        upsert:
+                            false,
+
+                        contentType:
+                            file.type
+                    }
+                );
+
+
+        if (uploadError) {
+
+            throw uploadError;
+
+        }
+
+
+        const column =
+            type === "hero"
+                ? "hero_image"
+                : "about_image";
+
+
+        const {
+            data: current,
+            error: readError
+        } =
+            await supabaseClient
+                .from("site_content")
+                .select("id," + column)
+                .limit(1)
+                .maybeSingle();
+
+
+        if (readError) {
+
+            throw readError;
+
+        }
+
+
+        if (current) {
+
+            const oldPath =
+                current[column];
+
+
+            const {
+                error: updateError
+            } =
+                await supabaseClient
+                    .from("site_content")
+                    .update({
+
+                        [column]:
+                            filePath,
+
+                        updated_at:
+                            new Date().toISOString()
+
+                    })
+                    .eq(
+                        "id",
+                        current.id
+                    );
+
+
+            if (updateError) {
+
+                /*
+                 * Roll back uploaded file if
+                 * database update fails.
+                 */
+
+                await supabaseClient
+                    .storage
+                    .from(
+                        CONTENT_BUCKET
+                    )
+                    .remove([
+                        filePath
+                    ]);
+
+                throw updateError;
+
+            }
+
+
+            /*
+             * Delete previous image.
+             */
+
+            if (oldPath) {
+
+                await supabaseClient
+                    .storage
+                    .from(
+                        CONTENT_BUCKET
+                    )
+                    .remove([
+                        oldPath
+                    ]);
+
+            }
+
+        }
+
+        else {
+
+            const {
+                error: insertError
+            } =
+                await supabaseClient
+                    .from("site_content")
+                    .insert({
+
+                        [column]:
+                            filePath
+
+                    });
+
+
+            if (insertError) {
+
+                await supabaseClient
+                    .storage
+                    .from(
+                        CONTENT_BUCKET
+                    )
+                    .remove([
+                        filePath
+                    ]);
+
+                throw insertError;
+
+            }
+
+        }
+
+
+        showMessage(
+            type === "hero"
+                ? "Hero image updated successfully."
+                : "About image updated successfully.",
+            "success"
+        );
+
+
+        await loadWebsiteContent();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Content upload error:",
+            error
+        );
+
+        showMessage(
+            "Could not update " +
+            type +
+            " image: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   REMOVE HERO / ABOUT
+===================================================== */
+
+async function removeContentImage(
+    type
+) {
+
+    const confirmed =
+        confirm(
+            "Remove the current " +
+            type +
+            " image?"
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const column =
+            type === "hero"
+                ? "hero_image"
+                : "about_image";
+
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("site_content")
+                .select("id," + column)
+                .limit(1)
+                .maybeSingle();
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        if (!data) {
+
+            return;
+
+        }
+
+
+        const oldPath =
+            data[column];
+
+
+        const {
+            error: updateError
+        } =
+            await supabaseClient
+                .from("site_content")
+                .update({
+
+                    [column]:
+                        null,
+
+                    updated_at:
+                        new Date().toISOString()
+
+                })
+                .eq(
+                    "id",
+                    data.id
+                );
+
+
+        if (updateError) {
+
+            throw updateError;
+
+        }
+
+
+        if (oldPath) {
+
+            await supabaseClient
+                .storage
+                .from(
+                    CONTENT_BUCKET
+                )
+                .remove([
+                    oldPath
+                ]);
+
+        }
+
+
+        showMessage(
+            type +
+            " image removed.",
+            "success"
+        );
+
+
+        await loadWebsiteContent();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Could not remove " +
+            type +
+            " image: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   REVIEWS
+===================================================== */
+
+let editingReviewId = null;
+
+
+/* =====================================================
+   LOAD REVIEWS
+===================================================== */
+
+async function loadReviews() {
+
+    const container =
+        document.getElementById(
+            "reviews-list"
+        );
+
+
+    if (!container) {
+
+        return;
+
+    }
+
+
+    container.innerHTML =
+        "<p style='color:#666;'>Loading reviews...</p>";
+
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await supabaseClient
+                .from("reviews")
+                .select("*")
+                .order(
+                    "created_at",
+                    {
+                        ascending:
+                            false
+                    }
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        container.innerHTML =
+            "";
+
+
+        if (
+            !data ||
+            data.length === 0
+        ) {
+
+            container.innerHTML =
+                `
+                <p style="
+                    color:#666;
+                    grid-column:1/-1;
+                ">
+                    No reviews yet.
+                    Add the first testimonial.
+                </p>
+                `;
+
+            return;
+
+        }
+
+
+        data.forEach(
+            review => {
+
+                container.appendChild(
+                    createReviewCard(
+                        review
+                    )
+                );
+
+            }
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Reviews loading error:",
+            error
+        );
+
+        container.innerHTML =
+            `
+            <p class="error">
+                Could not load reviews:
+                ${escapeHtml(error.message)}
+            </p>
+            `;
+
+    }
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+===================================================== */
+
+function escapeHtml(
+    value
+) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =====================================================
+   CREATE REVIEW CARD
+===================================================== */
+
+function createReviewCard(
+    review
+) {
+
+    const card =
+        document.createElement(
+            "div"
+        );
+
+
+    card.className =
+        "review-admin-card";
+
+
+    const stars =
+        document.createElement(
+            "div"
+        );
+
+
+    stars.className =
+        "review-stars";
+
+
+    stars.textContent =
+        "★".repeat(
+            Math.max(
+                1,
+                Math.min(
+                    5,
+                    Number(
+                        review.rating
+                    ) || 5
+                )
+            )
+        );
+
+
+    const text =
+        document.createElement(
+            "p"
+        );
+
+
+    text.className =
+        "review-text";
+
+
+    text.textContent =
+        `"${review.review_text}"`;
+
+
+    const author =
+        document.createElement(
+            "div"
+        );
+
+
+    author.className =
+        "review-author";
+
+
+    const name =
+        document.createElement(
+            "div"
+        );
+
+
+    name.className =
+        "review-author-name";
+
+
+    name.textContent =
+        review.client_name;
+
+
+    const actions =
+        document.createElement(
+            "div"
+        );
+
+
+    actions.className =
+        "review-actions";
+
+
+    const editButton =
+        document.createElement(
+            "button"
+        );
+
+
+    editButton.className =
+        "secondary";
+
+
+    editButton.textContent =
+        "EDIT";
+
+
+    editButton.addEventListener(
+        "click",
+        () =>
+            openReviewModal(
+                review
+            )
+    );
+
+
+    const deleteButton =
+        document.createElement(
+            "button"
+        );
+
+
+    deleteButton.className =
+        "danger";
+
+
+    deleteButton.textContent =
+        "DELETE";
+
+
+    deleteButton.addEventListener(
+        "click",
+        () =>
+            deleteReview(
+                review
+            )
+    );
+
+
+    actions.appendChild(
+        editButton
+    );
+
+    actions.appendChild(
+        deleteButton
+    );
+
+
+    author.appendChild(
+        name
+    );
+
+    author.appendChild(
+        actions
+    );
+
+
+    card.appendChild(
+        stars
+    );
+
+    card.appendChild(
+        text
+    );
+
+    card.appendChild(
+        author
+    );
+
+
+    return card;
+
+}
+
+
+/* =====================================================
+   RATING SELECTOR
+===================================================== */
+
+function initializeRatingSelector() {
+
+    const container =
+        document.getElementById(
+            "rating-selector"
+        );
+
+
+    container.innerHTML =
+        "";
+
+
+    for (
+        let i = 1;
+        i <= 5;
+        i++
+    ) {
+
+        const button =
+            document.createElement(
+                "button"
+            );
+
+
+        button.type =
+            "button";
+
+
+        button.className =
+            "rating-star";
+
+
+        button.textContent =
+            "★";
+
+
+        button.dataset.rating =
+            i;
+
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                document.getElementById(
+                    "review-rating"
+                ).value =
+                    i;
+
+
+                updateRatingSelector(
+                    i
+                );
+
+            }
+        );
+
+
+        container.appendChild(
+            button
+        );
+
+    }
+
+
+    updateRatingSelector(
+        5
+    );
+
+}
+
+
+/* =====================================================
+   UPDATE RATING SELECTOR
+===================================================== */
+
+function updateRatingSelector(
+    rating
+) {
+
+    document
+        .querySelectorAll(
+            ".rating-star"
+        )
+        .forEach(
+            button => {
+
+                button.classList.toggle(
+                    "active",
+                    Number(
+                        button.dataset.rating
+                    ) <= rating
+                );
+
+            }
+        );
+
+}
+
+
+/* =====================================================
+   OPEN REVIEW MODAL
+===================================================== */
+
+function openReviewModal(
+    review = null
+) {
+
+    const modal =
+        document.getElementById(
+            "review-modal"
+        );
+
+
+    const title =
+        document.getElementById(
+            "review-modal-title"
+        );
+
+
+    const id =
+        document.getElementById(
+            "review-id"
+        );
+
+
+    const name =
+        document.getElementById(
+            "review-client-name"
+        );
+
+
+    const text =
+        document.getElementById(
+            "review-text"
+        );
+
+
+    const rating =
+        document.getElementById(
+            "review-rating"
+        );
+
+
+    if (review) {
+
+        editingReviewId =
+            review.id;
+
+
+        title.textContent =
+            "Edit Review";
+
+
+        id.value =
+            review.id;
+
+
+        name.value =
+            review.client_name;
+
+
+        text.value =
+            review.review_text;
+
+
+        rating.value =
+            review.rating;
+
+
+        updateRatingSelector(
+            Number(
+                review.rating
+            )
+        );
+
+    }
+
+    else {
+
+        editingReviewId =
+            null;
+
+
+        title.textContent =
+            "Add Review";
+
+
+        id.value =
+            "";
+
+
+        name.value =
+            "";
+
+
+        text.value =
+            "";
+
+
+        rating.value =
+            "5";
+
+
+        updateRatingSelector(
+            5
+        );
+
+    }
+
+
+    modal.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        () =>
+            name.focus(),
+        50
+    );
+
+}
+
+
+/* =====================================================
+   CLOSE REVIEW MODAL
+===================================================== */
+
+function closeReviewModal() {
+
+    document
+        .getElementById(
+            "review-modal"
+        )
+        .classList.remove(
+            "show"
+        );
+
+
+    editingReviewId =
+        null;
+
+}
+
+
+/* =====================================================
+   SAVE REVIEW
+===================================================== */
+
+async function saveReview(
+    event
+) {
+
+    event.preventDefault();
+
+
+    const name =
+        document.getElementById(
+            "review-client-name"
+        ).value.trim();
+
+
+    const text =
+        document.getElementById(
+            "review-text"
+        ).value.trim();
+
+
+    const rating =
+        Number(
+            document.getElementById(
+                "review-rating"
+            ).value
+        );
+
+
+    if (
+        !name ||
+        !text
+    ) {
+
+        showMessage(
+            "Please fill in the client name and review.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        rating < 1 ||
+        rating > 5
+    ) {
+
+        showMessage(
+            "Rating must be between 1 and 5.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    showMessage(
+        editingReviewId
+            ? "Updating review..."
+            : "Saving review..."
+    );
+
+
+    try {
+
+        let result;
+
+
+        if (editingReviewId) {
+
+            result =
+                await supabaseClient
+                    .from("reviews")
+                    .update({
+
+                        client_name:
+                            name,
+
+                        review_text:
+                            text,
+
+                        rating:
+                            rating,
+
+                        updated_at:
+                            new Date().toISOString()
+
+                    })
+                    .eq(
+                        "id",
+                        editingReviewId
+                    );
+
+        }
+
+        else {
+
+            result =
+                await supabaseClient
+                    .from("reviews")
+                    .insert({
+
+                        client_name:
+                            name,
+
+                        review_text:
+                            text,
+
+                        rating:
+                            rating
+
+                    });
+
+        }
+
+
+        if (result.error) {
+
+            throw result.error;
+
+        }
+
+
+        closeReviewModal();
+
+
+        showMessage(
+            editingReviewId
+                ? "Review updated successfully."
+                : "Review added successfully.",
+            "success"
+        );
+
+
+        await loadReviews();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Could not save review: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   DELETE REVIEW
+===================================================== */
+
+async function deleteReview(
+    review
+) {
+
+    const confirmed =
+        confirm(
+            `Delete the review from ${review.client_name}?\n\nThis cannot be undone.`
+        );
+
+
+    if (!confirmed) {
+
+        return;
+
+    }
+
+
+    try {
+
+        showMessage(
+            "Deleting review..."
+        );
+
+
+        const {
+            error
+        } =
+            await supabaseClient
+                .from("reviews")
+                .delete()
+                .eq(
+                    "id",
+                    review.id
+                );
+
+
+        if (error) {
+
+            throw error;
+
+        }
+
+
+        showMessage(
+            "Review deleted successfully.",
+            "success"
+        );
+
+
+        await loadReviews();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            error
+        );
+
+        showMessage(
+            "Could not delete review: " +
+            error.message,
+            "error"
+        );
+
+    }
+
+}
+
+
+/* =====================================================
+   CONTENT EVENTS
+===================================================== */
+
+document
+    .getElementById(
+        "add-review-button"
+    )
+    .addEventListener(
+        "click",
+        () =>
+            openReviewModal()
+    );
+
+
+document
+    .getElementById(
+        "review-modal-close"
+    )
+    .addEventListener(
+        "click",
+        closeReviewModal
+    );
+
+
+document
+    .getElementById(
+        "review-cancel"
+    )
+    .addEventListener(
+        "click",
+        closeReviewModal
+    );
+
+
+document
+    .getElementById(
+        "review-form"
+    )
+    .addEventListener(
+        "submit",
+        saveReview
+    );
+
+
+document
+    .getElementById(
+        "review-modal"
+    )
+    .addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                event.target ===
+                this
+            ) {
+
+                closeReviewModal();
+
+            }
+
+        }
+    );
+
+
+initializeRatingSelector();
 /* =====================================================
    START
 ===================================================== */
@@ -4585,13 +7034,26 @@ document
     }
 
 
+    /*
+     * Existing dashboard
+     */
+
     await loadClients();
 
 
     await initializePortfolio();
 
-})();
 
+    /*
+     * Website Content
+     */
+
+    await loadWebsiteContent();
+
+
+    await loadReviews();
+
+})();
 </script>
 
 </body>
