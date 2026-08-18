@@ -1649,38 +1649,21 @@ async function listPortfolioFiles(
    GET LARGE IMAGE
 ===================================================== */
 
-async function getLargeImage(
-    section,
-    category
-) {
+async function getLargeImage(section) {
 
     try {
 
         const {
             data,
             error
-        } =
-            await supabaseClient
-                .from(
-                    "portfolio_settings"
-                )
-                .select(
-                    "large_image"
-                )
-                .eq(
-                    "section",
-                    section
-                )
-                .eq(
-                    "category",
-                    category
-                )
-                .maybeSingle();
+        } = await supabaseClient
+            .from("portfolio_settings")
+            .select("large_image")
+            .eq("section", section)
+            .eq("category", "portfolio")
+            .maybeSingle();
 
-
-        if (
-            error
-        ) {
+        if (error) {
 
             console.warn(
                 "Could not read large image:",
@@ -1688,29 +1671,20 @@ async function getLargeImage(
             );
 
             return null;
-
         }
 
+        return data?.large_image || null;
 
-        return (
-            data?.large_image ||
-            null
-        );
-
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.warn(
+            "getLargeImage error:",
             error
         );
 
         return null;
-
     }
-
 }
-
 
 /* =====================================================
    SET LARGE IMAGE
