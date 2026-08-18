@@ -2061,11 +2061,350 @@ document.addEventListener("DOMContentLoaded", function () {
             protectImage
         );
 
+/* =========================================================
+   LOAD WEBSITE CONTENT
+   Hero + About
+========================================================= */
 
+async function loadWebsiteContent() {
+
+    try {
+
+        const response = await fetch(
+            SUPABASE_URL +
+            "/rest/v1/site_content" +
+            "?select=hero_image,about_image" +
+            "&limit=1",
+            {
+                method: "GET",
+
+                headers: {
+                    "apikey": SUPABASE_PUBLISHABLE_KEY,
+                    "Authorization":
+                        `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+                    "Content-Type": "application/json"
+                }
+            }
+        );
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Unable to load website content."
+            );
+        }
+
+        const data =
+            await response.json();
+
+        if (
+            !Array.isArray(data) ||
+            !data.length
+        ) {
+            return;
+        }
+
+        const content =
+            data[0];
+
+
+        /* =====================================================
+           HERO IMAGE
+        ===================================================== */
+
+        if (content.hero_image) {
+
+            const hero =
+                document.querySelector(".hero");
+
+            if (hero) {
+
+                const heroUrl =
+                    getPublicImageUrl(
+                        content.hero_image
+                    );
+
+                hero.style.backgroundImage =
+                    `url("${heroUrl}")`;
+
+                hero.classList.add(
+                    "dynamic-hero-image"
+                );
+
+                console.log(
+                    "Hero image loaded:",
+                    heroUrl
+                );
+            }
+        }
+
+
+        /* =====================================================
+           ABOUT IMAGE
+        ===================================================== */
+
+        if (content.about_image) {
+
+            const aboutImage =
+                document.querySelector(
+                    ".about-image img"
+                );
+
+            if (aboutImage) {
+
+                const aboutUrl =
+                    getPublicImageUrl(
+                        content.about_image
+                    );
+
+                aboutImage.src =
+                    aboutUrl;
+
+                aboutImage.loading =
+                    "lazy";
+
+                aboutImage.decoding =
+                    "async";
+
+                console.log(
+                    "About image loaded:",
+                    aboutUrl
+                );
+            }
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Website content loading error:",
+            error
+        );
+    }
+}
+
+
+/* =========================================================
+   LOAD REVIEWS FROM SUPABASE
+========================================================= */
+
+async function loadReviews() {
+
+    const reviewsGrid =
+        document.querySelector(
+            ".testimonials-grid"
+        );
+
+    if (!reviewsGrid) {
+        return;
+    }
+
+    try {
+
+        const response =
+            await fetch(
+                SUPABASE_URL +
+                "/rest/v1/reviews" +
+                "?select=id,client_name,review_text,rating,created_at" +
+                "&order=created_at.desc",
+                {
+                    method: "GET",
+
+                    headers: {
+                        "apikey":
+                            SUPABASE_PUBLISHABLE_KEY,
+
+                        "Authorization":
+                            `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
+
+                        "Content-Type":
+                            "application/json"
+                    }
+                }
+            );
+
+
+        if (!response.ok) {
+
+            const errorText =
+                await response.text();
+
+            console.error(
+                "Reviews loading error:",
+                errorText
+            );
+
+            return;
+        }
+
+
+        const reviews =
+            await response.json();
+
+
+        if (
+            !Array.isArray(reviews) ||
+            reviews.length === 0
+        ) {
+
+            console.log(
+                "No reviews found."
+            );
+
+            return;
+        }
+
+
+        /* =====================================================
+           CREATE REVIEWS
+        ===================================================== */
+
+        reviewsGrid.innerHTML = "";
+
+
+        reviews.forEach(
+            function (review, index) {
+
+                const card =
+                    document.createElement("div");
+
+                card.className =
+                    "testimonial-card";
+
+
+                /* ---------------------------------------------
+                   NUMBER
+                --------------------------------------------- */
+
+                const number =
+                    document.createElement("span");
+
+                number.className =
+                    "testimonial-number";
+
+                number.textContent =
+                    String(index + 1)
+                        .padStart(2, "0");
+
+
+                /* ---------------------------------------------
+                   STARS
+                --------------------------------------------- */
+
+                const stars =
+                    document.createElement("div");
+
+                stars.className =
+                    "testimonial-stars";
+
+                const rating =
+                    Math.min(
+                        5,
+                        Math.max(
+                            1,
+                            Number(review.rating) || 5
+                        )
+                    );
+
+                stars.textContent =
+                    "★".repeat(rating) +
+                    "☆".repeat(5 - rating);
+
+
+                /* ---------------------------------------------
+                   REVIEW TEXT
+                --------------------------------------------- */
+
+                const text =
+                    document.createElement("p");
+
+                text.className =
+                    "testimonial-placeholder";
+
+                text.textContent =
+                    review.review_text || "";
+
+
+                /* ---------------------------------------------
+                   AUTHOR
+                --------------------------------------------- */
+
+                const author =
+                    document.createElement("div");
+
+                author.className =
+                    "testimonial-author";
+
+
+                const name =
+                    document.createElement("strong");
+
+                name.textContent =
+                    (
+                        review.client_name ||
+                        "CLIENT"
+                    ).toUpperCase();
+
+
+                author.appendChild(
+                    name
+                );
+
+
+                /* ---------------------------------------------
+                   BUILD CARD
+                --------------------------------------------- */
+
+                card.appendChild(
+                    number
+                );
+
+                card.appendChild(
+                    stars
+                );
+
+                card.appendChild(
+                    text
+                );
+
+                card.appendChild(
+                    author
+                );
+
+
+                reviewsGrid.appendChild(
+                    card
+                );
+            }
+        );
+
+
+        console.log(
+            "Reviews loaded:",
+            reviews.length
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Reviews loading error:",
+            error
+        );
+    }
+}
     /* =========================================================
        START
     ========================================================= */
 
-    loadPortfolio();
+    /* =========================================================
+   START
+========================================================= */
+
+loadWebsiteContent();
+
+loadReviews();
+
+loadPortfolio();
 
 });
