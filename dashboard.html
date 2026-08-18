@@ -2166,76 +2166,80 @@ async function deletePortfolioPhoto(
             "Delete this portfolio photo?\n\nThis cannot be undone."
         );
 
-
     if (!confirmed) {
-
         return;
-
     }
 
-
-    showMessage(
-        "Deleting photo..."
-    );
-
+    showMessage("Deleting photo...");
 
     try {
 
+        /*
+         * First check whether this is the current
+         * Large Image.
+         */
+
+        const largeImage =
+            await getLargeImage();
+
+
+        /*
+         * Delete the actual file.
+         */
+
         const {
-            error
+            error: deleteError
         } =
             await supabaseClient
                 .storage
-                .from(
-                    PORTFOLIO_BUCKET
-                )
+                .from(PORTFOLIO_BUCKET)
                 .remove([
                     filePath
                 ]);
 
 
-        if (error) {
-
-            throw error;
-
+        if (deleteError) {
+            throw deleteError;
         }
 
 
         /*
-           If this was the large image,
-           clear the database setting.
-        */
+         * If the deleted image was the Large Image,
+         * remove it from portfolio_settings.
+         */
 
-      const largeImage =
-    await getLargeImage();
+        if (largeImage === filePath) {
+
+            const {
+                error: clearError
+            } =
+                await supabaseClient
+                    .from("portfolio_settings")
+                    .update({
+                        large_image: null,
+                        updated_at:
+                            new Date().toISOString()
+                    })
+                    .eq(
+                        "section",
+                        "featured"
+                    )
+                    .eq(
+                        "category",
+                        "portraits"
+                    );
 
 
-if (
-    largeImage === filePath
-) {
+            if (clearError) {
 
-    const {
-        error: clearLargeError
-    } = await supabaseClient
-        .from("portfolio_settings")
-        .update({
-            large_image: null,
-            updated_at: new Date().toISOString()
-        })
-        .eq("section", "featured")
-        .eq("category", "portraits");
+                console.error(
+                    "Could not clear Large Image:",
+                    clearError
+                );
 
+            }
 
-    if (clearLargeError) {
-
-        console.error(
-            "Could not clear large image:",
-            clearLargeError
-        );
-
-    }
-
-}
+        }
 
 
         showMessage(
@@ -2254,6 +2258,7 @@ if (
     catch (error) {
 
         console.error(
+            "Delete portfolio photo error:",
             error
         );
 
@@ -2264,9 +2269,7 @@ if (
         );
 
     }
-
 }
-
 
 /* =====================================================
    CREATE PORTFOLIO CARD
