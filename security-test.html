@@ -163,27 +163,59 @@ document
  * TEST PORTFOLIO SETTINGS READ
  */
 
+/*
+ * TEST PORTFOLIO SETTINGS UPDATE
+ */
+
 log(
-    "\n--- TEST: portfolio_settings READ ---"
+    "\n--- TEST: portfolio_settings UPDATE ---"
 );
 
 const {
-    data: settingsData,
-    error: settingsError
+    data: updateData,
+    error: updateError
+} =
+    await supabaseClient
+        .from("portfolio_settings")
+        .update({
+            title: "SECURITY_TEST_SHOULD_FAIL"
+        })
+        .eq("id", 3)
+        .select();
+
+log(
+    "\nUPDATE DATA:\n" +
+    JSON.stringify(updateData, null, 2)
+);
+
+log(
+    "\nUPDATE ERROR:\n" +
+    JSON.stringify(updateError, null, 2)
+);
+
+
+/*
+ * READ THE SAME ROW AGAIN
+ */
+
+const {
+    data: verifyData,
+    error: verifyError
 } =
     await supabaseClient
         .from("portfolio_settings")
         .select("id, title")
-        .limit(5);
+        .eq("id", 3)
+        .single();
 
 log(
-    "\nREAD DATA:\n" +
-    JSON.stringify(settingsData, null, 2)
+    "\nVERIFY DATA:\n" +
+    JSON.stringify(verifyData, null, 2)
 );
 
 log(
-    "\nREAD ERROR:\n" +
-    JSON.stringify(settingsError, null, 2)
+    "\nVERIFY ERROR:\n" +
+    JSON.stringify(verifyError, null, 2)
 );
 
 
