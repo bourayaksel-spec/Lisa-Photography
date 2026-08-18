@@ -1,3 +1,4 @@
+```javascript
 document.addEventListener("DOMContentLoaded", function () {
 
     /* =========================================================
@@ -13,21 +14,36 @@ document.addEventListener("DOMContentLoaded", function () {
     const BUCKET_NAME = "portfolio";
 
     /*
+       Featured folders:
+
+       portfolio/featured/portraits/
+       portfolio/featured/couples/
+       portfolio/featured/sports/
+       portfolio/featured/landscapes/
+       portfolio/featured/real-estate/
+       portfolio/featured/lifestyle/
+
        IMPORTANT:
 
-       Homepage Portfolio:
-       portfolio/featured/
+       portfolio_settings.large_image
 
-       More Work:
-       portfolio/portraits/
-       portfolio/couples/
-       portfolio/sports/
-       portfolio/landscapes/
-       portfolio/real-estate/
-       portfolio/lifestyle/
+       contains ONE image for the whole homepage.
+
+       Example:
+
+       featured/portraits/19.webp
+
+       OR
+
+       featured/couples/05.webp
+
+       OR
+
+       featured/sports/12.webp
     */
 
     const FEATURED_FOLDER = "featured";
+
 
     const categories = [
         "portraits",
@@ -158,11 +174,26 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentFilter = "all";
 
 
+    /*
+       The single Large Image for the entire portfolio.
+
+       Example:
+
+       featured/portraits/19.webp
+    */
+
+    let largeImagePath = null;
+
+
     /* =========================================================
        SUPABASE PUBLIC IMAGE URL
     ========================================================= */
 
     function getPublicImageUrl(filePath) {
+
+        if (!filePath) {
+            return "";
+        }
 
         return (
             SUPABASE_URL +
@@ -171,6 +202,23 @@ document.addEventListener("DOMContentLoaded", function () {
             "/" +
             filePath
         );
+
+    }
+
+
+    /* =========================================================
+       NORMALIZE IMAGE PATH
+    ========================================================= */
+
+    function normalizeImagePath(path) {
+
+        if (!path) {
+            return "";
+        }
+
+        return String(path)
+            .trim()
+            .replace(/^\/+/, "");
 
     }
 
@@ -212,12 +260,392 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     /* =========================================================
+       FIND CATEGORY FROM PATH
+    ========================================================= */
+
+    function getCategoryFromPath(filePath) {
+
+        const path =
+            normalizeImagePath(filePath);
+
+
+        if (!path) {
+            return "";
+        }
+
+
+        const parts =
+            path.split("/");
+
+
+        /*
+           Expected:
+
+           featured/portraits/19.webp
+
+           parts[0] = featured
+           parts[1] = portraits
+           parts[2] = 19.webp
+        */
+
+        if (
+            parts.length >= 3 &&
+            parts[0] === FEATURED_FOLDER
+        ) {
+
+            return parts[1];
+
+        }
+
+
+        return "";
+
+    }
+
+
+    /* =========================================================
+       LOAD SINGLE LARGE IMAGE SETTING
+       
+       Reads:
+
+       portfolio_settings.large_image
+
+       IMPORTANT:
+
+       There is only ONE large_image
+       for the whole portfolio.
+    ========================================================= */
+
+    async function loadLargeImageSetting() {
+
+        try {
+
+            const url =
+                SUPABASE_URL +
+                "/rest/v1/portfolio_settings" +
+                "?select=large_image&limit=1";
+
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        method: "GET",
+
+                        headers: {
+
+                            "Authorization":
+                                "Bearer " +
+                                SUPABASE_PUBLISHABLE_KEY,
+
+                            "apikey":
+                                SUPABASE_PUBLISHABLE_KEY,
+
+                            "Content-Type":
+                                "application/json"
+
+                        }
+
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                throw new Error(
+                    "Could not load portfolio large image setting."
+                );
+
+            }
+
+
+            const data =
+                await response.json();
+
+
+            if (
+                Array.isArray(data) &&
+                data.length > 0
+            ) {
+
+                largeImagePath =
+                    normalizeImagePath(
+                        data[0].large_image
+                    );
+
+            } else {
+
+                largeImagePath = null;
+
+            }
+
+
+            console.log(
+                "Portfolio Large Image:",
+                largeImagePath
+            );
+
+
+            return largeImagePath;
+
+        } catch (error) {
+
+            console.error(
+                "Large image setting error:",
+                error
+            );
+
+
+            largeImagePath = null;
+
+            return null;
+
+        }
+
+    }
+
+
+    /* =========================================================
+       CREATE LARGE IMAGE SECTION
+       
+       This is the ONE large image for the whole portfolio.
+    ========================================================= */
+
+    function createLargeImageSection() {
+
+        if (!gallery) {
+            return;
+        }
+
+
+        /*
+           Remove an old large image section
+           if one already exists.
+        */
+
+        const oldLarge =
+            document.getElementById(
+                "portfolio-large-image"
+            );
+
+
+        if (oldLarge) {
+
+            oldLarge.remove();
+
+        }
+
+
+        /*
+           If no Large Image has been selected,
+           do not create the section.
+        */
+
+        if (!largeImagePath) {
+
+            return;
+
+        }
+
+
+        const largeSection =
+            document.createElement("div");
+
+
+        largeSection.id =
+            "portfolio-large-image";
+
+
+        largeSection.className =
+            "portfolio-large-image";
+
+
+        const image =
+            document.createElement("img");
+
+
+        image.src =
+            getPublicImageUrl(
+                largeImagePath
+            );
+
+
+        const largeCategory =
+            getCategoryFromPath(
+                largeImagePath
+            );
+
+
+        image.alt =
+            createAltText(
+                largeCategory
+            );
+
+
+        image.loading =
+            "eager";
+
+
+        image.decoding =
+            "async";
+
+
+        image.draggable =
+            false;
+
+
+        /*
+           Prevent right click.
+        */
+
+        image.addEventListener(
+            "contextmenu",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+
+
+        /*
+           Open the same lightbox.
+        */
+
+        image.addEventListener(
+            "click",
+            function () {
+
+                openLargeImageInLightbox(
+                    image
+                );
+
+            }
+        );
+
+
+        /*
+           If the Large Image cannot load,
+           hide the section.
+        */
+
+        image.addEventListener(
+            "error",
+            function () {
+
+                console.warn(
+                    "Large image could not load:",
+                    largeImagePath
+                );
+
+
+                largeSection.remove();
+
+            }
+        );
+
+
+        largeSection.appendChild(
+            image
+        );
+
+
+        /*
+           Put the Large Image BEFORE
+           the normal gallery.
+        */
+
+        gallery.parentNode.insertBefore(
+            largeSection,
+            gallery
+        );
+
+    }
+
+
+    /* =========================================================
+       LARGE IMAGE CSS
+       
+       Creates the visual presentation automatically,
+       so no HTML change is required.
+    ========================================================= */
+
+    function addLargeImageStyles() {
+
+        if (
+            document.getElementById(
+                "portfolio-large-image-styles"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const style =
+            document.createElement("style");
+
+
+        style.id =
+            "portfolio-large-image-styles";
+
+
+        style.textContent = `
+
+            .portfolio-large-image {
+                width: 100%;
+                margin: 0 auto 40px;
+                position: relative;
+                overflow: hidden;
+                cursor: pointer;
+            }
+
+            .portfolio-large-image img {
+                display: block;
+                width: 100%;
+                max-height: 700px;
+                object-fit: cover;
+                object-position: center;
+                transition: transform 0.5s ease;
+                user-select: none;
+                -webkit-user-drag: none;
+            }
+
+            .portfolio-large-image:hover img {
+                transform: scale(1.02);
+            }
+
+            @media (max-width: 768px) {
+
+                .portfolio-large-image {
+                    margin-bottom: 25px;
+                }
+
+                .portfolio-large-image img {
+                    max-height: 500px;
+                }
+
+            }
+
+        `;
+
+
+        document.head.appendChild(
+            style
+        );
+
+    }
+
+
+    /* =========================================================
        LOAD FEATURED CATEGORY
        
        Example:
-       
-       featured/couples/01.webp
+
        featured/portraits/01.webp
+       featured/portraits/02.webp
+       featured/portraits/19.webp
     ========================================================= */
 
     async function loadFeaturedCategory(category) {
@@ -357,6 +785,12 @@ document.addEventListener("DOMContentLoaded", function () {
             file.category;
 
 
+        item.dataset.path =
+            normalizeImagePath(
+                file.path
+            );
+
+
         const image =
             document.createElement("img");
 
@@ -383,7 +817,9 @@ document.addEventListener("DOMContentLoaded", function () {
             false;
 
 
-        /* Prevent right click */
+        /*
+           Prevent right click.
+        */
 
         image.addEventListener(
             "contextmenu",
@@ -395,7 +831,9 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* Open lightbox */
+        /*
+           Open lightbox.
+        */
 
         image.addEventListener(
             "click",
@@ -407,7 +845,9 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        /* Image loading error */
+        /*
+           Image loading error.
+        */
 
         image.addEventListener(
             "error",
@@ -424,9 +864,14 @@ document.addEventListener("DOMContentLoaded", function () {
         );
 
 
-        item.appendChild(image);
+        item.appendChild(
+            image
+        );
 
-        gallery.appendChild(item);
+
+        gallery.appendChild(
+            item
+        );
 
     }
 
@@ -434,118 +879,230 @@ document.addEventListener("DOMContentLoaded", function () {
     /* =========================================================
        LOAD PORTFOLIO
        
-       ONLY reads:
-       
-       portfolio/featured/
+       Loads:
+
+       1. ONE Large Image
+       2. ALL Featured Images
+
+       The Large Image is NOT removed from Supabase.
+       It is only excluded from the normal grid
+       to prevent the same image appearing twice.
     ========================================================= */
 
-   async function loadPortfolio() {
+    async function loadPortfolio() {
 
-    if (!gallery) {
-        return;
-    }
+        if (!gallery) {
 
-    try {
+            return;
 
-        if (portfolioLoading) {
-            portfolioLoading.style.display = "block";
         }
 
-        if (portfolioError) {
-            portfolioError.style.display = "none";
-        }
 
-        gallery.innerHTML = "";
+        try {
 
-        /*
-         * Load selected Large Images
-         * from portfolio_settings
-         */
+            if (portfolioLoading) {
 
-        const settingsResponse = await fetch(
-            SUPABASE_URL +
-            "/rest/v1/portfolio_settings" +
-            "?select=category,large_image" +
-            "&is_visible=eq.true" +
-            "&is_featured=eq.true" +
-            "&large_image=not.is.null",
-            {
-                method: "GET",
+                portfolioLoading.style.display =
+                    "block";
 
-                headers: {
-                    "Authorization":
-                        "Bearer " +
-                        SUPABASE_PUBLISHABLE_KEY,
-
-                    "apikey":
-                        SUPABASE_PUBLISHABLE_KEY
-                }
             }
-        );
 
 
-        if (!settingsResponse.ok) {
+            if (portfolioError) {
 
-            throw new Error(
-                "Could not load portfolio settings"
+                portfolioError.style.display =
+                    "none";
+
+            }
+
+
+            gallery.innerHTML = "";
+
+
+            /*
+               Load the single Large Image
+               from portfolio_settings.
+            */
+
+            await loadLargeImageSetting();
+
+
+            /*
+               Add the Large Image section.
+            */
+
+            addLargeImageStyles();
+
+            createLargeImageSection();
+
+
+            let allFiles = [];
+
+
+            /*
+               Load every Featured category.
+            */
+
+            for (
+                const category of categories
+            ) {
+
+                try {
+
+                    const files =
+                        await loadFeaturedCategory(
+                            category
+                        );
+
+
+                    allFiles =
+                        allFiles.concat(files);
+
+                } catch (error) {
+
+                    console.warn(
+                        error.message
+                    );
+
+                }
+
+            }
+
+
+            /*
+               Remove the Large Image from
+               the normal gallery.
+
+               Example:
+
+               Large:
+               featured/portraits/19.webp
+
+               It will appear ONLY in the
+               Large Image area.
+
+               All other images remain.
+            */
+
+            if (largeImagePath) {
+
+                const normalizedLarge =
+                    normalizeImagePath(
+                        largeImagePath
+                    );
+
+
+                allFiles =
+                    allFiles.filter(
+                        function (file) {
+
+                            return (
+                                normalizeImagePath(
+                                    file.path
+                                ) !==
+                                normalizedLarge
+                            );
+
+                        }
+                    );
+
+            }
+
+
+            /*
+               Sort images.
+
+               Category first,
+               filename second.
+            */
+
+            allFiles.sort(
+                function (a, b) {
+
+                    const first =
+                        a.category +
+                        "/" +
+                        a.name;
+
+                    const second =
+                        b.category +
+                        "/" +
+                        b.name;
+
+
+                    return first.localeCompare(
+                        second,
+                        undefined,
+                        {
+                            numeric: true,
+                            sensitivity: "base"
+                        }
+                    );
+
+                }
             );
 
-        }
+
+            /*
+               Display ALL remaining Featured images.
+            */
+
+            allFiles.forEach(
+                function (file) {
+
+                    createGalleryItem(
+                        file
+                    );
+
+                }
+            );
 
 
-        const settings =
-            await settingsResponse.json();
+            if (portfolioLoading) {
 
+                portfolioLoading.style.display =
+                    "none";
 
-        /*
-         * Create gallery items
-         * using large_image
-         */
-
-        settings.forEach(function (setting) {
-
-            if (
-                !setting.category ||
-                !setting.large_image
-            ) {
-                return;
             }
 
 
-            const file = {
+            if (
+                allFiles.length === 0 &&
+                !largeImagePath
+            ) {
 
-                path: setting.large_image,
+                if (portfolioError) {
 
-                category:
-                    setting.category.toLowerCase(),
+                    portfolioError.textContent =
+                        "No featured photographs found.";
 
-                name:
-                    setting.large_image
-                        .split("/")
-                        .pop()
+                    portfolioError.style.display =
+                        "block";
 
-            };
+                }
 
+            }
 
-            createGalleryItem(file);
+        } catch (error) {
 
-        });
-
-
-        if (portfolioLoading) {
-
-            portfolioLoading.style.display =
-                "none";
-
-        }
+            console.error(
+                "Portfolio loading error:",
+                error
+            );
 
 
-        if (settings.length === 0) {
+            if (portfolioLoading) {
+
+                portfolioLoading.style.display =
+                    "none";
+
+            }
+
 
             if (portfolioError) {
 
                 portfolioError.textContent =
-                    "No featured photographs found.";
+                    "Unable to load the portfolio.";
 
                 portfolioError.style.display =
                     "block";
@@ -554,38 +1111,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         }
 
-    } catch (error) {
-
-        console.error(
-            "Portfolio loading error:",
-            error
-        );
-
-
-        if (portfolioLoading) {
-
-            portfolioLoading.style.display =
-                "none";
-
-        }
-
-
-        if (portfolioError) {
-
-            portfolioError.textContent =
-                "Unable to load the portfolio.";
-
-            portfolioError.style.display =
-                "block";
-
-        }
-
     }
 
-}
 
     /* =========================================================
-       GET VISIBLE IMAGES
+       GET VISIBLE GALLERY IMAGES
     ========================================================= */
 
     function getVisibleGalleryImages() {
@@ -598,19 +1128,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const images =
-            gallery.querySelectorAll("img");
+            gallery.querySelectorAll(
+                ".gallery-item img"
+            );
 
 
         return Array.from(images)
             .filter(function (image) {
 
                 const item =
-                    image.closest(".gallery-item");
+                    image.closest(
+                        ".gallery-item"
+                    );
 
 
                 return (
                     item &&
-                    !item.classList.contains("hidden")
+                    !item.classList.contains(
+                        "hidden"
+                    )
                 );
 
             });
@@ -626,7 +1162,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("lightbox");
 
     const lightboxImage =
-        document.getElementById("lightbox-image");
+        document.getElementById(
+            "lightbox-image"
+        );
 
     const closeButton =
         document.querySelector(".close");
@@ -638,14 +1176,16 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("next");
 
     const lightboxCounter =
-        document.getElementById("lightbox-counter");
+        document.getElementById(
+            "lightbox-counter"
+        );
 
 
     let currentImage = 0;
 
 
     /* =========================================================
-       OPEN LIGHTBOX
+       OPEN NORMAL GALLERY IMAGE
     ========================================================= */
 
     function openLightbox(image) {
@@ -655,7 +1195,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const index =
-            visibleImages.indexOf(image);
+            visibleImages.indexOf(
+                image
+            );
 
 
         if (index === -1) {
@@ -665,16 +1207,88 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
 
-        showGalleryImage(index);
+        showGalleryImage(
+            index
+        );
 
     }
 
 
     /* =========================================================
-       SHOW LIGHTBOX IMAGE
+       OPEN LARGE IMAGE IN LIGHTBOX
     ========================================================= */
 
-    function showGalleryImage(index) {
+    function openLargeImageInLightbox(
+        image
+    ) {
+
+        if (
+            !lightbox ||
+            !lightboxImage
+        ) {
+
+            return;
+
+        }
+
+
+        lightboxImage.src =
+            image.src;
+
+
+        lightboxImage.alt =
+            image.alt;
+
+
+        /*
+           Large image is outside the
+           normal gallery, so it gets
+           its own simple counter.
+        */
+
+        if (lightboxCounter) {
+
+            lightboxCounter.textContent =
+                "Large";
+
+        }
+
+
+        if (previousButton) {
+
+            previousButton.style.visibility =
+                "hidden";
+
+        }
+
+
+        if (nextButton) {
+
+            nextButton.style.visibility =
+                "hidden";
+
+        }
+
+
+        lightbox.style.display =
+            "flex";
+
+
+        lightbox.setAttribute(
+            "aria-hidden",
+            "false"
+        );
+
+    }
+
+
+    /* =========================================================
+       SHOW GALLERY IMAGE
+    ========================================================= */
+
+    function showGalleryImage(
+        index
+    ) {
 
         const visibleImages =
             getVisibleGalleryImages();
@@ -699,7 +1313,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         if (
-            index >= visibleImages.length
+            index >=
+            visibleImages.length
         ) {
 
             index =
@@ -713,7 +1328,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
         const image =
-            visibleImages[currentImage];
+            visibleImages[
+                currentImage
+            ];
 
 
         lightboxImage.src =
@@ -814,7 +1431,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (lightboxImage) {
 
-            lightboxImage.src = "";
+            lightboxImage.src =
+                "";
 
         }
 
@@ -872,7 +1490,9 @@ document.addEventListener("DOMContentLoaded", function () {
             "click",
             function () {
 
-                if (currentImage > 0) {
+                if (
+                    currentImage > 0
+                ) {
 
                     showGalleryImage(
                         currentImage - 1
@@ -897,7 +1517,8 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 if (
-                    event.target === lightbox
+                    event.target ===
+                    lightbox
                 ) {
 
                     closeLightbox();
@@ -920,7 +1541,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
             if (
                 !lightbox ||
-                lightbox.style.display !== "flex"
+                lightbox.style.display !==
+                    "flex"
             ) {
 
                 return;
@@ -929,7 +1551,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             if (
-                event.key === "Escape"
+                event.key ===
+                "Escape"
             ) {
 
                 closeLightbox();
@@ -938,7 +1561,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             else if (
-                event.key === "ArrowRight"
+                event.key ===
+                "ArrowRight"
             ) {
 
                 if (nextButton) {
@@ -951,7 +1575,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
             else if (
-                event.key === "ArrowLeft"
+                event.key ===
+                "ArrowLeft"
             ) {
 
                 if (previousButton) {
@@ -980,7 +1605,8 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 touchStartX =
-                    event.changedTouches[0].screenX;
+                    event.changedTouches[0]
+                        .screenX;
 
             }
         );
@@ -991,7 +1617,8 @@ document.addEventListener("DOMContentLoaded", function () {
             function (event) {
 
                 const touchEndX =
-                    event.changedTouches[0].screenX;
+                    event.changedTouches[0]
+                        .screenX;
 
 
                 const distance =
@@ -1104,13 +1731,19 @@ document.addEventListener("DOMContentLoaded", function () {
                         );
 
 
+                        /*
+                           IMPORTANT:
+
+                           The Large Image is independent
+                           from categories.
+
+                           Therefore it ALWAYS stays visible
+                           when filtering Portraits, Couples,
+                           Sports, etc.
+                        */
+
                         closeLightbox();
 
-
-                        /*
-                           If no image exists
-                           in this category.
-                        */
 
                         if (
                             portfolioError &&
@@ -1136,6 +1769,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         }
 
+
+                        if (
+                            portfolioError &&
+                            currentFilter === "all"
+                        ) {
+
+                            portfolioError.style.display =
+                                "none";
+
+                        }
+
                     }
 
                 }
@@ -1150,10 +1794,14 @@ document.addEventListener("DOMContentLoaded", function () {
     ========================================================= */
 
     const menuToggle =
-        document.querySelector(".menu-toggle");
+        document.querySelector(
+            ".menu-toggle"
+        );
 
     const navLinks =
-        document.querySelector(".nav-links");
+        document.querySelector(
+            ".nav-links"
+        );
 
 
     if (
@@ -1256,7 +1904,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
                             if (
-                                itemRating <= rating
+                                itemRating <=
+                                rating
                             ) {
 
                                 item.classList.add(
@@ -1309,6 +1958,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (submitButton) {
 
                     submitButton.disabled = true;
+
                     submitButton.textContent =
                         "SENDING...";
 
@@ -1322,13 +1972,17 @@ document.addEventListener("DOMContentLoaded", function () {
                             reviewForm.action,
                             {
                                 method: "POST",
-                                body: new FormData(
-                                    reviewForm
-                                ),
+
+                                body:
+                                    new FormData(
+                                        reviewForm
+                                    ),
+
                                 headers: {
                                     "Accept":
                                         "application/json"
                                 }
+
                             }
                         );
 
@@ -1354,7 +2008,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                         if (submitButton) {
 
-                            submitButton.disabled = false;
+                            submitButton.disabled =
+                                false;
+
                             submitButton.textContent =
                                 "SUBMIT REVIEW";
 
@@ -1376,7 +2032,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
                     if (submitButton) {
 
-                        submitButton.disabled = false;
+                        submitButton.disabled =
+                            false;
+
                         submitButton.textContent =
                             "SUBMIT REVIEW";
 
@@ -1449,3 +2107,4 @@ document.addEventListener("DOMContentLoaded", function () {
     loadPortfolio();
 
 });
+```
