@@ -7070,31 +7070,13 @@ initializeRatingSelector();
     const user =
         await checkUser();
 
-
     if (!user) {
-
         return;
-
     }
 
-
-    /*
-     * Existing dashboard
-     */
-
     await loadClients();
-
-
     await initializePortfolio();
-
-
-    /*
-     * Website Content
-     */
-
     await loadWebsiteContent();
-
-
     await loadReviews();
 
 })();
