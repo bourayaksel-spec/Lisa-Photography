@@ -223,6 +223,48 @@ log(
  * SIGN OUT
  */
 
+/*
+ * TEST PORTFOLIO PHOTOS INSERT
+ */
+
+log(
+    "\n--- TEST: portfolio_photos INSERT ---"
+);
+
+const {
+    data: insertData,
+    error: insertError
+} =
+    await supabaseClient
+        .from("portfolio_photos")
+        .insert({
+            category: "security-test",
+            title: "SECURITY TEST",
+            image_url: "https://example.com/security-test.webp"
+        })
+        .select();
+
+log(
+    "\nINSERT DATA:\n" +
+    JSON.stringify(insertData, null, 2)
+);
+
+log(
+    "\nINSERT ERROR:\n" +
+    JSON.stringify(insertError, null, 2)
+);
+
+
+/*
+ * SIGN OUT
+ */
+
+await supabaseClient.auth.signOut();
+
+log(
+    "\nTEST FINISHED."
+);
+        
 await supabaseClient.auth.signOut();
 
 log(
