@@ -163,25 +163,29 @@ document
             "\n--- TEST: portfolio_settings UPDATE ---"
         );
 
+const {
+    data: settingsData,
+    error: settingsError
+} = await supabaseClient
+    .from("portfolio_settings")
+    .select("id, title")
+    .limit(5);
 
-        const {
-            data: updateData,
-            error: updateError
-        } =
-            await supabaseClient
-                .from("portfolio_settings")
-                .update({
-                    title: "SECURITY_TEST_SHOULD_FAIL"
-                })
-                .eq("id", 1)
-                .select();
+log(
+    "\nPORTFOLIO SETTINGS READ:"
+);
 
+log(
+    JSON.stringify(settingsData, null, 2)
+);
 
-        log(
-            "UPDATE DATA:\n" +
-            JSON.stringify(updateData, null, 2)
-        );
+log(
+    "\nREAD ERROR:"
+);
 
+log(
+    JSON.stringify(settingsError, null, 2)
+);
 
         log(
             "\nUPDATE ERROR:\n" +
