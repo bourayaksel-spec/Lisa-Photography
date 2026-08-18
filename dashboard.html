@@ -7067,17 +7067,54 @@ initializeRatingSelector();
 
 (async function () {
 
-    const user =
-        await checkUser();
+    console.log("=== DASHBOARD START ===");
+
+    const user = await checkUser();
+
+    console.log("USER:", user);
 
     if (!user) {
+        console.error("NO USER - NOT AUTHENTICATED");
         return;
     }
 
-    await loadClients();
-    await initializePortfolio();
-    await loadWebsiteContent();
-    await loadReviews();
+    console.log("STEP 1: Loading clients...");
+
+    try {
+        await loadClients();
+        console.log("✓ Clients loaded");
+    } catch (error) {
+        console.error("✗ Clients failed:", error);
+    }
+
+    console.log("STEP 2: Loading portfolio...");
+
+    try {
+        await initializePortfolio();
+        console.log("✓ Portfolio loaded");
+    } catch (error) {
+        console.error("✗ Portfolio failed:", error);
+    }
+
+    console.log("STEP 3: Loading website content...");
+
+    try {
+        await loadWebsiteContent();
+        console.log("✓ Website content loaded");
+    } catch (error) {
+        console.error("✗ Website content failed:", error);
+    }
+
+    console.log("STEP 4: Loading reviews...");
+
+    try {
+        await loadReviews();
+        console.log("✓ Reviews loaded");
+    } catch (error) {
+        console.error("✗ Reviews failed:", error);
+    }
+
+    console.log("=== DASHBOARD FINISHED ===");
 
 })();
 </script>
