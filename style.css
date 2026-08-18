@@ -322,35 +322,38 @@ select {
 
 /* GALLERY */
 
+/* =========================================================
+   PORTFOLIO — EDITORIAL MASONRY GALLERY
+========================================================= */
+
 .gallery {
     max-width: 1300px;
+    margin: 0 auto;
 
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns: 1.4fr 1fr;
-
-    grid-template-rows: 450px 450px;
-
-    gap: 18px;
+    columns: 3 320px;
+    column-gap: 18px;
 }
 
 .gallery-item {
-    overflow: hidden;
-}
+    width: 100%;
+    margin: 0 0 18px;
 
-.gallery-item.large {
-    grid-row: span 2;
+    break-inside: avoid;
+
+    overflow: hidden;
+
+    position: relative;
+
+    background: #ebe6df;
 }
 
 .gallery-item img {
     width: 100%;
-    height: 100%;
-
-    object-fit: cover;
+    height: auto;
 
     display: block;
+
+    object-fit: contain;
 
     cursor: pointer;
 
@@ -359,13 +362,25 @@ select {
         filter 0.8s ease;
 }
 
-.gallery-item:hover img {
-    transform: scale(1.04);
-
-    filter: brightness(0.9);
+/* الصورة الكبيرة المختارة */
+.gallery-item.large {
+    grid-row: auto;
 }
 
+/* لا يوجد أي قص */
+.gallery-item.large img {
+    width: 100%;
+    height: auto;
 
+    object-fit: contain;
+}
+
+/* Hover */
+.gallery-item:hover img {
+    transform: scale(1.025);
+
+    filter: brightness(0.94);
+}
 /* =========================================================
    ABOUT
 ========================================================= */
@@ -1429,35 +1444,42 @@ select {
 
     /* PORTFOLIO */
 
-    #portfolio {
-        padding: 90px 20px;
-    }
+  /* =========================================================
+   PORTFOLIO — MOBILE
+========================================================= */
 
-    .portfolio-header {
-        margin-bottom: 50px;
-    }
+#portfolio {
+    padding: 90px 20px;
+}
 
-    .portfolio-header h2 {
-        font-size: 45px;
-    }
+.portfolio-header {
+    margin-bottom: 50px;
+}
 
-    .gallery {
-        grid-template-columns: 1fr;
+.portfolio-header h2 {
+    font-size: 45px;
+}
 
-        grid-template-rows: auto;
+.gallery {
+    columns: 2 160px;
+    column-gap: 10px;
+}
 
-        gap: 12px;
-    }
+.gallery-item {
+    width: 100%;
+    height: auto;
 
-    .gallery-item.large {
-        grid-row: auto;
-    }
+    margin-bottom: 10px;
 
-    .gallery-item {
-        height: 450px;
-    }
+    break-inside: avoid;
+}
 
+.gallery-item img {
+    width: 100%;
+    height: auto;
 
+    object-fit: contain;
+}
     /* ABOUT */
 
     .about-section {
