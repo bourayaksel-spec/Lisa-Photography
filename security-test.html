@@ -36,7 +36,7 @@
             background: #fff;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
         }
 
         h1 {
@@ -59,6 +59,10 @@
             color: #fff;
             border: none;
             cursor: pointer;
+        }
+
+        button:hover:not(:disabled) {
+            opacity: .9;
         }
 
         button:disabled {
@@ -95,9 +99,13 @@
     <h1>Security Test</h1>
 
     <p>
-        Client data isolation test.
+        Client data isolation and Storage security test.
     </p>
 
+
+    <!-- =================================================
+         LOGIN
+    ================================================== -->
 
     <input
         id="email"
@@ -120,6 +128,10 @@
         LOGIN TEST ACCOUNT
     </button>
 
+
+    <!-- =================================================
+         TEST BUTTONS
+    ================================================== -->
 
     <div class="test-group">
 
@@ -145,18 +157,23 @@
         >
             TEST GALLERY PHOTOS READ
         </button>
-<button
-    id="storageButton"
-    disabled
->
-    TEST CLIENT STORAGE ACCESS
-</button>
+
+
+        <button
+            id="storageButton"
+            disabled
+        >
+            TEST CLIENT STORAGE ACCESS
+        </button>
+
     </div>
 
 
-    <pre id="result">
-Waiting for login...
-    </pre>
+    <!-- =================================================
+         RESULT
+    ================================================== -->
+
+    <pre id="result">Waiting for login...</pre>
 
 </div>
 
@@ -175,7 +192,7 @@ const SUPABASE_ANON_KEY =
 
 
 /* =====================================================
-   CREATE CLIENT
+   CREATE SUPABASE CLIENT
 ===================================================== */
 
 const client =
@@ -200,6 +217,9 @@ const galleriesButton =
 
 const photosButton =
     document.getElementById("photosButton");
+
+const storageButton =
+    document.getElementById("storageButton");
 
 const emailInput =
     document.getElementById("email");
@@ -258,19 +278,25 @@ loginButton.addEventListener(
             "\n\nEmail:\n" +
             loginResult.data.user.email +
 
-            "\n\nSession exists: YES";
+            "\n\nSession exists: YES\n\n" +
+
+            "Security tests are now available.";
 
 
         clientsButton.disabled = false;
+
         galleriesButton.disabled = false;
+
         photosButton.disabled = false;
+
+        storageButton.disabled = false;
 
     }
 );
 
 
 /* =====================================================
-   TEST CLIENTS
+   TEST CLIENTS READ
 ===================================================== */
 
 clientsButton.addEventListener(
@@ -322,7 +348,7 @@ clientsButton.addEventListener(
 
 
 /* =====================================================
-   TEST GALLERIES
+   TEST GALLERIES READ
 ===================================================== */
 
 galleriesButton.addEventListener(
@@ -374,7 +400,7 @@ galleriesButton.addEventListener(
 
 
 /* =====================================================
-   TEST GALLERY PHOTOS
+   TEST GALLERY PHOTOS READ
 ===================================================== */
 
 photosButton.addEventListener(
@@ -423,12 +449,11 @@ photosButton.addEventListener(
 
     }
 );
-const storageButton =
-    document.getElementById("storageButton");
 
 
-storageButton.disabled = false;
-
+/* =====================================================
+   TEST CLIENT STORAGE ACCESS
+===================================================== */
 
 storageButton.addEventListener(
     "click",
@@ -440,7 +465,9 @@ storageButton.addEventListener(
 
         result.textContent =
             "Testing client-galleries Storage access...\n\n" +
+
             "File:\n" +
+
             filePath;
 
 
@@ -464,6 +491,7 @@ storageButton.addEventListener(
             "CLIENT STORAGE ACCESS TEST\n\n" +
 
             "FILE:\n" +
+
             filePath +
 
             "\n\nDATA:\n" +
@@ -484,6 +512,7 @@ storageButton.addEventListener(
 
     }
 );
+
 </script>
 
 </body>
