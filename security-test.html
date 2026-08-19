@@ -301,8 +301,57 @@ loginButton.addEventListener(
    PORTFOLIO SETTINGS UPDATE TEST
 ========================================================= */
 
+
 testButton.addEventListener(
     "click",
+    async function () {
+
+        result.textContent =
+            "Testing portfolio_settings READ...\n\n";
+
+
+        const {
+            data: readData,
+            error: readError
+        } =
+            await supabaseClient
+                .from("portfolio_settings")
+                .select("id, title")
+                .limit(10);
+
+
+        console.log(
+            "READ DATA:",
+            readData
+        );
+
+        console.log(
+            "READ ERROR:",
+            readError
+        );
+
+
+        result.textContent =
+            "PORTFOLIO SETTINGS READ TEST\n\n" +
+
+            "DATA:\n" +
+            JSON.stringify(
+                readData,
+                null,
+                2
+            ) +
+
+            "\n\nERROR:\n" +
+            JSON.stringify(
+                readError,
+                null,
+                2
+            );
+
+    }
+);
+
+
     async function () {
 
         result.textContent =
