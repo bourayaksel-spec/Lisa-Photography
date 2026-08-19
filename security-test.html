@@ -13,9 +13,7 @@
 
     <title>Security Test</title>
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
-    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
 
@@ -25,64 +23,57 @@
 
         body {
             margin: 0;
-            padding: 30px;
-            font-family: Arial, sans-serif;
+            padding: 40px 20px;
+            min-height: 100vh;
             background: #f5f5f5;
             color: #222;
+            font-family: Arial, sans-serif;
         }
 
         .container {
             max-width: 800px;
-            margin: 0 auto;
-            background: white;
+            margin: auto;
+            background: #fff;
             padding: 30px;
             border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.08);
         }
 
         h1 {
             margin-top: 0;
         }
 
-        .warning {
-            padding: 15px;
-            margin: 20px 0;
-            background: #fff3cd;
-            border: 1px solid #ffe69c;
-            border-radius: 8px;
-        }
-
         input,
         button {
+            display: block;
             width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            font-size: 16px;
+            padding: 13px;
+            margin-top: 12px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
         }
 
         button {
+            background: #222;
+            color: #fff;
+            border: none;
             cursor: pointer;
         }
 
         button:disabled {
+            opacity: .5;
             cursor: not-allowed;
-            opacity: 0.5;
         }
 
         pre {
-            margin-top: 20px;
+            margin-top: 25px;
             padding: 20px;
             background: #111;
             color: #eee;
             border-radius: 8px;
             white-space: pre-wrap;
             word-break: break-word;
-            min-height: 150px;
-        }
-
-        .test-section {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
         }
 
     </style>
@@ -96,71 +87,40 @@
 
     <h1>Security Test</h1>
 
-    <div class="warning">
+    <p>
+        Temporary security testing page.
+    </p>
 
-        <strong>Temporary security testing page.</strong>
-
-        <br><br>
-
-        This page is only for testing Supabase RLS
-        permissions using a non-admin account.
-
-    </div>
-
-
-    <!-- LOGIN -->
-
-    <h2>1. Test Account Login</h2>
 
     <input
         id="email"
         type="email"
-        placeholder="Test account email"
+        value="belal@gmail.com"
+        placeholder="Email"
         autocomplete="username"
     >
+
 
     <input
         id="password"
         type="password"
-        placeholder="Test account password"
+        placeholder="Password"
         autocomplete="current-password"
     >
 
-    <button id="login-button">
 
+    <button id="loginButton">
         LOGIN TEST ACCOUNT
-
     </button>
 
 
-    <!-- TEST -->
+    <button
+        id="readButton"
+        disabled
+    >
+        TEST PORTFOLIO SETTINGS READ
+    </button>
 
-    <div class="test-section">
-
-        <h2>2. Portfolio Settings Test</h2>
-
-        <p>
-
-            This attempts to UPDATE portfolio_settings
-            using the currently authenticated user.
-
-        </p>
-
-        <button
-            id="portfolio-settings-test"
-            disabled
-        >
-
-            TEST PORTFOLIO SETTINGS UPDATE
-
-        </button>
-
-    </div>
-
-
-    <!-- RESULT -->
-
-    <h2>Result</h2>
 
     <pre id="result">Waiting for login...</pre>
 
@@ -169,113 +129,83 @@
 
 <script>
 
-
-/* =========================================================
-   SUPABASE CONFIGURATION
-========================================================= */
-
-/*
-    IMPORTANT:
-
-    Replace these two values with the same values
-    already used by your dashboard.html.
-
-    NEVER use a service_role key here.
-*/
+/* =====================================================
+   SUPABASE CONFIG
+===================================================== */
 
 const SUPABASE_URL =
-    "https://ilrdmzogaqfdrcyzjahk.supabase.co";
-
+    "YOUR_SUPABASE_URL";
 
 const SUPABASE_ANON_KEY =
-    "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
+    "YOUR_SUPABASE_ANON_KEY";
 
 
-const supabaseClient =
+/* =====================================================
+   CREATE CLIENT
+===================================================== */
+
+const client =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_ANON_KEY
     );
 
 
-/* =========================================================
+/* =====================================================
    ELEMENTS
-========================================================= */
+===================================================== */
+
+const loginButton =
+    document.getElementById("loginButton");
+
+const readButton =
+    document.getElementById("readButton");
 
 const emailInput =
     document.getElementById("email");
 
-
 const passwordInput =
     document.getElementById("password");
-
-
-const loginButton =
-    document.getElementById("login-button");
-
-
-const testButton =
-    document.getElementById(
-        "portfolio-settings-test"
-    );
-
 
 const result =
     document.getElementById("result");
 
 
-/* =========================================================
+/* =====================================================
    LOGIN
-========================================================= */
+===================================================== */
 
 loginButton.addEventListener(
     "click",
-    async function () {
+    async () => {
 
         result.textContent =
             "Logging in...";
 
 
-        const email =
-            emailInput.value.trim();
+        const loginResult =
+            await client.auth.signInWithPassword({
+
+                email:
+                    emailInput.value.trim(),
+
+                password:
+                    passwordInput.value
+
+            });
 
 
-        const password =
-            passwordInput.value;
+        if (loginResult.error) {
 
-
-        if (!email || !password) {
-
-            result.textContent =
-                "Please enter email and password.";
-
-            return;
-
-        }
-
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient.auth
-                .signInWithPassword({
-
-                    email: email,
-
-                    password: password
-
-                });
-
-
-        if (error) {
+            console.error(
+                loginResult.error
+            );
 
             result.textContent =
                 "LOGIN ERROR\n\n" +
-                error.message;
+                loginResult.error.message;
 
             return;
-
         }
 
 
@@ -283,38 +213,34 @@ loginButton.addEventListener(
             "LOGIN SUCCESS\n\n" +
 
             "User ID:\n" +
-            data.user.id +
+            loginResult.data.user.id +
 
             "\n\nEmail:\n" +
-            data.user.email +
+            loginResult.data.user.email +
 
-            "\n\nNow you can run the security test.";
+            "\n\nSession exists: YES";
 
 
-        testButton.disabled = false;
+        readButton.disabled = false;
 
     }
 );
 
 
-/* =========================================================
-   PORTFOLIO SETTINGS UPDATE TEST
-========================================================= */
+/* =====================================================
+   READ PORTFOLIO SETTINGS
+===================================================== */
 
-
-testButton.addEventListener(
+readButton.addEventListener(
     "click",
-    async function () {
+    async () => {
 
         result.textContent =
-            "Testing portfolio_settings READ...\n\n";
+            "Testing portfolio_settings READ...";
 
 
-        const {
-            data: readData,
-            error: readError
-        } =
-            await supabaseClient
+        const readResult =
+            await client
                 .from("portfolio_settings")
                 .select("id, title")
                 .limit(10);
@@ -322,12 +248,12 @@ testButton.addEventListener(
 
         console.log(
             "READ DATA:",
-            readData
+            readResult.data
         );
 
         console.log(
             "READ ERROR:",
-            readError
+            readResult.error
         );
 
 
@@ -335,80 +261,9 @@ testButton.addEventListener(
             "PORTFOLIO SETTINGS READ TEST\n\n" +
 
             "DATA:\n" +
-            JSON.stringify(
-                readData,
-                null,
-                2
-            ) +
-
-            "\n\nERROR:\n" +
-            JSON.stringify(
-                readError,
-                null,
-                2
-            );
-
-    }
-);
-
-
-    async function () {
-
-        result.textContent =
-            "Testing UPDATE permission...\n\n";
-
-
-        /*
-            IMPORTANT:
-
-            We use an ID that already exists.
-
-            The value is intentionally harmless.
-        */
-
-        const {
-            data,
-            error
-        } =
-            await supabaseClient
-               const {
-    data,
-    error
-} = await supabaseClient
-    .from("portfolio_settings")
-    .select("id, title")
-    .limit(10);
-
-console.log("READ DATA:", data);
-console.log("READ ERROR:", error);
-
-result.textContent =
-    "PORTFOLIO SETTINGS READ TEST\n\n" +
-    "DATA:\n" +
-    JSON.stringify(data, null, 2) +
-    "\n\nERROR:\n" +
-    JSON.stringify(error, null, 2);
-
-
-        console.log(
-            "UPDATE DATA:",
-            data
-        );
-
-
-        console.log(
-            "UPDATE ERROR:",
-            error
-        );
-
-
-        result.textContent =
-            "PORTFOLIO SETTINGS UPDATE TEST\n\n" +
-
-            "DATA:\n" +
 
             JSON.stringify(
-                data,
+                readResult.data,
                 null,
                 2
             ) +
@@ -416,42 +271,13 @@ result.textContent =
             "\n\nERROR:\n" +
 
             JSON.stringify(
-                error,
+                readResult.error,
                 null,
                 2
             );
 
-
     }
 );
-
-
-/* =========================================================
-   CURRENT SESSION CHECK
-========================================================= */
-
-(async function () {
-
-    const {
-        data,
-        error
-    } =
-        await supabaseClient.auth
-            .getSession();
-
-
-    console.log(
-        "INITIAL SESSION:",
-        data.session
-    );
-
-
-    console.log(
-        "INITIAL SESSION ERROR:",
-        error
-    );
-
-})();
 
 </script>
 
