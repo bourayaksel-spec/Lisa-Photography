@@ -118,7 +118,7 @@
         id="updateButton"
         disabled
     >
-        TEST PORTFOLIO SETTINGS READ
+        TEST PORTFOLIO SETTINGS UPDATE
     </button>
 
 
@@ -141,7 +141,7 @@ const SUPABASE_ANON_KEY =
 
 
 /* =====================================================
-   CREATE CLIENT
+   CREATE SUPABASE CLIENT
 ===================================================== */
 
 const client =
@@ -158,8 +158,8 @@ const client =
 const loginButton =
     document.getElementById("loginButton");
 
-const readButton =
-    document.getElementById("readButton");
+const updateButton =
+    document.getElementById("updateButton");
 
 const emailInput =
     document.getElementById("email");
@@ -218,31 +218,20 @@ loginButton.addEventListener(
             "\n\nEmail:\n" +
             loginResult.data.user.email +
 
-            "\n\nSession exists: YES";
+            "\n\nSession exists: YES\n\n" +
+
+            "You can now run the UPDATE test.";
 
 
-        readButton.disabled = false;
+        updateButton.disabled = false;
 
     }
 );
 
 
 /* =====================================================
-   READ PORTFOLIO SETTINGS
+   TEST PORTFOLIO SETTINGS UPDATE
 ===================================================== */
-
-readButton.addEventListener(
-    "click",
-    async () => {
-
-        result.textContent =
-            "Testing portfolio_settings READ...";
-
-
-
-const updateButton =
-    document.getElementById("updateButton");
-
 
 updateButton.addEventListener(
     "click",
@@ -250,8 +239,13 @@ updateButton.addEventListener(
 
         result.textContent =
             "Testing portfolio_settings UPDATE...\n\n" +
+
             "Target row: id = 3\n" +
-            "Current title: Sports";
+
+            "Current title: Sports\n\n" +
+
+            "The normal test account should NOT " +
+            "be allowed to update this row.";
 
 
         const updateResult =
@@ -295,7 +289,6 @@ updateButton.addEventListener(
             );
 
     }
-
 );
 
 </script>
