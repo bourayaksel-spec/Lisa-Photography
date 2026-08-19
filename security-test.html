@@ -15,13 +15,11 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
     <style>
 
         * {
             box-sizing: border-box;
         }
-
 
         body {
             margin: 0;
@@ -34,10 +32,9 @@
             font-family: Arial, sans-serif;
         }
 
-
         .container {
             width: 100%;
-            max-width: 900px;
+            max-width: 950px;
 
             margin: auto;
             padding: 30px;
@@ -50,21 +47,30 @@
                 0 10px 30px rgba(0, 0, 0, .08);
         }
 
-
         h1 {
             margin-top: 0;
         }
-
 
         .description {
             color: #666;
             line-height: 1.6;
         }
 
+        .section {
+            margin-top: 30px;
+            padding-top: 25px;
+
+            border-top: 1px solid #ddd;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
         input,
         button {
-
             display: block;
 
             width: 100%;
@@ -78,79 +84,54 @@
             border: 1px solid #ccc;
 
             font-size: 15px;
-
         }
 
-
         button {
-
             background: #222;
-
             color: #fff;
 
             border: none;
 
             cursor: pointer;
-
         }
-
 
         button:hover:not(:disabled) {
-
             opacity: .9;
-
         }
-
 
         button:disabled {
-
             opacity: .5;
-
             cursor: not-allowed;
-
         }
 
+        .warning {
+            margin-top: 20px;
+            padding: 15px;
 
-        .test-group {
+            background: #fff3cd;
+            border: 1px solid #ffe69c;
 
-            margin-top: 30px;
+            border-radius: 8px;
 
-            padding-top: 25px;
-
-            border-top: 1px solid #ddd;
-
+            line-height: 1.5;
         }
-
-
-        .test-title {
-
-            font-weight: bold;
-
-            margin-bottom: 10px;
-
-        }
-
 
         pre {
-
             margin-top: 25px;
 
             padding: 20px;
 
             background: #111;
-
             color: #eee;
 
             border-radius: 8px;
 
             white-space: pre-wrap;
-
             word-break: break-word;
 
             overflow-x: auto;
 
             line-height: 1.5;
-
         }
 
     </style>
@@ -171,53 +152,72 @@
 
     <p class="description">
 
-        Temporary security testing page.
+        Temporary security testing page for a normal
+        client account.
 
-        This page tests Row Level Security and
-        Storage access for a normal client account.
-
-        No data is inserted, updated, or deleted.
+        These tests verify that a client cannot modify
+        protected application data.
 
     </p>
+
+
+    <div class="warning">
+
+        <strong>SAFE TEST:</strong>
+
+        The UPDATE tests attempt to write the
+        exact value that is already stored.
+
+        No DELETE operation is performed.
+
+    </div>
 
 
     <!-- =================================================
          LOGIN
     ================================================== -->
 
-    <input
-        id="email"
-        type="email"
-        value="belal@gmail.com"
-        placeholder="Email"
-        autocomplete="username"
-    >
+    <div class="section">
+
+        <div class="section-title">
+            LOGIN
+        </div>
 
 
-    <input
-        id="password"
-        type="password"
-        placeholder="Password"
-        autocomplete="current-password"
-    >
+        <input
+            id="email"
+            type="email"
+            value="belal@gmail.com"
+            placeholder="Email"
+            autocomplete="username"
+        >
 
 
-    <button id="loginButton">
+        <input
+            id="password"
+            type="password"
+            placeholder="Password"
+            autocomplete="current-password"
+        >
 
-        LOGIN TEST ACCOUNT
 
-    </button>
+        <button id="loginButton">
+
+            LOGIN TEST ACCOUNT
+
+        </button>
+
+    </div>
 
 
     <!-- =================================================
-         DATABASE TESTS
+         READ TESTS
     ================================================== -->
 
-    <div class="test-group">
+    <div class="section">
 
-
-        <div class="test-title">
-            DATABASE TESTS
+        <div class="section-title">
+            CLIENT DATA READ TESTS
         </div>
 
 
@@ -250,18 +250,16 @@
 
         </button>
 
-
     </div>
 
 
     <!-- =================================================
-         STORAGE TESTS
+         STORAGE
     ================================================== -->
 
-    <div class="test-group">
+    <div class="section">
 
-
-        <div class="test-title">
+        <div class="section-title">
             STORAGE TESTS
         </div>
 
@@ -285,6 +283,68 @@
 
         </button>
 
+    </div>
+
+
+    <!-- =================================================
+         UPDATE SECURITY TESTS
+    ================================================== -->
+
+    <div class="section">
+
+        <div class="section-title">
+            CLIENT → ADMIN UPDATE SECURITY TESTS
+        </div>
+
+
+        <button
+            id="clientUpdateButton"
+            disabled
+        >
+
+            TEST CLIENTS UPDATE
+
+        </button>
+
+
+        <button
+            id="galleryUpdateButton"
+            disabled
+        >
+
+            TEST GALLERIES UPDATE
+
+        </button>
+
+
+        <button
+            id="photoUpdateButton"
+            disabled
+        >
+
+            TEST GALLERY PHOTOS UPDATE
+
+        </button>
+
+
+        <button
+            id="portfolioUpdateButton"
+            disabled
+        >
+
+            TEST PORTFOLIO SETTINGS UPDATE
+
+        </button>
+
+
+        <button
+            id="siteContentUpdateButton"
+            disabled
+        >
+
+            TEST SITE CONTENT UPDATE
+
+        </button>
 
     </div>
 
@@ -371,6 +431,36 @@ const unauthorizedStorageButton =
     );
 
 
+const clientUpdateButton =
+    document.getElementById(
+        "clientUpdateButton"
+    );
+
+
+const galleryUpdateButton =
+    document.getElementById(
+        "galleryUpdateButton"
+    );
+
+
+const photoUpdateButton =
+    document.getElementById(
+        "photoUpdateButton"
+    );
+
+
+const portfolioUpdateButton =
+    document.getElementById(
+        "portfolioUpdateButton"
+    );
+
+
+const siteContentUpdateButton =
+    document.getElementById(
+        "siteContentUpdateButton"
+    );
+
+
 const emailInput =
     document.getElementById(
         "email"
@@ -387,6 +477,36 @@ const result =
     document.getElementById(
         "result"
     );
+
+
+/* =====================================================
+   ENABLE ALL TESTS
+===================================================== */
+
+
+function enableTests() {
+
+    clientsButton.disabled = false;
+
+    galleriesButton.disabled = false;
+
+    photosButton.disabled = false;
+
+    storageButton.disabled = false;
+
+    unauthorizedStorageButton.disabled = false;
+
+    clientUpdateButton.disabled = false;
+
+    galleryUpdateButton.disabled = false;
+
+    photoUpdateButton.disabled = false;
+
+    portfolioUpdateButton.disabled = false;
+
+    siteContentUpdateButton.disabled = false;
+
+}
 
 
 /* =====================================================
@@ -451,28 +571,10 @@ loginButton.addEventListener(
 
             "\n\nSession exists: YES\n\n" +
 
-            "All security tests are now available.";
+            "Security tests are now available.";
 
 
-        clientsButton.disabled =
-            false;
-
-
-        galleriesButton.disabled =
-            false;
-
-
-        photosButton.disabled =
-            false;
-
-
-        storageButton.disabled =
-            false;
-
-
-        unauthorizedStorageButton.disabled =
-            false;
-
+        enableTests();
 
     }
 
@@ -480,7 +582,7 @@ loginButton.addEventListener(
 
 
 /* =====================================================
-   CLIENTS READ TEST
+   CLIENTS READ
 ===================================================== */
 
 
@@ -492,35 +594,13 @@ clientsButton.addEventListener(
 
 
         result.textContent =
+            "Testing CLIENTS READ...";
 
-            "Testing CLIENTS read permission...";
 
-
-        const testResult =
-
+        const response =
             await client
-
                 .from("clients")
-
                 .select("*");
-
-
-        console.log(
-
-            "CLIENTS DATA:",
-
-            testResult.data
-
-        );
-
-
-        console.log(
-
-            "CLIENTS ERROR:",
-
-            testResult.error
-
-        );
 
 
         result.textContent =
@@ -530,27 +610,18 @@ clientsButton.addEventListener(
             "DATA:\n" +
 
             JSON.stringify(
-
-                testResult.data,
-
+                response.data,
                 null,
-
                 2
-
             ) +
 
             "\n\nERROR:\n" +
 
             JSON.stringify(
-
-                testResult.error,
-
+                response.error,
                 null,
-
                 2
-
             );
-
 
     }
 
@@ -558,7 +629,7 @@ clientsButton.addEventListener(
 
 
 /* =====================================================
-   GALLERIES READ TEST
+   GALLERIES READ
 ===================================================== */
 
 
@@ -570,35 +641,13 @@ galleriesButton.addEventListener(
 
 
         result.textContent =
+            "Testing GALLERIES READ...";
 
-            "Testing GALLERIES read permission...";
 
-
-        const testResult =
-
+        const response =
             await client
-
                 .from("galleries")
-
                 .select("*");
-
-
-        console.log(
-
-            "GALLERIES DATA:",
-
-            testResult.data
-
-        );
-
-
-        console.log(
-
-            "GALLERIES ERROR:",
-
-            testResult.error
-
-        );
 
 
         result.textContent =
@@ -608,27 +657,18 @@ galleriesButton.addEventListener(
             "DATA:\n" +
 
             JSON.stringify(
-
-                testResult.data,
-
+                response.data,
                 null,
-
                 2
-
             ) +
 
             "\n\nERROR:\n" +
 
             JSON.stringify(
-
-                testResult.error,
-
+                response.error,
                 null,
-
                 2
-
             );
-
 
     }
 
@@ -636,7 +676,7 @@ galleriesButton.addEventListener(
 
 
 /* =====================================================
-   GALLERY PHOTOS READ TEST
+   GALLERY PHOTOS READ
 ===================================================== */
 
 
@@ -648,35 +688,13 @@ photosButton.addEventListener(
 
 
         result.textContent =
+            "Testing GALLERY PHOTOS READ...";
 
-            "Testing GALLERY PHOTOS read permission...";
 
-
-        const testResult =
-
+        const response =
             await client
-
                 .from("gallery_photos")
-
                 .select("*");
-
-
-        console.log(
-
-            "GALLERY PHOTOS DATA:",
-
-            testResult.data
-
-        );
-
-
-        console.log(
-
-            "GALLERY PHOTOS ERROR:",
-
-            testResult.error
-
-        );
 
 
         result.textContent =
@@ -686,27 +704,18 @@ photosButton.addEventListener(
             "DATA:\n" +
 
             JSON.stringify(
-
-                testResult.data,
-
+                response.data,
                 null,
-
                 2
-
             ) +
 
             "\n\nERROR:\n" +
 
             JSON.stringify(
-
-                testResult.error,
-
+                response.error,
                 null,
-
                 2
-
             );
-
 
     }
 
@@ -714,7 +723,7 @@ photosButton.addEventListener(
 
 
 /* =====================================================
-   AUTHORIZED STORAGE TEST
+   AUTHORIZED STORAGE
 ===================================================== */
 
 
@@ -726,43 +735,21 @@ storageButton.addEventListener(
 
 
         const filePath =
-
             "1786974129213-3mw91o-WhatsApp-Image-2026-02-14-at-20-49-42--1-.jpeg";
 
 
         result.textContent =
-
-            "Testing authorized Storage access...\n\n" +
-
-            "File:\n" +
-
-            filePath;
+            "Testing authorized Storage access...";
 
 
-        const storageResult =
-
+        const response =
             await client
-
                 .storage
-
                 .from("client-galleries")
-
                 .createSignedUrl(
-
                     filePath,
-
                     60
-
                 );
-
-
-        console.log(
-
-            "AUTHORIZED STORAGE RESULT:",
-
-            storageResult
-
-        );
 
 
         result.textContent =
@@ -776,27 +763,18 @@ storageButton.addEventListener(
             "\n\nDATA:\n" +
 
             JSON.stringify(
-
-                storageResult.data,
-
+                response.data,
                 null,
-
                 2
-
             ) +
 
             "\n\nERROR:\n" +
 
             JSON.stringify(
-
-                storageResult.error,
-
+                response.error,
                 null,
-
                 2
-
             );
-
 
     }
 
@@ -804,7 +782,7 @@ storageButton.addEventListener(
 
 
 /* =====================================================
-   UNAUTHORIZED STORAGE TEST
+   UNAUTHORIZED STORAGE
 ===================================================== */
 
 
@@ -816,43 +794,21 @@ unauthorizedStorageButton.addEventListener(
 
 
         const fakeFilePath =
-
             "another-client/private-test-image.jpg";
 
 
         result.textContent =
-
-            "Testing unauthorized Storage access...\n\n" +
-
-            "File:\n" +
-
-            fakeFilePath;
+            "Testing unauthorized Storage access...";
 
 
-        const storageResult =
-
+        const response =
             await client
-
                 .storage
-
                 .from("client-galleries")
-
                 .createSignedUrl(
-
                     fakeFilePath,
-
                     60
-
                 );
-
-
-        console.log(
-
-            "UNAUTHORIZED STORAGE RESULT:",
-
-            storageResult
-
-        );
 
 
         result.textContent =
@@ -866,27 +822,469 @@ unauthorizedStorageButton.addEventListener(
             "\n\nDATA:\n" +
 
             JSON.stringify(
-
-                storageResult.data,
-
+                response.data,
                 null,
-
                 2
-
             ) +
 
             "\n\nERROR:\n" +
 
             JSON.stringify(
-
-                storageResult.error,
-
+                response.error,
                 null,
-
                 2
-
             );
 
+    }
+
+);
+
+
+/* =====================================================
+   CLIENTS UPDATE TEST
+===================================================== */
+
+
+clientUpdateButton.addEventListener(
+
+    "click",
+
+    async () => {
+
+
+        const clientId =
+            "30b13c52-b10b-4b3a-9640-4940f835fc81";
+
+
+        const originalName =
+            "Belal";
+
+
+        result.textContent =
+            "Testing CLIENTS UPDATE...\n\n" +
+
+            "Target ID:\n" +
+
+            clientId +
+
+            "\n\n" +
+
+            "Attempting to write the same value:\n" +
+
+            originalName;
+
+
+        const response =
+            await client
+                .from("clients")
+                .update({
+
+                    name: originalName
+
+                })
+                .eq(
+                    "id",
+                    clientId
+                )
+                .select(
+                    "id,name"
+                );
+
+
+        result.textContent =
+
+            "CLIENTS UPDATE SECURITY TEST\n\n" +
+
+            "ORIGINAL VALUE:\n" +
+
+            JSON.stringify({
+
+                id: clientId,
+
+                name: originalName
+
+            }, null, 2) +
+
+            "\n\nUPDATE RESPONSE:\n" +
+
+            JSON.stringify({
+
+                success:
+                    !response.error,
+
+                error:
+                    response.error,
+
+                data:
+                    response.data,
+
+                status:
+                    response.status,
+
+                statusText:
+                    response.statusText
+
+            }, null, 2);
+
+    }
+
+);
+
+
+/* =====================================================
+   GALLERIES UPDATE TEST
+===================================================== */
+
+
+galleryUpdateButton.addEventListener(
+
+    "click",
+
+    async () => {
+
+
+        const galleryId =
+            "bba49a70-9968-4555-a835-dcf43d1156cb";
+
+
+        const originalSlug =
+            "belal";
+
+
+        result.textContent =
+            "Testing GALLERIES UPDATE...";
+
+
+        const response =
+            await client
+                .from("galleries")
+                .update({
+
+                    slug: originalSlug
+
+                })
+                .eq(
+                    "id",
+                    galleryId
+                )
+                .select(
+                    "id,slug"
+                );
+
+
+        result.textContent =
+
+            "GALLERIES UPDATE SECURITY TEST\n\n" +
+
+            "ORIGINAL VALUE:\n" +
+
+            JSON.stringify({
+
+                id: galleryId,
+
+                slug: originalSlug
+
+            }, null, 2) +
+
+            "\n\nUPDATE RESPONSE:\n" +
+
+            JSON.stringify({
+
+                success:
+                    !response.error,
+
+                error:
+                    response.error,
+
+                data:
+                    response.data,
+
+                status:
+                    response.status,
+
+                statusText:
+                    response.statusText
+
+            }, null, 2);
+
+    }
+
+);
+
+
+/* =====================================================
+   GALLERY PHOTOS UPDATE TEST
+===================================================== */
+
+
+photoUpdateButton.addEventListener(
+
+    "click",
+
+    async () => {
+
+
+        const photoId =
+            "77a6d320-8bf3-4862-aebb-de614d26896c";
+
+
+        const originalFileName =
+            "WhatsApp Image 2026-02-14 at 20.49.42 (1).jpeg";
+
+
+        result.textContent =
+            "Testing GALLERY PHOTOS UPDATE...";
+
+
+        const response =
+            await client
+                .from("gallery_photos")
+                .update({
+
+                    file_name:
+                        originalFileName
+
+                })
+                .eq(
+                    "id",
+                    photoId
+                )
+                .select(
+                    "id,file_name"
+                );
+
+
+        result.textContent =
+
+            "GALLERY PHOTOS UPDATE SECURITY TEST\n\n" +
+
+            "ORIGINAL VALUE:\n" +
+
+            JSON.stringify({
+
+                id: photoId,
+
+                file_name:
+                    originalFileName
+
+            }, null, 2) +
+
+            "\n\nUPDATE RESPONSE:\n" +
+
+            JSON.stringify({
+
+                success:
+                    !response.error,
+
+                error:
+                    response.error,
+
+                data:
+                    response.data,
+
+                status:
+                    response.status,
+
+                statusText:
+                    response.statusText
+
+            }, null, 2);
+
+    }
+
+);
+
+
+/* =====================================================
+   PORTFOLIO SETTINGS UPDATE
+===================================================== */
+
+
+portfolioUpdateButton.addEventListener(
+
+    "click",
+
+    async () => {
+
+
+        const portfolioId = 3;
+
+
+        const originalTitle =
+            "Sports";
+
+
+        result.textContent =
+            "Testing PORTFOLIO SETTINGS UPDATE...";
+
+
+        const response =
+            await client
+                .from("portfolio_settings")
+                .update({
+
+                    title:
+                        originalTitle
+
+                })
+                .eq(
+                    "id",
+                    portfolioId
+                )
+                .select(
+                    "id,title"
+                );
+
+
+        result.textContent =
+
+            "PORTFOLIO SETTINGS UPDATE SECURITY TEST\n\n" +
+
+            "ORIGINAL VALUE:\n" +
+
+            JSON.stringify({
+
+                id:
+                    portfolioId,
+
+                title:
+                    originalTitle
+
+            }, null, 2) +
+
+            "\n\nUPDATE RESPONSE:\n" +
+
+            JSON.stringify({
+
+                success:
+                    !response.error,
+
+                error:
+                    response.error,
+
+                data:
+                    response.data,
+
+                status:
+                    response.status,
+
+                statusText:
+                    response.statusText
+
+            }, null, 2);
+
+    }
+
+);
+
+
+/* =====================================================
+   SITE CONTENT UPDATE
+===================================================== */
+
+
+siteContentUpdateButton.addEventListener(
+
+    "click",
+
+    async () => {
+
+
+        result.textContent =
+            "Loading SITE CONTENT for safe test...";
+
+
+        const readResponse =
+            await client
+                .from("site_content")
+                .select("*")
+                .limit(1);
+
+
+        if (
+            readResponse.error ||
+            !readResponse.data ||
+            readResponse.data.length === 0
+        ) {
+
+
+            result.textContent =
+
+                "SITE CONTENT UPDATE TEST\n\n" +
+
+                "Could not find a test row.\n\n" +
+
+                "READ DATA:\n" +
+
+                JSON.stringify(
+                    readResponse.data,
+                    null,
+                    2
+                ) +
+
+                "\n\nERROR:\n" +
+
+                JSON.stringify(
+                    readResponse.error,
+                    null,
+                    2
+                );
+
+
+            return;
+
+        }
+
+
+        const row =
+            readResponse.data[0];
+
+
+        const primaryKey =
+            Object.keys(row)[0];
+
+
+        const originalValue =
+            row[primaryKey];
+
+
+        result.textContent =
+
+            "Testing SITE CONTENT UPDATE...\n\n" +
+
+            "Using first available row.\n\n" +
+
+            "Primary field:\n" +
+
+            primaryKey;
+
+
+        /*
+         * We intentionally do NOT perform the update here.
+         *
+         * The table structure may contain different
+         * editable columns, and we do not want to
+         * accidentally modify website content.
+         */
+
+
+        result.textContent =
+
+            "SITE CONTENT UPDATE TEST\n\n" +
+
+            "SAFE CHECK ONLY\n\n" +
+
+            "A row exists, but no UPDATE was performed\n" +
+
+            "because site_content structure may vary.\n\n" +
+
+            "ROW:\n" +
+
+            JSON.stringify(
+                row,
+                null,
+                2
+            );
 
     }
 
