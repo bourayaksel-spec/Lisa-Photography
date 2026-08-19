@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,10 +9,6 @@
     <title>Lisa Michelle Visuals — Client Gallery Manager</title>
 
     <style>
-
-        /* ================================
-           RESET
-        ================================= */
 
         * {
             box-sizing: border-box;
@@ -50,11 +47,6 @@
             overflow: hidden;
         }
 
-
-        /* ================================
-           BACKGROUND DETAILS
-        ================================= */
-
         body::before {
             content: "";
 
@@ -91,11 +83,6 @@
             pointer-events: none;
         }
 
-
-        /* ================================
-           LOGIN CARD
-        ================================= */
-
         .login-box {
 
             width: calc(100% - 40px);
@@ -127,7 +114,6 @@
                 cardAppear .7s ease forwards;
         }
 
-
         @keyframes cardAppear {
 
             from {
@@ -142,11 +128,6 @@
 
         }
 
-
-        /* ================================
-           TOP LINE
-        ================================= */
-
         .top-line {
 
             width: 42px;
@@ -158,11 +139,6 @@
 
             opacity: .85;
         }
-
-
-        /* ================================
-           BRAND
-        ================================= */
 
         .brand {
 
@@ -180,7 +156,6 @@
             font-weight: 400;
         }
 
-
         .subtitle {
 
             margin: 0 0 36px;
@@ -194,11 +169,6 @@
             text-transform: uppercase;
         }
 
-
-        /* ================================
-           DIVIDER
-        ================================= */
-
         .divider {
 
             width: 100%;
@@ -210,18 +180,12 @@
             margin-bottom: 30px;
         }
 
-
-        /* ================================
-           FORM
-        ================================= */
-
         .form-group {
 
             position: relative;
 
             margin-bottom: 18px;
         }
-
 
         label {
 
@@ -237,7 +201,6 @@
 
             text-transform: uppercase;
         }
-
 
         input {
 
@@ -265,18 +228,13 @@
                 box-shadow .25s ease;
         }
 
-
         input::placeholder {
-
             color: #666;
         }
 
-
         input:hover {
-
             border-color: #555;
         }
-
 
         input:focus {
 
@@ -287,11 +245,6 @@
             box-shadow:
                 0 0 0 3px rgba(255,255,255,.04);
         }
-
-
-        /* ================================
-           BUTTON
-        ================================= */
 
         button {
 
@@ -323,7 +276,6 @@
                 box-shadow .2s ease;
         }
 
-
         button:hover {
 
             background: #e9e9e9;
@@ -334,12 +286,9 @@
                 0 8px 25px rgba(0,0,0,.35);
         }
 
-
         button:active {
-
             transform: translateY(0);
         }
-
 
         button:disabled {
 
@@ -349,11 +298,6 @@
 
             transform: none;
         }
-
-
-        /* ================================
-           MESSAGE
-        ================================= */
 
         #message {
 
@@ -372,11 +316,6 @@
             transition: opacity .2s ease;
         }
 
-
-        /* ================================
-           FOOTER
-        ================================= */
-
         .footer {
 
             margin-top: 32px;
@@ -394,11 +333,6 @@
             letter-spacing: .8px;
         }
 
-
-        /* ================================
-           MOBILE
-        ================================= */
-
         @media (max-width: 600px) {
 
             body {
@@ -407,7 +341,6 @@
 
                 padding: 20px;
             }
-
 
             .login-box {
 
@@ -419,12 +352,9 @@
                     30px;
             }
 
-
             .brand {
-
                 font-size: 24px;
             }
-
 
             .subtitle {
 
@@ -437,7 +367,6 @@
 
         }
 
-
         @media (max-width: 360px) {
 
             .login-box {
@@ -449,7 +378,6 @@
             }
 
             .brand {
-
                 font-size: 22px;
             }
 
@@ -465,25 +393,19 @@
 
 <div class="login-box">
 
-
     <div class="top-line"></div>
-
 
     <h1 class="brand">
         Lisa Michelle Visuals
     </h1>
 
-
     <p class="subtitle">
         SECURE ADMIN ACCESS
     </p>
 
-
     <div class="divider"></div>
 
-
     <form id="login-form">
-
 
         <div class="form-group">
 
@@ -519,10 +441,12 @@
         </div>
 
 
-        <button type="submit">
+        <button
+            id="login-button"
+            type="submit"
+        >
             SIGN IN
         </button>
-
 
     </form>
 
@@ -534,7 +458,6 @@
         ADMIN LOGIN
     </div>
 
-
 </div>
 
 
@@ -543,11 +466,20 @@
 
 <script>
 
+/* =====================================================
+   SUPABASE CONFIG
+===================================================== */
+
 const SUPABASE_URL =
     "https://ilrdmzogaqfdrcyzjahk.supabase.co";
 
 const SUPABASE_KEY =
     "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
+
+
+/* =====================================================
+   CREATE CLIENT
+===================================================== */
 
 const supabaseClient =
     window.supabase.createClient(
@@ -555,12 +487,47 @@ const supabaseClient =
         SUPABASE_KEY
     );
 
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
 const loginForm =
-    document.getElementById("login-form");
+    document.getElementById(
+        "login-form"
+    );
+
+const loginButton =
+    document.getElementById(
+        "login-button"
+    );
 
 const message =
-    document.getElementById("message");
+    document.getElementById(
+        "message"
+    );
 
+
+/* =====================================================
+   SHOW MESSAGE
+===================================================== */
+
+function showMessage(
+    text,
+    color
+) {
+
+    message.style.color =
+        color;
+
+    message.textContent =
+        text;
+}
+
+
+/* =====================================================
+   LOGIN + ADMIN AUTHORIZATION
+===================================================== */
 
 loginForm.addEventListener(
     "submit",
@@ -568,11 +535,13 @@ loginForm.addEventListener(
 
         event.preventDefault();
 
+
         const email =
             document
                 .getElementById("email")
                 .value
                 .trim();
+
 
         const password =
             document
@@ -580,54 +549,177 @@ loginForm.addEventListener(
                 .value;
 
 
-        message.style.color = "#aaa";
+        /*
+         * Prevent multiple submissions.
+         */
 
-        message.textContent =
-            "Logging in...";
+        loginButton.disabled =
+            true;
 
+
+        showMessage(
+            "Checking credentials...",
+            "#aaa"
+        );
+
+
+        /* =================================================
+           1. AUTHENTICATION
+        ================================================== */
 
         const {
-            data,
-            error
+            data: loginData,
+            error: loginError
         } =
             await supabaseClient
                 .auth
                 .signInWithPassword({
-                    email: email,
-                    password: password
+
+                    email:
+                        email,
+
+                    password:
+                        password
+
                 });
 
 
-        if (error) {
+        /*
+         * Authentication failed.
+         */
 
-            message.style.color =
-                "#ff7777";
+        if (loginError) {
 
-            message.textContent =
-                error.message;
+            console.error(
+                "LOGIN ERROR:",
+                loginError
+            );
+
+
+            showMessage(
+                "Invalid email or password.",
+                "#ff7777"
+            );
+
+
+            loginButton.disabled =
+                false;
+
 
             return;
         }
 
 
-        message.style.color =
-            "#7cff7c";
-
-        message.textContent =
-            "Login successful!";
+        const loggedInUser =
+            loginData.user;
 
 
-        setTimeout(() => {
+        /* =================================================
+           2. ADMIN AUTHORIZATION
+        ================================================== */
 
-            window.location.href =
-                "dashboard.html";
+        showMessage(
+            "Verifying admin access...",
+            "#aaa"
+        );
 
-        }, 800);
+
+        const {
+            data: adminRecord,
+            error: adminError
+        } =
+            await supabaseClient
+                .from("admin_users")
+                .select("user_id")
+                .eq(
+                    "user_id",
+                    loggedInUser.id
+                )
+                .maybeSingle();
+
+
+        /*
+         * IMPORTANT:
+         *
+         * Authentication succeeded,
+         * but authorization failed.
+         */
+
+        if (
+            adminError ||
+            !adminRecord
+        ) {
+
+            console.warn(
+                "ADMIN ACCESS DENIED",
+                adminError
+            );
+
+
+            /*
+             * Immediately destroy
+             * the authenticated session.
+             */
+
+            await supabaseClient
+                .auth
+                .signOut();
+
+
+            /*
+             * Do NOT say:
+             * "Login successful"
+             *
+             * because this user is
+             * not authorized.
+             */
+
+            showMessage(
+                "Access denied. This account is not authorized for the Admin Dashboard.",
+                "#ff7777"
+            );
+
+
+            loginButton.disabled =
+                false;
+
+
+            return;
+        }
+
+
+        /* =================================================
+           3. ADMIN VERIFIED
+        ================================================== */
+
+        showMessage(
+            "Admin access verified.",
+            "#7cff7c"
+        );
+
+
+        /*
+         * Small delay only after
+         * authorization succeeds.
+         */
+
+        setTimeout(
+            function() {
+
+                window.location.replace(
+                    "dashboard.html"
+                );
+
+            },
+            300
+        );
 
     }
 );
 
 </script>
 
+
 </body>
 </html>
+```
