@@ -31,7 +31,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: auto;
             background: #fff;
             padding: 30px;
@@ -66,6 +66,12 @@
             cursor: not-allowed;
         }
 
+        .test-group {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
         pre {
             margin-top: 25px;
             padding: 20px;
@@ -74,6 +80,7 @@
             border-radius: 8px;
             white-space: pre-wrap;
             word-break: break-word;
+            overflow-x: auto;
         }
 
     </style>
@@ -88,7 +95,7 @@
     <h1>Security Test</h1>
 
     <p>
-        Temporary security testing page.
+        Client data isolation test.
     </p>
 
 
@@ -114,15 +121,37 @@
     </button>
 
 
-    <button
-        id="updateButton"
-        disabled
-    >
-        TEST PORTFOLIO SETTINGS UPDATE
-    </button>
+    <div class="test-group">
+
+        <button
+            id="clientsButton"
+            disabled
+        >
+            TEST CLIENTS READ
+        </button>
 
 
-    <pre id="result">Waiting for login...</pre>
+        <button
+            id="galleriesButton"
+            disabled
+        >
+            TEST GALLERIES READ
+        </button>
+
+
+        <button
+            id="photosButton"
+            disabled
+        >
+            TEST GALLERY PHOTOS READ
+        </button>
+
+    </div>
+
+
+    <pre id="result">
+Waiting for login...
+    </pre>
 
 </div>
 
@@ -141,7 +170,7 @@ const SUPABASE_ANON_KEY =
 
 
 /* =====================================================
-   CREATE SUPABASE CLIENT
+   CREATE CLIENT
 ===================================================== */
 
 const client =
@@ -158,8 +187,14 @@ const client =
 const loginButton =
     document.getElementById("loginButton");
 
-const updateButton =
-    document.getElementById("updateButton");
+const clientsButton =
+    document.getElementById("clientsButton");
+
+const galleriesButton =
+    document.getElementById("galleriesButton");
+
+const photosButton =
+    document.getElementById("photosButton");
 
 const emailInput =
     document.getElementById("email");
@@ -218,137 +253,171 @@ loginButton.addEventListener(
             "\n\nEmail:\n" +
             loginResult.data.user.email +
 
-            "\n\nSession exists: YES\n\n" +
-
-            "You can now run the UPDATE test.";
+            "\n\nSession exists: YES";
 
 
-        updateButton.disabled = false;
+        clientsButton.disabled = false;
+        galleriesButton.disabled = false;
+        photosButton.disabled = false;
 
     }
 );
 
 
 /* =====================================================
-   TEST PORTFOLIO SETTINGS UPDATE
+   TEST CLIENTS
 ===================================================== */
 
-updateButton.addEventListener(
+clientsButton.addEventListener(
     "click",
     async () => {
 
         result.textContent =
-            "Running RLS UPDATE test...\n\n" +
-            "Target: portfolio_settings.id = 3";
+            "Testing CLIENTS read permission...";
 
 
-        /*
-         * First read the current value
-         */
-
-        const beforeResult =
+        const testResult =
             await client
-                .from("portfolio_settings")
-                .select("id, title")
-                .eq("id", 3)
-                .single();
+                .from("clients")
+                .select("*");
 
 
-        if (beforeResult.error) {
+        console.log(
+            "CLIENTS DATA:",
+            testResult.data
+        );
 
-            result.textContent =
-                "FAILED TO READ TEST ROW\n\n" +
-                JSON.stringify(
-                    beforeResult.error,
-                    null,
-                    2
-                );
+        console.log(
+            "CLIENTS ERROR:",
+            testResult.error
+        );
 
-            return;
-        }
-
-
-        const originalTitle =
-            beforeResult.data.title;
-
-
-        /*
-         * Attempt UPDATE
-         */
-
-        const updateResult =
-            await client
-                .from("portfolio_settings")
-                .update({
-                    title: "SECURITY_TEST_TEMP"
-                })
-                .eq("id", 3)
-                .select("id, title");
-
-
-        /*
-         * Read again
-         */
-
-        const afterResult =
-            await client
-                .from("portfolio_settings")
-                .select("id, title")
-                .eq("id", 3)
-                .single();
-
-
-        /*
-         * Display result
-         */
 
         result.textContent =
+            "CLIENTS READ TEST\n\n" +
 
-            "RLS UPDATE SECURITY TEST\n\n" +
-
-            "ORIGINAL VALUE:\n" +
+            "DATA:\n" +
 
             JSON.stringify(
-                beforeResult.data,
+                testResult.data,
                 null,
                 2
             ) +
 
-            "\n\nUPDATE RESPONSE:\n" +
+            "\n\nERROR:\n" +
 
             JSON.stringify(
-                updateResult,
-                null,
-                2
-            ) +
-
-            "\n\nVALUE AFTER UPDATE:\n" +
-
-            JSON.stringify(
-                afterResult.data,
+                testResult.error,
                 null,
                 2
             );
 
+    }
+);
+
+
+/* =====================================================
+   TEST GALLERIES
+===================================================== */
+
+galleriesButton.addEventListener(
+    "click",
+    async () => {
+
+        result.textContent =
+            "Testing GALLERIES read permission...";
+
+
+        const testResult =
+            await client
+                .from("galleries")
+                .select("*");
+
 
         console.log(
-            "Original:",
-            beforeResult.data
+            "GALLERIES DATA:",
+            testResult.data
         );
 
         console.log(
-            "Update:",
-            updateResult
+            "GALLERIES ERROR:",
+            testResult.error
         );
 
-        console.log(
-            "After:",
-            afterResult.data
-        );
+
+        result.textContent =
+            "GALLERIES READ TEST\n\n" +
+
+            "DATA:\n" +
+
+            JSON.stringify(
+                testResult.data,
+                null,
+                2
+            ) +
+
+            "\n\nERROR:\n" +
+
+            JSON.stringify(
+                testResult.error,
+                null,
+                2
+            );
 
     }
 );
 
+
+/* =====================================================
+   TEST GALLERY PHOTOS
+===================================================== */
+
+photosButton.addEventListener(
+    "click",
+    async () => {
+
+        result.textContent =
+            "Testing GALLERY PHOTOS read permission...";
+
+
+        const testResult =
+            await client
+                .from("gallery_photos")
+                .select("*");
+
+
+        console.log(
+            "GALLERY PHOTOS DATA:",
+            testResult.data
+        );
+
+        console.log(
+            "GALLERY PHOTOS ERROR:",
+            testResult.error
+        );
+
+
+        result.textContent =
+            "GALLERY PHOTOS READ TEST\n\n" +
+
+            "DATA:\n" +
+
+            JSON.stringify(
+                testResult.data,
+                null,
+                2
+            ) +
+
+            "\n\nERROR:\n" +
+
+            JSON.stringify(
+                testResult.error,
+                null,
+                2
+            );
+
+    }
+);
 
 </script>
 
