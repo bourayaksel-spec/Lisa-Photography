@@ -238,58 +238,117 @@ updateButton.addEventListener(
     async () => {
 
         result.textContent =
-            "Testing portfolio_settings UPDATE...\n\n" +
+            "Running RLS UPDATE test...\n\n" +
+            "Target: portfolio_settings.id = 3";
 
-            "Target row: id = 3\n" +
 
-            "Current title: Sports\n\n" +
+        /*
+         * First read the current value
+         */
 
-            "The normal test account should NOT " +
-            "be allowed to update this row.";
+        const beforeResult =
+            await client
+                .from("portfolio_settings")
+                .select("id, title")
+                .eq("id", 3)
+                .single();
 
+
+        if (beforeResult.error) {
+
+            result.textContent =
+                "FAILED TO READ TEST ROW\n\n" +
+                JSON.stringify(
+                    beforeResult.error,
+                    null,
+                    2
+                );
+
+            return;
+        }
+
+
+        const originalTitle =
+            beforeResult.data.title;
+
+
+        /*
+         * Attempt UPDATE
+         */
 
         const updateResult =
             await client
                 .from("portfolio_settings")
                 .update({
-                    title: "Sports"
+                    title: "SECURITY_TEST_TEMP"
                 })
                 .eq("id", 3)
                 .select("id, title");
 
 
-        console.log(
-            "UPDATE DATA:",
-            updateResult.data
-        );
+        /*
+         * Read again
+         */
 
-        console.log(
-            "UPDATE ERROR:",
-            updateResult.error
-        );
+        const afterResult =
+            await client
+                .from("portfolio_settings")
+                .select("id, title")
+                .eq("id", 3)
+                .single();
 
+
+        /*
+         * Display result
+         */
 
         result.textContent =
-            "PORTFOLIO SETTINGS UPDATE TEST\n\n" +
 
-            "DATA:\n" +
+            "RLS UPDATE SECURITY TEST\n\n" +
+
+            "ORIGINAL VALUE:\n" +
 
             JSON.stringify(
-                updateResult.data,
+                beforeResult.data,
                 null,
                 2
             ) +
 
-            "\n\nERROR:\n" +
+            "\n\nUPDATE RESPONSE:\n" +
 
             JSON.stringify(
-                updateResult.error,
+                updateResult,
+                null,
+                2
+            ) +
+
+            "\n\nVALUE AFTER UPDATE:\n" +
+
+            JSON.stringify(
+                afterResult.data,
                 null,
                 2
             );
 
+
+        console.log(
+            "Original:",
+            beforeResult.data
+        );
+
+        console.log(
+            "Update:",
+            updateResult
+        );
+
+        console.log(
+            "After:",
+            afterResult.data
+        );
+
     }
 );
+
 
 </script>
 
