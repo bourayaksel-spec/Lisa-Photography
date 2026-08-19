@@ -239,31 +239,49 @@ readButton.addEventListener(
             "Testing portfolio_settings READ...";
 
 
-        const readResult =
+
+const updateButton =
+    document.getElementById("updateButton");
+
+
+updateButton.addEventListener(
+    "click",
+    async () => {
+
+        result.textContent =
+            "Testing portfolio_settings UPDATE...\n\n" +
+            "Target row: id = 3\n" +
+            "Current title: Sports";
+
+
+        const updateResult =
             await client
                 .from("portfolio_settings")
-                .select("id, title")
-                .limit(10);
+                .update({
+                    title: "Sports"
+                })
+                .eq("id", 3)
+                .select("id, title");
 
 
         console.log(
-            "READ DATA:",
-            readResult.data
+            "UPDATE DATA:",
+            updateResult.data
         );
 
         console.log(
-            "READ ERROR:",
-            readResult.error
+            "UPDATE ERROR:",
+            updateResult.error
         );
 
 
         result.textContent =
-            "PORTFOLIO SETTINGS READ TEST\n\n" +
+            "PORTFOLIO SETTINGS UPDATE TEST\n\n" +
 
             "DATA:\n" +
 
             JSON.stringify(
-                readResult.data,
+                updateResult.data,
                 null,
                 2
             ) +
@@ -271,12 +289,13 @@ readButton.addEventListener(
             "\n\nERROR:\n" +
 
             JSON.stringify(
-                readResult.error,
+                updateResult.error,
                 null,
                 2
             );
 
     }
+
 );
 
 </script>
