@@ -145,7 +145,12 @@
         >
             TEST GALLERY PHOTOS READ
         </button>
-
+<button
+    id="storageButton"
+    disabled
+>
+    TEST CLIENT STORAGE ACCESS
+</button>
     </div>
 
 
@@ -418,7 +423,67 @@ photosButton.addEventListener(
 
     }
 );
+const storageButton =
+    document.getElementById("storageButton");
 
+
+storageButton.disabled = false;
+
+
+storageButton.addEventListener(
+    "click",
+    async () => {
+
+        const filePath =
+            "1786974129213-3mw91o-WhatsApp-Image-2026-02-14-at-20-49-42--1-.jpeg";
+
+
+        result.textContent =
+            "Testing client-galleries Storage access...\n\n" +
+            "File:\n" +
+            filePath;
+
+
+        const storageResult =
+            await client
+                .storage
+                .from("client-galleries")
+                .createSignedUrl(
+                    filePath,
+                    60
+                );
+
+
+        console.log(
+            "STORAGE RESULT:",
+            storageResult
+        );
+
+
+        result.textContent =
+            "CLIENT STORAGE ACCESS TEST\n\n" +
+
+            "FILE:\n" +
+            filePath +
+
+            "\n\nDATA:\n" +
+
+            JSON.stringify(
+                storageResult.data,
+                null,
+                2
+            ) +
+
+            "\n\nERROR:\n" +
+
+            JSON.stringify(
+                storageResult.error,
+                null,
+                2
+            );
+
+    }
+);
 </script>
 
 </body>
