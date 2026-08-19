@@ -3,71 +3,220 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>Security Test</title>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script
+        src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+    ></script>
 
     <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
+            margin: 0;
+            padding: 30px;
             font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #222;
+        }
+
+        .container {
             max-width: 800px;
-            margin: 40px auto;
-            padding: 20px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        .warning {
+            padding: 15px;
+            margin: 20px 0;
+            background: #fff3cd;
+            border: 1px solid #ffe69c;
+            border-radius: 8px;
         }
 
         input,
         button {
-            padding: 10px;
-            margin: 5px 0;
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            font-size: 16px;
         }
 
         button {
             cursor: pointer;
         }
 
-        pre {
-            background: #f4f4f4;
-            padding: 15px;
-            white-space: pre-wrap;
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
         }
+
+        pre {
+            margin-top: 20px;
+            padding: 20px;
+            background: #111;
+            color: #eee;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            min-height: 150px;
+        }
+
+        .test-section {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-    <h1>Supabase Security Test</h1>
+<div class="container">
+
+    <h1>Security Test</h1>
+
+    <div class="warning">
+
+        <strong>Temporary security testing page.</strong>
+
+        <br><br>
+
+        This page is only for testing Supabase RLS
+        permissions using a non-admin account.
+
+    </div>
+
+
+    <!-- LOGIN -->
+
+    <h2>1. Test Account Login</h2>
 
     <input
         id="email"
         type="email"
         placeholder="Test account email"
-        value="belal@gmail.com"
+        autocomplete="username"
     >
 
     <input
         id="password"
         type="password"
         placeholder="Test account password"
+        autocomplete="current-password"
     >
 
-    <button id="login">
-        Login & Test
+    <button id="login-button">
+
+        LOGIN TEST ACCOUNT
+
     </button>
 
-    <pre id="result">Waiting...</pre>
+
+    <!-- TEST -->
+
+    <div class="test-section">
+
+        <h2>2. Portfolio Settings Test</h2>
+
+        <p>
+
+            This attempts to UPDATE portfolio_settings
+            using the currently authenticated user.
+
+        </p>
+
+        <button
+            id="portfolio-settings-test"
+            disabled
+        >
+
+            TEST PORTFOLIO SETTINGS UPDATE
+
+        </button>
+
+    </div>
+
+
+    <!-- RESULT -->
+
+    <h2>Result</h2>
+
+    <pre id="result">Waiting for login...</pre>
+
+</div>
 
 
 <script>
 
-const SUPABASE_URL = "https://ilrdmzogaqfdrcyzjahk.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_MGbh1GVGc9Vl_dLYJGTplA_-PDqMiPJ";
+
+/* =========================================================
+   SUPABASE CONFIGURATION
+========================================================= */
+
+/*
+    IMPORTANT:
+
+    Replace these two values with the same values
+    already used by your dashboard.html.
+
+    NEVER use a service_role key here.
+*/
+
+const SUPABASE_URL =
+    "YOUR_SUPABASE_URL";
+
+
+const SUPABASE_ANON_KEY =
+    "YOUR_SUPABASE_ANON_KEY";
+
 
 const supabaseClient =
-    supabase.createClient(
+    window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_ANON_KEY
+    );
+
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
+
+const emailInput =
+    document.getElementById("email");
+
+
+const passwordInput =
+    document.getElementById("password");
+
+
+const loginButton =
+    document.getElementById("login-button");
+
+
+const testButton =
+    document.getElementById(
+        "portfolio-settings-test"
     );
 
 
@@ -75,221 +224,181 @@ const result =
     document.getElementById("result");
 
 
-function log(message) {
+/* =========================================================
+   LOGIN
+========================================================= */
 
-    result.textContent +=
-        "\n" + message;
+loginButton.addEventListener(
+    "click",
+    async function () {
 
-}
-
-
-document
-    .getElementById("login")
-    .addEventListener("click", async () => {
-
-        result.textContent = "Starting security test...";
+        result.textContent =
+            "Logging in...";
 
 
         const email =
-            document.getElementById("email").value;
+            emailInput.value.trim();
+
 
         const password =
-            document.getElementById("password").value;
+            passwordInput.value;
 
 
-        /*
-         * LOGIN
-         */
+        if (!email || !password) {
 
-        const {
-            data: loginData,
-            error: loginError
-        } =
-            await supabaseClient.auth.signInWithPassword({
-                email,
-                password
-            });
-
-
-        if (loginError) {
-
-            log(
-                "LOGIN FAILED:\n" +
-                loginError.message
-            );
+            result.textContent =
+                "Please enter email and password.";
 
             return;
+
         }
 
 
-        log(
-            "LOGIN SUCCESS:\n" +
-            loginData.user.id
-        );
+        const {
+            data,
+            error
+        } =
+            await supabaseClient.auth
+                .signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
+        if (error) {
+
+            result.textContent =
+                "LOGIN ERROR\n\n" +
+                error.message;
+
+            return;
+
+        }
+
+
+        result.textContent =
+            "LOGIN SUCCESS\n\n" +
+
+            "User ID:\n" +
+            data.user.id +
+
+            "\n\nEmail:\n" +
+            data.user.email +
+
+            "\n\nNow you can run the security test.";
+
+
+        testButton.disabled = false;
+
+    }
+);
+
+
+/* =========================================================
+   PORTFOLIO SETTINGS UPDATE TEST
+========================================================= */
+
+testButton.addEventListener(
+    "click",
+    async function () {
+
+        result.textContent =
+            "Testing UPDATE permission...\n\n";
 
 
         /*
-         * CHECK ADMIN STATUS
-         */
+            IMPORTANT:
+
+            We use an ID that already exists.
+
+            The value is intentionally harmless.
+        */
 
         const {
-            data: admin,
-            error: adminError
+            data,
+            error
         } =
             await supabaseClient
-                .from("admin_users")
-                .select("user_id")
-                .eq("user_id", loginData.user.id)
-                .maybeSingle();
+                .from("portfolio_settings")
+                .update({
+
+                    title:
+                        "SECURITY_TEST_DO_NOT_USE"
+
+                })
+                .eq("id", 1)
+                .select();
 
 
-        log(
-            "\nADMIN RECORD:\n" +
-            JSON.stringify(admin, null, 2)
+        console.log(
+            "UPDATE DATA:",
+            data
         );
 
 
-        log(
-            "\nADMIN CHECK ERROR:\n" +
-            JSON.stringify(adminError, null, 2)
+        console.log(
+            "UPDATE ERROR:",
+            error
         );
 
 
-        /*
-         * TEST PORTFOLIO SETTINGS UPDATE
-         */
+        result.textContent =
+            "PORTFOLIO SETTINGS UPDATE TEST\n\n" +
 
-       /*
- * TEST PORTFOLIO SETTINGS READ
- */
+            "DATA:\n" +
 
-/*
- * TEST PORTFOLIO SETTINGS UPDATE
- */
+            JSON.stringify(
+                data,
+                null,
+                2
+            ) +
 
-log(
-    "\n--- TEST: portfolio_settings UPDATE ---"
-);
+            "\n\nERROR:\n" +
 
-const {
-    data: updateData,
-    error: updateError
-} =
-    await supabaseClient
-        .from("portfolio_settings")
-        .update({
-            title: "SECURITY_TEST_SHOULD_FAIL"
-        })
-        .eq("id", 3)
-        .select();
+            JSON.stringify(
+                error,
+                null,
+                2
+            );
 
-log(
-    "\nUPDATE DATA:\n" +
-    JSON.stringify(updateData, null, 2)
-);
 
-log(
-    "\nUPDATE ERROR:\n" +
-    JSON.stringify(updateError, null, 2)
+    }
 );
 
 
-/*
- * READ THE SAME ROW AGAIN
- */
+/* =========================================================
+   CURRENT SESSION CHECK
+========================================================= */
 
-const {
-    data: verifyData,
-    error: verifyError
-} =
-    await supabaseClient
-        .from("portfolio_settings")
-        .select("id, title")
-        .eq("id", 3)
-        .single();
+(async function () {
 
-log(
-    "\nVERIFY DATA:\n" +
-    JSON.stringify(verifyData, null, 2)
-);
-
-log(
-    "\nVERIFY ERROR:\n" +
-    JSON.stringify(verifyError, null, 2)
-);
+    const {
+        data,
+        error
+    } =
+        await supabaseClient.auth
+            .getSession();
 
 
-/*
- * SIGN OUT
- */
-
-/*
- * TEST PORTFOLIO PHOTOS INSERT
- */
-
-/*
- * TEST PORTFOLIO PHOTOS INSERT
- */
-
-log(
-    "\n--- TEST: portfolio_photos INSERT ---"
-);
-
-const {
-    data: insertData,
-    error: insertError
-} =
-    await supabaseClient
-        .from("portfolio_photos")
-        .insert({
-            file_name: "security-test.webp",
-            file_path: "security-test/security-test.webp",
-            category: "security-test",
-            alt_text: "Security test",
-            display_order: 999999
-        })
-        .select();
-
-log(
-    "\nINSERT DATA:\n" +
-    JSON.stringify(insertData, null, 2)
-);
-
-log(
-    "\nINSERT ERROR:\n" +
-    JSON.stringify(insertError, null, 2)
-);
+    console.log(
+        "INITIAL SESSION:",
+        data.session
+    );
 
 
-/*
- * SIGN OUT
- */
+    console.log(
+        "INITIAL SESSION ERROR:",
+        error
+    );
 
-await supabaseClient.auth.signOut();
-
-log(
-    "\nTEST FINISHED."
-);
-
-/*
- * SIGN OUT
- */
-
-await supabaseClient.auth.signOut();
-
-log(
-    "\nTEST FINISHED."
-);
-        
-await supabaseClient.auth.signOut();
-
-log(
-    "\nTEST FINISHED."
-);
-    });
+})();
 
 </script>
 
 </body>
+
 </html>
 ```
